@@ -1,0 +1,12 @@
+:root{
+  --radius-none:0px;
+  --radius-xs:2px;
+  --radius-sm:4px;
+  --radius-md:6px;
+  --radius-lg:10px;
+  --radius-pill:999px;
+  --radius-circle:50%;
+  --radius-card:var(--radius-sm);
+  --radius-control:var(--radius-sm);
+  --radius-media:var(--radius-xs);
+}

@@ -1,0 +1,81 @@
+:root{
+  /* --- Brand red, sampled from the O-Yaku mark (#E06064) --- */
+  --clay-50:#FDF3F3;
+  --clay-100:#FAE4E4;
+  --clay-200:#F3C8C9;
+  --clay-300:#EBA5A7;
+  --clay-400:#E5817F;
+  --clay-500:#E06064; /* brand */
+  --clay-600:#C74C50;
+  --clay-700:#A23C40;
+  --clay-800:#7A2E31;
+  --clay-900:#4E1E20;
+
+  /* --- Warm stone neutrals (paper, slip, kiln) --- */
+  --stone-0:#FFFFFF;
+  --stone-50:#FBF9F6;
+  --stone-100:#F4F1EC;
+  --stone-200:#E8E3DB;
+  --stone-300:#D6CFC4;
+  --stone-400:#B3AAA0;
+  --stone-500:#8C8479;
+  --stone-600:#6A635A;
+  --stone-700:#4B4640;
+  --stone-800:#2E2B27;
+  --stone-900:#1B1917;
+
+  /* --- Moss: the single supporting hue, muted so the red stays loudest --- */
+  --moss-100:#EDF0E8;
+  --moss-300:#C3CBB4;
+  --moss-500:#8B9878;
+  --moss-700:#5A6650;
+  --moss-900:#333B2D;
+
+  /* --- Glaze: cool celadon, used only for informational states --- */
+  --glaze-100:#E9EFF0;
+  --glaze-500:#7E9598;
+  --glaze-700:#4F6265;
+
+  /* --- Ochre: kiln warning tone --- */
+  --ochre-100:#F7EEDD;
+  --ochre-500:#C79A57;
+  --ochre-700:#8A6730;
+
+  /* --- Semantic surfaces --- */
+  --surface-page:var(--stone-50);
+  --surface-card:var(--stone-0);
+  --surface-sunken:var(--stone-100);
+  --surface-inverse:var(--stone-900);
+  --surface-brand:var(--clay-500);
+  --surface-brand-soft:var(--clay-50);
+  --surface-moss-soft:var(--moss-100);
+
+  /* --- Semantic text --- */
+  --text-body:var(--stone-800);
+  --text-heading:var(--stone-900);
+  --text-muted:var(--stone-500);
+  --text-subtle:var(--stone-400);
+  --text-inverse:var(--stone-50);
+  --text-brand:var(--clay-600);
+  --text-link:var(--clay-600);
+  --text-link-hover:var(--clay-700);
+
+  /* --- Semantic lines --- */
+  --line-hairline:var(--stone-200);
+  --line-strong:var(--stone-300);
+  --line-brand:var(--clay-500);
+  --line-inverse:rgba(255,255,255,.18);
+
+  /* --- Semantic status --- */
+  --status-success-fg:var(--moss-700);
+  --status-success-bg:var(--moss-100);
+  --status-warning-fg:var(--ochre-700);
+  --status-warning-bg:var(--ochre-100);
+  --status-danger-fg:var(--clay-700);
+  --status-danger-bg:var(--clay-50);
+  --status-info-fg:var(--glaze-700);
+  --status-info-bg:var(--glaze-100);
+
+  /* --- Focus --- */
+  --focus-ring:0 0 0 3px var(--clay-200);
+}

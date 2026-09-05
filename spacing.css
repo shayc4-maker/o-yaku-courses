@@ -1,0 +1,24 @@
+:root{
+  /* 4px base, with a 6px half-step for optical padding */
+  --space-0:0px;
+  --space-1:4px;
+  --space-2:6px;
+  --space-3:8px;
+  --space-4:12px;
+  --space-5:16px;
+  --space-6:20px;
+  --space-7:24px;
+  --space-8:32px;
+  --space-9:40px;
+  --space-10:56px;
+  --space-11:72px;
+  --space-12:96px;
+  --space-13:128px;
+
+  --gutter-page:24px;
+  --gutter-page-lg:56px;
+  --measure-prose:62ch;
+  --container-max:1200px;
+  --container-narrow:760px;
+  --section-y:var(--space-12);
+}

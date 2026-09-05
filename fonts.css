@@ -1,0 +1,5 @@
+/* O-Yaku webfonts.
+   SUBSTITUTION NOTE: no font binaries were supplied with the brand assets.
+   Both families are served from Google Fonts and cover Hebrew + Latin.
+   Replace the @import below with local @font-face rules once real files arrive. */
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@200..800&family=Frank+Ruhl+Libre:wght@300..900&display=swap");

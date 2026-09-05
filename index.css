@@ -1,0 +1,37 @@
+/* O-Yaku Design System — token load order matters: fonts/colors/typography/spacing/radius/elevation/motion, then base resets. */
+@import "./tokens/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/radius.css";
+@import "./tokens/elevation.css";
+@import "./tokens/motion.css";
+@import "./tokens/base.css";
+
+/* Page-level overrides carried over from the prototype's O-Yaku Flow.html <style> block. */
+a {
+  border-bottom-color: transparent;
+}
+@media (max-width: 720px) {
+  .oy-wrap {
+    padding-left: var(--gutter-page) !important;
+    padding-right: var(--gutter-page) !important;
+  }
+  h1 {
+    font-size: var(--text-3xl) !important;
+  }
+}
+.oy-spin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--stone-300);
+  border-top-color: var(--clay-500);
+  animation: oyspin 0.9s linear infinite;
+  flex: none;
+}
+@keyframes oyspin {
+  to {
+    transform: rotate(360deg);
+  }
+}
