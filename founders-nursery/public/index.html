@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>בונים את משתלת אויאקו</title>
+  <meta name="description" content="סבב הקמה פרטי למשתלת הבונסאי של אויאקו.">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="preload" href="/fonts/frank-ruhl-libre-hebrew-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">דילוג לתוכן</a>
+
+  <p class="test-banner" id="test-banner" role="status" hidden>
+    מצב בדיקה: התשלום אינו פעיל ולא יבוצע חיוב.
+  </p>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="logo-link" href="#main" aria-label="אויאקו — לראש הדף">
+        <img src="/assets/logo-oyaku.png" alt="O‑Yaku" width="34" height="36">
+      </a>
+      <button class="cart-button" type="button" id="open-cart" aria-haspopup="dialog" aria-controls="cart-dialog">
+        <span>סל</span>
+        <span class="cart-count" id="cart-count" aria-live="polite">0</span>
+        <span class="visually-hidden" id="cart-count-label">פריטים</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-text">
+        <p class="eyebrow eyebrow-brand">סבב הקמה פרטי</p>
+        <h1 id="hero-title">בונים את משתלת אויאקו</h1>
+        <p class="lead">
+          אני מקים משתלה לגידול בונסאי. יש שטח ויש עצים, ועכשיו צריך להכין את המקום: משטחי גידול, השקיה,
+          הצללה וגידור. אני פותח את הסבב הזה לתלמידים ולחברים שרוצים לקחת חלק. אפשר לרכוש מראש כלי, סדנה,
+          אקדמה או מקום לעצים שלכם. הכסף יעזור לי לקדם את ההקמה.
+        </p>
+        <p class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="#options">לאפשרויות הרכישה</a>
+        </p>
+      </div>
+      <figure class="hero-figure">
+        <img src="/assets/atmosphere-juniper.jpg" width="768" height="768"
+             alt="עץ ערער ותיק עם גזע מפותל על סלע, בנוף הררי.">
+        <figcaption>תמונת אווירה. זה אינו צילום של המשתלה.</figcaption>
+      </figure>
+    </section>
+
+    <section class="facts wrap" aria-label="נתונים קצרים">
+      <dl class="facts-list">
+        <div class="fact">
+          <dt>שטח הגידול</dt>
+          <dd><span class="fact-value">750 מ״ר</span></dd>
+        </div>
+        <div class="fact">
+          <dt>משך הסבב</dt>
+          <dd><span class="fact-value">14 יום</span><span class="fact-note" id="round-dates">מועד הפתיחה ייקבע בהמשך</span></dd>
+        </div>
+        <div class="fact">
+          <dt>למי</dt>
+          <dd><span class="fact-value">קהילה קרובה</span><span class="fact-note">תלמידים וחברים</span></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="section wrap" id="options" aria-labelledby="options-title" tabindex="-1">
+      <div class="section-head">
+        <p class="eyebrow" lang="en">Options</p>
+        <h2 id="options-title">אפשרויות רכישה</h2>
+        <p class="muted">כל המחירים סופיים וכוללים מע״מ. אפשר לבחור כמה אפשרויות ולשלם פעם אחת על הסל כולו.</p>
+      </div>
+      <ul class="product-grid" id="product-grid" aria-live="off">
+        <li class="product-card is-loading"><p class="muted">טוען…</p></li>
+      </ul>
+      <noscript><p class="notice">כדי לבחור ולשלם יש להפעיל JavaScript בדפדפן.</p></noscript>
+    </section>
+
+    <section class="section wrap" aria-labelledby="build-title">
+      <div class="section-head">
+        <p class="eyebrow" lang="en">Build</p>
+        <h2 id="build-title">מה יוקם בעזרת הסבב</h2>
+      </div>
+      <ol class="build-list">
+        <li><span class="build-num" aria-hidden="true">01</span><span class="build-text"><strong>הכנת השטח</strong></span></li>
+        <li><span class="build-num" aria-hidden="true">02</span><span class="build-text"><strong>משטחי גידול</strong></span></li>
+        <li><span class="build-num" aria-hidden="true">03</span><span class="build-text"><strong>השקיה והצללה</strong></span></li>
+        <li><span class="build-num" aria-hidden="true">04</span><span class="build-text"><strong>גידור</strong> <span class="muted">גדר ושערים סביב שטח הגידול</span></span></li>
+      </ol>
+    </section>
+
+    <section class="section wrap" aria-labelledby="redeem-title">
+      <div class="section-head">
+        <p class="eyebrow" lang="en">Coordination</p>
+        <h2 id="redeem-title">תיאום ומימוש</h2>
+      </div>
+      <div class="prose">
+        <p>הרכישה היא תשלום מראש. אחרי התשלום אצור איתכם קשר כדי לתאם את המימוש.</p>
+        <p>מועדי המימוש, פרטי הסדנאות, מידות החולצות ואופן האיסוף יפורסמו כאן לפני פתיחת הסבב.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <img src="/assets/logo-oyaku.png" alt="O‑Yaku" width="30" height="32">
+      <div>
+        <p>אויאקו · משתלת בונסאי</p>
+        <p class="muted small">פרטי העסק, תנאי הרכישה ומדיניות הביטולים יתווספו כאן לפני פתיחת הסבב.</p>
+      </div>
+    </div>
+  </footer>
+
+  <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-title">
+    <div class="cart-inner">
+      <div class="cart-head">
+        <h2 id="cart-title" class="h3">הסל שלך</h2>
+        <button class="icon-button" type="button" id="close-cart" aria-label="סגירת הסל">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="cart-empty" class="cart-empty">
+        <p>הסל ריק.</p>
+        <button class="btn btn-secondary" type="button" id="cart-browse">לאפשרויות הרכישה</button>
+      </div>
+
+      <div id="cart-filled" hidden>
+        <ul class="cart-lines" id="cart-lines"></ul>
+        <div class="cart-total">
+          <span>סה״כ לתשלום</span>
+          <span><strong id="cart-total" class="num">₪0</strong> <span class="small muted">כולל מע״מ</span></span>
+        </div>
+        <p class="small muted">הסל נשמר בדפדפן הזה. הוא אינו שמירת מקום ואינו אישור הזמנה — הזמנה נקלטת רק אחרי תשלום מאושר.</p>
+
+        <form class="checkout-form" id="checkout-form" novalidate>
+          <h3 class="h4">פרטים לחשבונית</h3>
+          <div class="field">
+            <label for="c-name">שם מלא</label>
+            <input id="c-name" name="name" autocomplete="name" required minlength="2" maxlength="80">
+            <p class="field-error" id="c-name-error" hidden>נא למלא שם מלא.</p>
+          </div>
+          <div class="field">
+            <label for="c-phone">טלפון</label>
+            <input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required maxlength="20">
+            <p class="field-error" id="c-phone-error" hidden>נא למלא מספר טלפון תקין.</p>
+          </div>
+          <div class="field">
+            <label for="c-email">אימייל</label>
+            <input id="c-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" required maxlength="120">
+            <p class="field-error" id="c-email-error" hidden>נא למלא כתובת אימייל תקינה.</p>
+          </div>
+          <p class="form-error" id="checkout-error" role="alert" hidden></p>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" id="checkout-button">מעבר לתשלום</button>
+          <p class="small muted" id="checkout-note">התשלום מתבצע בעמוד מאובטח של ספק הסליקה. פרטי האשראי אינם מוזנים באתר הזה.</p>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toast-text"></span>
+    <button type="button" class="toast-action" id="toast-open-cart">לסל</button>
+  </div>
+</body>
+</html>

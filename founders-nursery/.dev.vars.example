@@ -1,0 +1,15 @@
+# Copy to .dev.vars for local development. Never commit .dev.vars.
+# In Cloudflare, set each of these with: npx wrangler secret put <NAME>
+
+# Random string, 32+ chars. Signs the per-order notifyUrl given to Morning.
+NOTIFY_SIGNING_SECRET=change-me-to-a-long-random-string
+
+# Morning API key (personal area > developer tools > API keys). Sandbox keys for morning_sandbox.
+MORNING_API_KEY_ID=
+MORNING_API_KEY_SECRET=
+
+# Local overrides of wrangler.jsonc vars, e.g. to try the Morning sandbox:
+# PAYMENT_MODE=morning_sandbox
+# MORNING_API_BASE=https://sandbox.d.greeninvoice.co.il/api/v1
+# MORNING_AUTH_BASE=https://api.sandbox.morning.dev
+# PUBLIC_BASE_URL=https://<a tunnel URL that Morning can reach>

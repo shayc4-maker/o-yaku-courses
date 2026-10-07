@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>מצב הזמנה · משתלת אויאקו</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/order.js"></script>
+</head>
+<body>
+  <p class="test-banner" id="test-banner" role="status" hidden>מצב בדיקה: התשלום אינו פעיל ולא יבוצע חיוב.</p>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="logo-link" href="/" aria-label="חזרה לדף הסבב"><img src="/assets/logo-oyaku.png" alt="O‑Yaku" width="34" height="36"></a>
+    </div>
+  </header>
+  <main class="wrap narrow page-simple" id="main">
+    <div class="status-box" id="status-box" role="status" aria-live="polite">
+      <h1 id="status-title">בודק את מצב ההזמנה…</h1>
+      <p id="status-text"></p>
+    </div>
+    <table class="summary-table" id="summary" hidden>
+      <caption class="visually-hidden">פירוט ההזמנה</caption>
+      <tbody id="summary-body"></tbody>
+      <tfoot><tr><th scope="row">סה״כ <small>כולל מע״מ</small></th><td class="num" id="summary-total"></td></tr></tfoot>
+    </table>
+    <p class="actions-row" id="actions"></p>
+  </main>
+</body>
+</html>

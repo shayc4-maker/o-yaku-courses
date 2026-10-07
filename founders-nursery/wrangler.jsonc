@@ -1,0 +1,47 @@
+// Cloudflare Worker for the O‑Yaku founders round — a separate project from the
+// existing ones in the account. Nothing here is deployed automatically.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oyaku-founders-nursery",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+
+  // Not reachable on a *.workers.dev address until you flip this at launch.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // API and payment routes always go to the Worker, never to static files.
+    "run_worker_first": ["/api/*", "/pay/*"]
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "oyaku-founders-orders",
+      // Replace with the id printed by: npx wrangler d1 create oyaku-founders-orders
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // Non-secret settings. Secrets go in .dev.vars locally and `wrangler secret put` in Cloudflare.
+  "vars": {
+    "PAYMENT_MODE": "mock",
+    "ALLOW_LIVE_PAYMENTS": "no",
+    "PUBLIC_BASE_URL": "",
+    "ROUND_OPENS_AT": "",
+    "MORNING_AUTH_FLOW": "legacy",
+    "MORNING_API_BASE": "",
+    "MORNING_AUTH_BASE": "",
+    "MORNING_SEND_INCOME_LINES": "true",
+    "MORNING_INCOME_VAT_TYPE": "1",
+    "MORNING_PLUGIN_ID": "",
+    "MORNING_GROUP": ""
+  },
+
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "oyaku-founders-nursery",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "db:migrate:local": "wrangler d1 migrations apply oyaku-founders-orders --local",
+    "dev": "npm run db:migrate:local && wrangler dev --port 8787",
+    "test": "node --test test/*.test.mjs",
+    "test:api": "node --test test/api.e2e.mjs",
+    "test:browser": "node test/browser.e2e.mjs",
+    "test:morning-flow": "node --test test/morning-flow.e2e.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "wrangler": "^4.40.0"
+  }
+}
