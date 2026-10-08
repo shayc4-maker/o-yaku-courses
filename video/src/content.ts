@@ -34,10 +34,11 @@ export type ExplainerProps = {
   /**
    * Voice-over, one line per moment in the video. Each line starts at its cue (tied to the
    * animation, so it stays in sync when timings change). `caption` is the on-screen text,
-   * `voice` is what's spoken, `audio` is the recorded file in video/public/voice/ (null = silent).
-   * Each line has to fit its cue's window — see the `max` comment next to it.
+   * `voice` is what's spoken, `audio` is the file in video/public/voice/. When `audio` is null,
+   * voice/<cue>.mp3 is used if it exists (that's what `npm run voice` writes), else silence.
+   * `maxSec` is how long the cue's window is — a longer recording runs into the next line.
    */
-  narration: Record<Cue, { caption: string | null; voice: string; audio: string | null }>;
+  narration: Record<Cue, { maxSec: number; caption: string | null; voice: string; audio: string | null }>;
   /** Optional background music in video/public/, ducked under the voice and the live clip. */
   music: string | null;
 };
@@ -80,22 +81,15 @@ export const defaultProps: ExplainerProps = {
     ],
   },
   narration: {
-    // max ~4s
-    intro: { caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: null },
-    // max ~3.5s
-    locked: { caption: 'מנוע השאלות פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות פתוח למנויי הפטרון שלנו.', audio: null },
-    // max ~5s
-    check: { caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: null },
-    // max ~4.5s
-    ask: { caption: 'עכשיו אפשר לשאול כל שאלה', voice: 'עכשיו שואלים כל שאלה על העצים שלכם. למשל: מתי גוזמים זית?', audio: null },
-    // max ~5s
-    answer: { caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: null },
-    // max ~3.8s
-    toLive: { caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: null },
-    // max ~2.5s, then the live clip's own audio plays
-    patreon: { caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: null },
-    // max ~5.5s
-    outro: { caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו אלינו בפטרון.', audio: null },
+    intro: { maxSec: 4, caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: null },
+    locked: { maxSec: 3.5, caption: 'מנוע השאלות פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות פתוח למנויי הפטרון שלנו.', audio: null },
+    check: { maxSec: 5, caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: null },
+    ask: { maxSec: 4.5, caption: 'עכשיו אפשר לשאול כל שאלה', voice: 'עכשיו שואלים כל שאלה על העצים שלכם. למשל: מתי גוזמים זית?', audio: null },
+    answer: { maxSec: 5, caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: null },
+    toLive: { maxSec: 3.8, caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: null },
+    // then the live clip's own audio plays
+    patreon: { maxSec: 2.5, caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: null },
+    outro: { maxSec: 5.5, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו אלינו בפטרון.', audio: null },
   },
   music: null,
 };

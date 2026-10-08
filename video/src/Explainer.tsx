@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { AbsoluteFill, Audio, interpolate, Sequence, staticFile, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, staticFile, useCurrentFrame } from 'remotion';
 import { Caption } from './components';
 import type { Cue, ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
@@ -31,6 +31,13 @@ export function Explainer(props: ExplainerProps) {
   const timestamp = props.sources.find((x) => x.live)?.live?.timestamp ?? '0:00';
   const clipFrom = p + CLIP_LEAD;
   const clipTo = clipFrom + Math.round(props.live.clipSeconds * FPS);
+
+  const files = new Set(getStaticFiles().map((x) => x.name));
+  const voiceFile = (cue: Cue) => {
+    const set = props.narration[cue].audio;
+    if (set) return `voice/${set}`;
+    return files.has(`voice/${cue}.mp3`) ? `voice/${cue}.mp3` : null;
+  };
 
   // [cue, from, to] in absolute frames, anchored to the animation's own events.
   const cues: [Cue, number, number][] = [
@@ -73,12 +80,13 @@ export function Explainer(props: ExplainerProps) {
       {/* captions + voice-over, one per cue */}
       {cues.map(([cue, from, to]) => {
         const line = props.narration[cue];
+        const audio = voiceFile(cue);
         return (
           <Fragment key={cue}>
             {line.caption ? <Caption from={from} to={to} text={line.caption} /> : null}
-            {line.audio ? (
+            {audio ? (
               <Sequence from={from} layout="none">
-                <Audio src={staticFile(`voice/${line.audio}`)} />
+                <Audio src={staticFile(audio)} />
               </Sequence>
             ) : null}
           </Fragment>
@@ -90,7 +98,7 @@ export function Explainer(props: ExplainerProps) {
           src={staticFile(props.music)}
           volume={(f) => {
             const inClip = f >= clipFrom && f < clipTo;
-            const underVoice = cues.some(([cue, a, b]) => props.narration[cue].audio && f >= a && f < b);
+            const underVoice = cues.some(([cue, a, b]) => voiceFile(cue) && f >= a && f < b);
             const fadeOut = interpolate(f, [tl.total - 45, tl.total], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
             return (inClip ? 0.03 : underVoice ? 0.08 : 0.22) * fadeOut;
           }}

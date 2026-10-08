@@ -7,7 +7,8 @@
     "studio": "remotion studio",
     "render": "remotion render Explainer out/o-yaku-explainer.mp4",
     "still": "remotion still Explainer out/frame.png --frame=200",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "voice": "NODE_USE_ENV_PROXY=1 node --experimental-strip-types --no-warnings scripts/voice.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",

@@ -34,3 +34,20 @@ to its length, and replace `subtitles` with the real lines. The video length adj
 Timing of the site walkthrough (clicks, typing, camera) is in `T` and the `Camera`/`Cursor`
 keyframes in `src/scenes/SiteFlow.tsx`. The on-screen captions are at the bottom of
 `src/Explainer.tsx`.
+
+## Voice-over
+
+Narration lines live in `narration` in `src/content.ts` (caption, spoken text, `maxSec` window).
+Any `public/voice/<cue>.mp3` is picked up automatically; or set `audio` to a different file name.
+
+**AI voice (ElevenLabs):** needs `ELEVENLABS_API_KEY` in the environment (never in the repo) and
+network access to `api.elevenlabs.io`.
+
+```bash
+npm run voice -- --list-voices        # find your cloned voice's id
+npm run voice -- --voice <voice_id>   # generates changed lines, reports length vs. maxSec
+npm run render
+```
+
+Only lines whose text changed are regenerated (`public/voice/manifest.json`); add `--force` or
+`--only intro,ask` to redo specific lines. Default model is `eleven_v3` (`ELEVENLABS_MODEL` to change).
