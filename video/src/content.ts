@@ -84,12 +84,12 @@ export const defaultProps: ExplainerProps = {
     intro: { maxSec: 4, caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: null },
     locked: { maxSec: 3.5, caption: 'מנוע השאלות פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות פתוח למנויי הפטרון שלנו.', audio: null },
     check: { maxSec: 5, caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: null },
-    ask: { maxSec: 4.5, caption: 'עכשיו אפשר לשאול כל שאלה', voice: 'עכשיו שואלים כל שאלה על העצים שלכם. למשל: מתי גוזמים זית?', audio: null },
+    ask: { maxSec: 4.5, caption: 'עכשיו אפשר לשאול כל שאלה', voice: 'עכשיו שואלים כל שאלה. למשל: מתי גוזמים זית?', audio: null },
     answer: { maxSec: 5, caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: null },
     toLive: { maxSec: 3.8, caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: null },
     // then the live clip's own audio plays
     patreon: { maxSec: 2.5, caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: null },
-    outro: { maxSec: 5.5, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו אלינו בפטרון.', audio: null },
+    outro: { maxSec: 5.5, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו בפטרון.', audio: null },
   },
   music: null,
 };
