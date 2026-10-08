@@ -40,8 +40,8 @@ keyframes in `src/scenes/SiteFlow.tsx`. When each caption/voice line starts is t
 Narration lines live in `narration` in `src/content.ts` (caption, spoken text, `maxSec` window).
 Any `public/voice/<cue>.mp3` is picked up automatically; or set `audio` to a different file name.
 
-**AI voice (ElevenLabs):** needs `ELEVENLABS_API_KEY` in the environment (never in the repo) and
-network access to `api.elevenlabs.io`.
+**AI voice (ElevenLabs):** needs the API key, never in the repo: either `ELEVENLABS_API_KEY` in the
+environment, or (cloud sessions) a network secret for `api.elevenlabs.io` that sends header `xi-api-key`.
 
 ```bash
 npm run voice -- --list-voices        # find your cloned voice's id

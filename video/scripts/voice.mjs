@@ -7,7 +7,7 @@
  *   npm run voice -- --voice <id>           generate every line that changed since last run
  *   npm run voice -- --voice <id> --only intro,ask --force
  *
- * Env: ELEVENLABS_API_KEY (required), ELEVENLABS_VOICE_ID (instead of --voice),
+ * Env: ELEVENLABS_API_KEY (unless a network secret injects the xi-api-key header), ELEVENLABS_VOICE_ID (instead of --voice),
  *      ELEVENLABS_MODEL (default eleven_v3, which reads Hebrew).
  */
 import { createHash } from 'node:crypto';
@@ -28,17 +28,19 @@ const opt = (name) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 
+// Either ELEVENLABS_API_KEY is set, or (cloud sessions) the network proxy injects the
+// xi-api-key header for api.elevenlabs.io from a network secret, so the key never reaches here.
 const key = process.env.ELEVENLABS_API_KEY;
-if (!key) {
-  console.error('ELEVENLABS_API_KEY is not set. Add it to the environment (never commit it).');
-  process.exit(1);
-}
 
 async function api(path, init = {}) {
-  const res = await fetch(`${API}${path}`, { ...init, headers: { 'xi-api-key': key, ...(init.headers || {}) } }).catch((err) => {
+  const res = await fetch(`${API}${path}`, { ...init, headers: { ...(key ? { 'xi-api-key': key } : {}), ...(init.headers || {}) } }).catch((err) => {
     console.error(`Can't reach ${API} (${err.cause?.message || err.message}). Is api.elevenlabs.io allowed by the network policy?`);
     process.exit(1);
   });
+  if (res.status === 401) {
+    console.error('ElevenLabs rejected the request (401): no valid key. Set ELEVENLABS_API_KEY, or add a network secret for api.elevenlabs.io with header xi-api-key.');
+    process.exit(1);
+  }
   if (!res.ok) throw new Error(`${init.method || 'GET'} ${path} → ${res.status} ${await res.text()}`);
   return res;
 }
