@@ -32,8 +32,8 @@ captions over the clip.
 to its length, and replace `subtitles` with the real lines. The video length adjusts automatically.
 
 Timing of the site walkthrough (clicks, typing, camera) is in `T` and the `Camera`/`Cursor`
-keyframes in `src/scenes/SiteFlow.tsx`. The on-screen captions are at the bottom of
-`src/Explainer.tsx`.
+keyframes in `src/scenes/SiteFlow.tsx`. When each caption/voice line starts is the `cues` list in
+`src/Explainer.tsx`; their text is in `narration` in `content.ts`.
 
 ## Voice-over
 
