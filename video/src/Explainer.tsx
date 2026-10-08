@@ -1,6 +1,7 @@
-import { AbsoluteFill, interpolate, Sequence, useCurrentFrame } from 'remotion';
+import { Fragment } from 'react';
+import { AbsoluteFill, Audio, interpolate, Sequence, staticFile, useCurrentFrame } from 'remotion';
 import { Caption } from './components';
-import type { ExplainerProps } from './content';
+import type { Cue, ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
 import { CLIP_LEAD, CLIP_TAIL, PatreonClip } from './scenes/PatreonClip';
 import { SITE_FLOW_FRAMES, SiteFlow, T } from './scenes/SiteFlow';
@@ -28,6 +29,20 @@ export function Explainer(props: ExplainerProps) {
   const s = tl.site;
   const p = tl.patreon;
   const timestamp = props.sources.find((x) => x.live)?.live?.timestamp ?? '0:00';
+  const clipFrom = p + CLIP_LEAD;
+  const clipTo = clipFrom + Math.round(props.live.clipSeconds * FPS);
+
+  // [cue, from, to] in absolute frames, anchored to the animation's own events.
+  const cues: [Cue, number, number][] = [
+    ['intro', 8, s],
+    ['locked', s + 15, s + T.clickConnect - 5],
+    ['check', s + T.clickConnect, s + T.connected + 20],
+    ['ask', s + T.connected + 30, s + T.clickSearch],
+    ['answer', s + T.clickSearch + 6, s + 590],
+    ['toLive', s + 596, s + SITE_FLOW_FRAMES - 10],
+    ['patreon', p + 8, clipFrom + 45],
+    ['outro', tl.outro + 10, tl.total],
+  ];
 
   return (
     <AbsoluteFill style={{ background: C.stone200, fontFamily: BODY }}>
@@ -55,13 +70,32 @@ export function Explainer(props: ExplainerProps) {
         </FadeIn>
       </Sequence>
 
-      {/* captions, absolute frames */}
-      <Caption from={s + 15} to={s + T.clickConnect - 5} text="מנוע השאלות פתוח למנויי O-YAKU ב-Patreon" />
-      <Caption from={s + T.clickConnect} to={s + T.connected + 20} text="התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל" />
-      <Caption from={s + T.connected + 30} to={s + T.clickSearch} text="עכשיו אפשר לשאול כל שאלה" />
-      <Caption from={s + T.clickSearch + 6} to={s + 590} text="התשובה מגיעה עם מקורות מהשיעורים והלייבים" />
-      <Caption from={s + 596} to={s + SITE_FLOW_FRAMES - 10} text="וכל מקור מוביל לרגע המדויק בלייב" />
-      <Caption from={p + 8} to={p + CLIP_LEAD + 45} text={`הלייב נפתח בפטרון, בדיוק מ-${timestamp}`} />
+      {/* captions + voice-over, one per cue */}
+      {cues.map(([cue, from, to]) => {
+        const line = props.narration[cue];
+        return (
+          <Fragment key={cue}>
+            {line.caption ? <Caption from={from} to={to} text={line.caption} /> : null}
+            {line.audio ? (
+              <Sequence from={from} layout="none">
+                <Audio src={staticFile(`voice/${line.audio}`)} />
+              </Sequence>
+            ) : null}
+          </Fragment>
+        );
+      })}
+
+      {props.music ? (
+        <Audio
+          src={staticFile(props.music)}
+          volume={(f) => {
+            const inClip = f >= clipFrom && f < clipTo;
+            const underVoice = cues.some(([cue, a, b]) => props.narration[cue].audio && f >= a && f < b);
+            const fadeOut = interpolate(f, [tl.total - 45, tl.total], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+            return (inClip ? 0.03 : underVoice ? 0.08 : 0.22) * fadeOut;
+          }}
+        />
+      ) : null}
     </AbsoluteFill>
   );
 }

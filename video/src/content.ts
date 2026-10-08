@@ -31,7 +31,18 @@ export type ExplainerProps = {
     /** Subtitles burned over the clip — part of the spoken answer. [startSec, endSec, text]. */
     subtitles: [number, number, string][];
   };
+  /**
+   * Voice-over, one line per moment in the video. Each line starts at its cue (tied to the
+   * animation, so it stays in sync when timings change). `caption` is the on-screen text,
+   * `voice` is what's spoken, `audio` is the recorded file in video/public/voice/ (null = silent).
+   * Each line has to fit its cue's window — see the `max` comment next to it.
+   */
+  narration: Record<Cue, { caption: string | null; voice: string; audio: string | null }>;
+  /** Optional background music in video/public/, ducked under the voice and the live clip. */
+  music: string | null;
 };
+
+export type Cue = 'intro' | 'locked' | 'check' | 'ask' | 'answer' | 'toLive' | 'patreon' | 'outro';
 
 export const defaultProps: ExplainerProps = {
   question: 'מתי גוזמים זית?',
@@ -68,4 +79,23 @@ export const defaultProps: ExplainerProps = {
       [8.5, 12, 'כהכנה לחורף וכחלק מסדר העבודה השנתי.'],
     ],
   },
+  narration: {
+    // max ~4s
+    intro: { caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: null },
+    // max ~3.5s
+    locked: { caption: 'מנוע השאלות פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות פתוח למנויי הפטרון שלנו.', audio: null },
+    // max ~5s
+    check: { caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: null },
+    // max ~4.5s
+    ask: { caption: 'עכשיו אפשר לשאול כל שאלה', voice: 'עכשיו שואלים כל שאלה על העצים שלכם. למשל: מתי גוזמים זית?', audio: null },
+    // max ~5s
+    answer: { caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: null },
+    // max ~3.8s
+    toLive: { caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: null },
+    // max ~2.5s, then the live clip's own audio plays
+    patreon: { caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: null },
+    // max ~5.5s
+    outro: { caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו אלינו בפטרון.', audio: null },
+  },
+  music: null,
 };
