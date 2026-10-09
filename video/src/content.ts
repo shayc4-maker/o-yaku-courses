@@ -54,6 +54,11 @@ export type ExplainerProps = {
    * (unprocessed cuts of the recording) instead of the cleaned files.
    */
   stem?: 'mix' | 'voice' | 'live';
+  /**
+   * A finished full-length mix (e.g. from DaVinci/Fairlight) in public/. When set, it replaces
+   * all other sound: narration, live clip audio and music. It must match the video's timing.
+   */
+  soundtrack?: string | null;
   rawVoice?: boolean;
   /** ElevenLabs voice used by `npm run voice` ("shayka", the owner's cloned voice). */
   voiceId: string;
@@ -117,12 +122,14 @@ export const defaultProps: ExplainerProps = {
     outro: { maxSec: 5.6, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו עכשיו.', audio: 'rec-outro.mp3' },
   },
   music: null,
+  soundtrack: 'soundtrack.wav', // owner's Fairlight mix, -16 LUFS (kept out of git)
   voiceId: 'kfiqnWKpE9m8HkyjWdgl',
 };
 
 /** Version B: the clearest work shots, partly sped up, narrated over a low live sound. */
 export const narratedProps: ExplainerProps = {
   ...defaultProps,
+  soundtrack: null, // the Fairlight mix was made for version A's timing
   live: {
     ...defaultProps.live,
     segments: [

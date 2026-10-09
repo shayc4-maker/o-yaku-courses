@@ -33,9 +33,10 @@ export function Explainer(props: ExplainerProps) {
   const clipTo = clipFrom + Math.round(clipSeconds(props.live) * FPS);
 
   const files = new Set(getStaticFiles().map((x) => x.name));
-  const stem = props.stem ?? 'mix';
+  const soundtrack = props.soundtrack && (props.stem ?? 'mix') === 'mix' ? props.soundtrack : null;
+  const stem = soundtrack ? 'none' : props.stem ?? 'mix';
   const voiceFile = (cue: Cue) => {
-    if (stem === 'live') return null;
+    if (stem === 'live' || stem === 'none') return null;
     if (props.rawVoice && files.has(`voice-raw/${cue}.wav`)) return `voice-raw/${cue}.wav`;
     const set = props.narration[cue].audio;
     if (set) return `voice/${set}`;
@@ -70,7 +71,7 @@ export function Explainer(props: ExplainerProps) {
       <Sequence from={p} durationInFrames={tl.patreonFrames}>
         <FadeIn>
           <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 40%, #f1efed, ${C.stone300})` }} />
-          <PatreonClip live={props.live} timestamp={timestamp} muteLive={stem === 'voice'} />
+          <PatreonClip live={props.live} timestamp={timestamp} muteLive={stem === 'voice' || stem === 'none'} />
         </FadeIn>
       </Sequence>
 
@@ -95,6 +96,8 @@ export function Explainer(props: ExplainerProps) {
           </Fragment>
         );
       })}
+
+      {soundtrack ? <Audio src={staticFile(soundtrack)} /> : null}
 
       {props.music && stem === 'mix' ? (
         <Audio
