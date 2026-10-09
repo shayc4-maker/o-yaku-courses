@@ -1,10 +1,10 @@
-import { interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { Audio, getStaticFiles, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { BrowserFrame, Camera, CAM_HOME, fadeIn, Icon } from '../components';
-import type { ExplainerProps } from '../content';
+import { segmentSeconds, type ExplainerProps, type Segment } from '../content';
 import { C, DISPLAY } from '../theme';
 
 /** Frames before the clip starts playing inside the Patreon page (page settles in). */
-export const CLIP_LEAD = 30;
+export const CLIP_LEAD = 100;
 /** Frames after the clip before the scene hands over to the outro. */
 export const CLIP_TAIL = 30;
 
@@ -14,10 +14,14 @@ const PLAYER = { left: 200, top: 36, w: 1200, h: 675 };
 export function PatreonClip({ live, timestamp }: { live: ExplainerProps['live']; timestamp: string }) {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const clipFrames = Math.round(live.clipSeconds * fps);
-  const t = Math.max(0, f - CLIP_LEAD) / fps; // seconds into the clip
-  const playing = f >= CLIP_LEAD && f < CLIP_LEAD + clipFrames;
-  const sub = live.subtitles.find(([a, b]) => playing && t >= a && t < b);
+  const parts = layout(live.segments, fps);
+  const clipFrames = parts.reduce((n, p) => n + p.frames, 0);
+  const local = f - CLIP_LEAD;
+  const cur = parts.find((p) => local >= p.start && local < p.start + p.frames);
+  // Position in the clip file (seconds), for subtitles and the player clock.
+  const srcT = cur ? cur.seg.from + ((local - cur.start) / fps) * (cur.seg.speed ?? 1) : local < 0 ? parts[0]?.seg.from ?? 0 : parts.at(-1)?.seg.to ?? 0;
+  const sub = cur ? (cur.seg.voice ?? live.subtitles.find(([a, b]) => srcT >= a && srcT < b)?.[2]) : undefined;
+  const files = new Set(getStaticFiles().map((x) => x.name));
   const enter = interpolate(f, [0, 20], [1.08, 1], { extrapolateRight: 'clamp' });
   const playerCenterY = PLAYER.top + PLAYER.h / 2;
 
@@ -34,9 +38,12 @@ export function PatreonClip({ live, timestamp }: { live: ExplainerProps['live'];
           {/* player */}
           <div style={{ position: 'absolute', left: PLAYER.left, top: PLAYER.top, width: PLAYER.w, height: PLAYER.h, background: C.stone900, borderRadius: 8, overflow: 'hidden' }}>
             {live.clipFile ? (
-              <Sequence from={CLIP_LEAD} durationInFrames={clipFrames}>
-                <OffthreadVideo src={staticFile(live.clipFile)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </Sequence>
+              parts.map(({ seg, start, frames }) => (
+                <Sequence key={seg.id} from={CLIP_LEAD + start} durationInFrames={frames}>
+                  <Piece src={live.clipFile!} seg={seg} fps={fps} />
+                  {seg.voice && files.has(`voice/clip-${seg.id}.mp3`) ? <Audio src={staticFile(`voice/clip-${seg.id}.mp3`)} /> : null}
+                </Sequence>
+              ))
             ) : (
               <Placeholder f={f} timestamp={timestamp} />
             )}
@@ -51,14 +58,14 @@ export function PatreonClip({ live, timestamp }: { live: ExplainerProps['live'];
             ) : null}
 
             {/* subtitles: part of the spoken answer */}
-            {sub ? (
+            {sub && local >= 0 ? (
               <div style={{ position: 'absolute', left: 0, right: 0, bottom: 74, display: 'flex', justifyContent: 'center' }}>
-                <span style={{ direction: 'rtl', fontSize: 34, fontWeight: 600, color: '#fff', background: 'rgba(0,0,0,.62)', padding: '8px 22px', borderRadius: 6 }}>{sub[2]}</span>
+                <span style={{ direction: 'rtl', fontSize: 34, fontWeight: 600, color: '#fff', background: 'rgba(0,0,0,.62)', padding: '8px 22px', borderRadius: 6 }}>{sub}</span>
               </div>
             ) : null}
 
             {/* controls */}
-            <Controls f={f} clipFrames={clipFrames} timestamp={timestamp} fps={fps} />
+            <Controls now={toSeconds(live.fileStart) + srcT} start={toSeconds(timestamp)} />
           </div>
 
           {/* post meta under the player */}
@@ -97,10 +104,8 @@ function fmt(sec: number) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-function Controls({ f, clipFrames, timestamp, fps }: { f: number; clipFrames: number; timestamp: string; fps: number }) {
+function Controls({ now, start }: { now: number; start: number }) {
   const total = 58 * 60 + 12; // nominal live length, only for the progress bar
-  const start = toSeconds(timestamp);
-  const now = start + Math.min(Math.max(0, f - CLIP_LEAD), clipFrames) / fps;
   const pct = (now / total) * 100;
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 56, background: 'linear-gradient(transparent, rgba(0,0,0,.6))', direction: 'ltr', display: 'flex', alignItems: 'center', gap: 16, padding: '0 22px' }}>
@@ -113,5 +118,34 @@ function Controls({ f, clipFrames, timestamp, fps }: { f: number; clipFrames: nu
         <div style={{ position: 'absolute', left: `${(start / total) * 100}%`, top: -5, width: 3, height: 15, background: '#fff', borderRadius: 2 }} />
       </div>
     </div>
+  );
+}
+
+/** Frame layout of the edit: each segment's start (relative to clip start) and length. */
+function layout(segments: Segment[], fps: number) {
+  let at = 0;
+  return segments.map((seg) => {
+    const frames = Math.round(segmentSeconds(seg) * fps);
+    const part = { seg, start: at, frames };
+    at += frames;
+    return part;
+  });
+}
+
+const DISSOLVE = 6;
+
+/** One piece of the edit, with a short dip-to-dark on each side. */
+function Piece({ src, seg, fps }: { src: string; seg: Segment; fps: number }) {
+  const f = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const o = interpolate(f, [0, DISSOLVE, durationInFrames - DISSOLVE, durationInFrames], [0, 1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  return (
+    <OffthreadVideo
+      src={staticFile(src)}
+      startFrom={Math.round(seg.from * fps)}
+      playbackRate={seg.speed ?? 1}
+      volume={seg.volume ?? 1}
+      style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: o }}
+    />
   );
 }

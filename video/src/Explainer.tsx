@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, staticFile, useCurrentFrame } from 'remotion';
 import { Caption } from './components';
-import type { Cue, ExplainerProps } from './content';
+import { clipSeconds, type Cue, type ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
 import { CLIP_LEAD, CLIP_TAIL, PatreonClip } from './scenes/PatreonClip';
 import { SITE_FLOW_FRAMES, SiteFlow, T } from './scenes/SiteFlow';
@@ -10,7 +10,7 @@ import { BODY, C, FPS } from './theme';
 const XFADE = 15;
 
 export function timeline(props: ExplainerProps) {
-  const clipFrames = Math.round(props.live.clipSeconds * FPS);
+  const clipFrames = Math.round(clipSeconds(props.live) * FPS);
   const site = INTRO_FRAMES - XFADE;
   const patreon = site + SITE_FLOW_FRAMES - XFADE;
   const patreonFrames = CLIP_LEAD + clipFrames + CLIP_TAIL;
@@ -30,7 +30,7 @@ export function Explainer(props: ExplainerProps) {
   const p = tl.patreon;
   const timestamp = props.sources.find((x) => x.live)?.live?.timestamp ?? '0:00';
   const clipFrom = p + CLIP_LEAD;
-  const clipTo = clipFrom + Math.round(props.live.clipSeconds * FPS);
+  const clipTo = clipFrom + Math.round(clipSeconds(props.live) * FPS);
 
   const files = new Set(getStaticFiles().map((x) => x.name));
   const voiceFile = (cue: Cue) => {
@@ -41,13 +41,13 @@ export function Explainer(props: ExplainerProps) {
 
   // [cue, from, to] in absolute frames, anchored to the animation's own events.
   const cues: [Cue, number, number][] = [
-    ['intro', 8, s],
-    ['locked', s + 15, s + T.clickConnect - 5],
+    ['intro', 0, s + 25],
+    ['locked', s + 25, s + T.clickConnect - 5],
     ['check', s + T.clickConnect, s + T.connected + 20],
     ['ask', s + T.connected + 30, s + T.clickSearch],
     ['answer', s + T.clickSearch + 6, s + 590],
     ['toLive', s + 596, s + SITE_FLOW_FRAMES - 10],
-    ['patreon', p + 8, clipFrom + 45],
+    ['patreon', p + 8, clipFrom],
     ['outro', tl.outro + 10, tl.total],
   ];
 

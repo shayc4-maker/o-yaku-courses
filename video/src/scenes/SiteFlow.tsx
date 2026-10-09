@@ -38,8 +38,10 @@ const LIVE_BTN = { left: 250, w: 290, cy: ROW_TOP + 66, h: 50 };
 export function SiteFlow({ question, sources }: Pick<ExplainerProps, 'question' | 'sources'>) {
   const f = useCurrentFrame();
   const connected = f >= T.connected;
-  const typeEnd = T.typeStart + question.length * T.charFrames;
-  const typed = question.slice(0, Math.max(0, Math.floor((f - T.typeStart) / T.charFrames) + 1));
+  // Type faster for long questions so typing always ends before the search click.
+  const cf = Math.max(2, Math.min(T.charFrames, Math.floor((T.clickSearch - 40 - T.typeStart) / question.length)));
+  const typeEnd = T.typeStart + question.length * cf;
+  const typed = question.slice(0, Math.max(0, Math.floor((f - T.typeStart) / cf) + 1));
   const searching = f >= T.clickSearch && f < T.resultsAt;
   const lockOpacity = interpolate(f, [T.connected - 5, T.connected + 12], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 

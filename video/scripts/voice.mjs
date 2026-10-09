@@ -51,7 +51,7 @@ if (flag('list-voices')) {
   process.exit(0);
 }
 
-const { defaultProps } = await import(join(ROOT, 'src', 'content.ts'));
+const { defaultProps, narratedProps, segmentSeconds } = await import(join(ROOT, 'src', 'content.ts'));
 const voice = opt('voice') || process.env.ELEVENLABS_VOICE_ID || defaultProps.voiceId;
 if (!voice) {
   console.error('Pass --voice <id>, set ELEVENLABS_VOICE_ID, or set voiceId in content.ts. Run with --list-voices to find it.');
@@ -60,7 +60,12 @@ if (!voice) {
 const model = process.env.ELEVENLABS_MODEL || 'eleven_v4';
 const only = opt('only')?.split(',');
 
-const lines = Object.entries(defaultProps.narration).filter(([cue]) => !only || only.includes(cue));
+// Narration cues → voice/<cue>.mp3; narrated clip pieces (both versions) → voice/clip-<id>.mp3.
+const pieces = [...defaultProps.live.segments, ...narratedProps.live.segments].filter((s) => s.voice);
+const lines = [
+  ...Object.entries(defaultProps.narration).map(([cue, l]) => [cue, { voice: l.voice, maxSec: l.maxSec }]),
+  ...pieces.map((s) => [`clip-${s.id}`, { voice: s.voice, maxSec: +segmentSeconds(s).toFixed(1) }]),
+].filter(([cue]) => !only || only.includes(cue));
 
 mkdirSync(OUT, { recursive: true });
 const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : {};
@@ -79,7 +84,7 @@ for (const [cue, line] of lines) {
   const file = join(OUT, `${cue}.mp3`);
   const hash = createHash('sha1').update(`${voice}|${model}|${line.voice}`).digest('hex');
   if (!flag('force') && manifest[cue] === hash && existsSync(file)) {
-    console.log(`= ${cue.padEnd(8)} unchanged`);
+    console.log(`= ${cue.padEnd(14)} unchanged`);
   } else {
     const res = await api(`/text-to-speech/${voice}?output_format=mp3_44100_128`, {
       method: 'POST',
@@ -93,7 +98,7 @@ for (const [cue, line] of lines) {
   const dur = seconds(file);
   const over = dur > line.maxSec;
   if (over) tooLong++;
-  console.log(`${over ? '!' : '✓'} ${cue.padEnd(8)} ${dur.toFixed(1)}s / max ${line.maxSec}s  ${line.voice}`);
+  console.log(`${over ? '!' : '✓'} ${cue.padEnd(14)} ${dur.toFixed(1)}s / max ${line.maxSec}s  ${line.voice}`);
 }
 
 if (tooLong) console.log(`\n${tooLong} line(s) run past their window — shorten the text, or regenerate (--only <cue> --force).`);

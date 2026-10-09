@@ -2,9 +2,13 @@
   "intro": "ea8031d84b52d629e020f03f17ca71bf354f89af",
   "locked": "d3dcd900c0e6bc7ae615e44cdb7a5da6881ab46e",
   "check": "730d5ac4a7c58a760d107c3b2931088c05d5118f",
-  "ask": "5b92073a413e39db7ca41760f157a7b8ac0719da",
+  "ask": "d4d2d369666c004b3ebd354f4ea308bcd244625a",
   "answer": "127824a598d8570546adfb57c78e3afab077491b",
   "toLive": "5724d3dfdd035014f3bc8fa4e1740e78cf9dd55f",
   "patreon": "2d7d43c46ecf84da22e3c35cc368ec8c8e14ea8d",
-  "outro": "ffca9a7ed573a4bb51d17712128379325166a3ac"
+  "outro": "ffca9a7ed573a4bb51d17712128379325166a3ac",
+  "clip-n-cut": "f70925b23e6d2bf2316b780d50755b297f2babce",
+  "clip-n-thread": "f7500560c65885333f3715a1279f37934fb3766e",
+  "clip-n-tie": "357ff745206dc5d198a63a1845bf7524850934fa",
+  "clip-n-done": "639fe7cc93417754901f224d069db0a6980dd7f8"
 }
