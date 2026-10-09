@@ -11,7 +11,7 @@ export const CLIP_TAIL = 30;
 const PLAYER = { left: 200, top: 36, w: 1200, h: 675 };
 
 /** Patreon post page with the live clip — or a placeholder until the clip file is set. */
-export function PatreonClip({ live, timestamp }: { live: ExplainerProps['live']; timestamp: string }) {
+export function PatreonClip({ live, timestamp, muteLive = false }: { live: ExplainerProps['live']; timestamp: string; muteLive?: boolean }) {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const parts = layout(live.segments, fps);
@@ -40,7 +40,7 @@ export function PatreonClip({ live, timestamp }: { live: ExplainerProps['live'];
             {live.clipFile ? (
               parts.map(({ seg, start, frames }) => (
                 <Sequence key={seg.id} from={CLIP_LEAD + start} durationInFrames={frames}>
-                  <Piece src={live.clipFile!} seg={seg} fps={fps} />
+                  <Piece src={live.clipFile!} seg={seg} fps={fps} muted={muteLive} />
                   {seg.voice && files.has(`voice/clip-${seg.id}.mp3`) ? <Audio src={staticFile(`voice/clip-${seg.id}.mp3`)} /> : null}
                 </Sequence>
               ))
@@ -135,7 +135,7 @@ function layout(segments: Segment[], fps: number) {
 const DISSOLVE = 6;
 
 /** One piece of the edit, with a short dip-to-dark on each side. */
-function Piece({ src, seg, fps }: { src: string; seg: Segment; fps: number }) {
+function Piece({ src, seg, fps, muted }: { src: string; seg: Segment; fps: number; muted: boolean }) {
   const f = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const o = interpolate(f, [0, DISSOLVE, durationInFrames - DISSOLVE, durationInFrames], [0, 1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
@@ -144,7 +144,7 @@ function Piece({ src, seg, fps }: { src: string; seg: Segment; fps: number }) {
       src={staticFile(src)}
       startFrom={Math.round(seg.from * fps)}
       playbackRate={seg.speed ?? 1}
-      volume={seg.volume ?? 1}
+      volume={muted ? 0 : seg.volume ?? 1}
       style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: o }}
     />
   );

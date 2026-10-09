@@ -48,6 +48,13 @@ export type ExplainerProps = {
   narration: Record<Cue, { maxSec: number; caption: string | null; voice: string; audio: string | null }>;
   /** Optional background music in video/public/, ducked under the voice and the live clip. */
   music: string | null;
+  /**
+   * Audio export for editing elsewhere (e.g. DaVinci): 'voice' = narration only, 'live' = live
+   * clip sound only, 'mix' = everything. With rawVoice, narration comes from voice-raw/<cue>.wav
+   * (unprocessed cuts of the recording) instead of the cleaned files.
+   */
+  stem?: 'mix' | 'voice' | 'live';
+  rawVoice?: boolean;
   /** ElevenLabs voice used by `npm run voice` ("shayka", the owner's cloned voice). */
   voiceId: string;
 };
