@@ -22,4 +22,8 @@ Notes
 - Screens: mirror the real components (Shop.tsx, Ceramics.tsx/PotPreview.tsx, Articles.tsx,
   Knowledge.tsx) with real content from the database where it exists.
 - Sound: record narration per scene (lossless), mix in DaVinci, attach with `soundtrack`.
+- Background music: needed — quiet, calm track under the whole video (also worth adding to the
+  short version). Royalty-free with a commercial license. Duck it under the narration and almost
+  mute it during the live clip. In DaVinci: its own track in the mix. Without a DaVinci mix: the
+  `music` prop already ducks automatically (lower under voice, near-silent in the clip).
 - Formats: 16:9 for the site/YouTube; consider a 9:16 cut per scene for social.
