@@ -79,7 +79,7 @@ export function SiteFlow({ question, sources }: Pick<ExplainerProps, 'question' 
         [d(720), liveBtnCenter[0], liveBtnCenter[1], 2.6],
       ]}
     >
-      <BrowserFrame url="o-yaku.co.il/kb" tab="O-YAKU · מאגר ידע">
+      <BrowserFrame url="o-yaku.com/kb" tab="O-YAKU · מאגר ידע">
         <Header connected={connected} />
 
         {/* page heading */}

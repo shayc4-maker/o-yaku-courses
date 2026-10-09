@@ -49,7 +49,7 @@ export function Outro() {
       >
         הצטרפו כמנויים ב-Patreon
       </div>
-      <div style={{ marginTop: 26, fontSize: 26, color: C.stone400, direction: 'ltr', opacity: fadeIn(f, 50, 14) }}>o-yaku.co.il</div>
+      <div style={{ marginTop: 26, fontSize: 26, color: C.stone400, direction: 'ltr', opacity: fadeIn(f, 50, 14) }}>o-yaku.com</div>
       <div style={{ position: 'absolute', bottom: 0, height: 6, left: 0, width: `${interpolate(f, [0, 180], [0, 100])}%`, background: C.clay500 }} />
     </AbsoluteFill>
   );
