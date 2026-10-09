@@ -50,4 +50,4 @@ npm run render
 ```
 
 Only lines whose text changed are regenerated (`public/voice/manifest.json`); add `--force` or
-`--only intro,ask` to redo specific lines. Default model is `eleven_v3` (`ELEVENLABS_MODEL` to change).
+`--only intro,ask` to redo specific lines. Default model is `eleven_v4` (`ELEVENLABS_MODEL` to change).

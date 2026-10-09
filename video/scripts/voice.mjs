@@ -8,7 +8,7 @@
  *   npm run voice -- --voice <id> --only intro,ask --force
  *
  * Env: ELEVENLABS_API_KEY (unless a network secret injects the xi-api-key header), ELEVENLABS_VOICE_ID (instead of --voice),
- *      ELEVENLABS_MODEL (default eleven_v3, which reads Hebrew).
+ *      ELEVENLABS_MODEL (default eleven_v4 — clearly better than v3 for the Hebrew clone).
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -57,7 +57,7 @@ if (!voice) {
   console.error('Pass --voice <id>, set ELEVENLABS_VOICE_ID, or set voiceId in content.ts. Run with --list-voices to find it.');
   process.exit(1);
 }
-const model = process.env.ELEVENLABS_MODEL || 'eleven_v3';
+const model = process.env.ELEVENLABS_MODEL || 'eleven_v4';
 const only = opt('only')?.split(',');
 
 const lines = Object.entries(defaultProps.narration).filter(([cue]) => !only || only.includes(cue));
