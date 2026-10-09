@@ -11,20 +11,32 @@ import { C, DISPLAY } from '../theme';
  *   432–600 searching → answer with sources, live source highlighted
  *   600–720 click "צפייה בקטע בפטרון" → push-in transition to Patreon
  */
-export const SITE_FLOW_FRAMES = 720;
+/**
+ * Short pauses inserted into the walkthrough so each voice-over line fits its moment:
+ * before the connect click, after connecting, and before the search click. Every frame
+ * number in this scene goes through d(), so the pauses are idle time, not frozen frames.
+ */
+const PAUSES: [at: number, frames: number][] = [
+  [60, 20],
+  [250, 10],
+  [430, 8],
+];
+export const d = (n: number) => n + PAUSES.reduce((sum, [at, len]) => (n >= at ? sum + len : sum), 0);
+
+export const SITE_FLOW_FRAMES = d(720);
 
 export const T = {
-  clickConnect: 115,
-  modalIn: 120,
-  step1Done: 165,
-  step2Done: 205,
-  connected: 245,
-  clickInput: 300,
-  typeStart: 306,
+  clickConnect: d(115),
+  modalIn: d(120),
+  step1Done: d(165),
+  step2Done: d(205),
+  connected: d(245),
+  clickInput: d(300),
+  typeStart: d(306),
   charFrames: 5,
-  clickSearch: 438,
-  resultsAt: 478,
-  clickLive: 668,
+  clickSearch: d(438),
+  resultsAt: d(478),
+  clickLive: d(668),
 };
 
 // Layout, in viewport coords (1600 × 888).
@@ -53,18 +65,18 @@ export function SiteFlow({ question, sources }: Pick<ExplainerProps, 'question' 
     <Camera
       keys={[
         [0, CAM_HOME.x, CAM_HOME.y, 1],
-        [60, CAM_HOME.x, CAM_HOME.y, 1],
-        [105, 800, 500, 1.18],
-        [210, 800, 470, 1.18],
-        [255, CAM_HOME.x, CAM_HOME.y, 1],
-        [285, CAM_HOME.x, CAM_HOME.y, 1],
-        [315, 800, BOX.top + 40, 1.42],
+        [d(60), CAM_HOME.x, CAM_HOME.y, 1],
+        [d(105), 800, 500, 1.18],
+        [d(210), 800, 470, 1.18],
+        [d(255), CAM_HOME.x, CAM_HOME.y, 1],
+        [d(285), CAM_HOME.x, CAM_HOME.y, 1],
+        [d(315), 800, BOX.top + 40, 1.42],
         [typeEnd + 30, 760, BOX.top + 40, 1.42],
         [T.resultsAt, CAM_HOME.x, CAM_HOME.y + 40, 1],
-        [575, CAM_HOME.x, CAM_HOME.y + 40, 1],
-        [615, 640, ROW_TOP + 70 + liveRow, 1.38],
+        [d(575), CAM_HOME.x, CAM_HOME.y + 40, 1],
+        [d(615), 640, ROW_TOP + 70 + liveRow, 1.38],
         [T.clickLive + 4, 600, ROW_TOP + 70 + liveRow, 1.42],
-        [720, liveBtnCenter[0], liveBtnCenter[1], 2.6],
+        [d(720), liveBtnCenter[0], liveBtnCenter[1], 2.6],
       ]}
     >
       <BrowserFrame url="o-yaku.co.il/kb" tab="O-YAKU · מאגר ידע">
@@ -133,13 +145,13 @@ export function SiteFlow({ question, sources }: Pick<ExplainerProps, 'question' 
           clicks={[T.clickConnect, T.clickInput, T.clickSearch, T.clickLive]}
           path={[
             [0, 1250, 760],
-            [65, 1250, 760],
+            [d(65), 1250, 760],
             [T.clickConnect - 6, CONNECT_BTN.cx + 40, CONNECT_BTN.cy + 6],
             [T.connected + 10, CONNECT_BTN.cx + 40, CONNECT_BTN.cy + 6],
             [T.clickInput - 4, 980, BOX.top + 34],
             [typeEnd + 6, 980, BOX.top + 34],
             [T.clickSearch - 6, searchBtnCenter[0], searchBtnCenter[1] + 4],
-            [600, searchBtnCenter[0], searchBtnCenter[1] + 4],
+            [d(600), searchBtnCenter[0], searchBtnCenter[1] + 4],
             [T.clickLive - 6, liveBtnCenter[0] + 30, liveBtnCenter[1] + 4],
           ]}
         />
@@ -267,7 +279,7 @@ function Results({ f, sources }: { f: number; sources: ExplainerProps['sources']
         const start = T.resultsAt + 6 + i * 12;
         const o = fadeIn(f, start, 10);
         const top = ROW_TOP + i * ROW_H;
-        const highlight = s.live ? track(f, [[575, 0], [600, 1]]) : 0;
+        const highlight = s.live ? track(f, [[d(575), 0], [d(600), 1]]) : 0;
         return (
           <div
             key={s.title}

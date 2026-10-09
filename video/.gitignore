@@ -2,3 +2,4 @@ node_modules/
 out/
 # raw lesson footage — patron-only content, kept out of git
 public/live-source.mp4
+public/live-norm.mp4

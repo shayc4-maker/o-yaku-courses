@@ -43,6 +43,7 @@ export type ExplainerProps = {
    * `voice` is what's spoken, `audio` is the file in video/public/voice/. When `audio` is null,
    * voice/<cue>.mp3 is used if it exists (that's what `npm run voice` writes), else silence.
    * `maxSec` is how long the cue's window is — a longer recording runs into the next line.
+   * The rec-*.mp3 files are the owner's own recordings (cut and loudness-matched to the live clip).
    */
   narration: Record<Cue, { maxSec: number; caption: string | null; voice: string; audio: string | null }>;
   /** Optional background music in video/public/, ducked under the voice and the live clip. */
@@ -80,7 +81,7 @@ export const defaultProps: ExplainerProps = {
   live: {
     postTitle: 'שיעור הרכבות סתיו בערערים',
     postUrl: 'patreon.com/u36592485/posts/shy-vr-hrkbvt-b-112241338',
-    clipFile: 'live-source.mp4',
+    clipFile: 'live-norm.mp4', // live-source.mp4 with loudness-normalized audio (-16 LUFS)
     fileStart: '20:34',
     segments: [
       { id: 'angle', from: 29.2, to: 36.6 },
@@ -98,15 +99,15 @@ export const defaultProps: ExplainerProps = {
     ],
   },
   narration: {
-    intro: { maxSec: 4.3, caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: null },
-    locked: { maxSec: 3.3, caption: 'מנוע השאלות פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות פתוח למנויי הפטרון שלנו.', audio: null },
-    check: { maxSec: 5.3, caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: null },
-    ask: { maxSec: 5.6, caption: 'עכשיו אפשר לשאול כל שאלה', voice: 'שואלים כל שאלה. למשל: איך מרכיבים עלווה על ערער?', audio: null },
-    answer: { maxSec: 5, caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: null },
-    toLive: { maxSec: 3.9, caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: null },
+    intro: { maxSec: 4.3, caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: 'rec-intro.mp3' },
+    locked: { maxSec: 3.7, caption: 'מנוע השאלות החדש, פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות החדש פתוח למנויי הפטרון שלנו.', audio: 'rec-locked.mp3' },
+    check: { maxSec: 4.7, caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: 'rec-check.mp3' },
+    ask: { maxSec: 6.8, caption: 'שואלים כל שאלה בתחום הבונסאי', voice: 'שואלים כל שאלה בתחום הבונסאי. למשל: איך מרכיבים עלווה על ערער?', audio: 'rec-ask.mp3' },
+    answer: { maxSec: 5.1, caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: 'rec-answer.mp3' },
+    toLive: { maxSec: 3.9, caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: 'rec-toLive.mp3' },
     // the live clip starts right after this line
-    patreon: { maxSec: 3, caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: null },
-    outro: { maxSec: 5.5, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו בפטרון.', audio: null },
+    patreon: { maxSec: 3.1, caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: 'rec-patreon.mp3' },
+    outro: { maxSec: 5.6, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו עכשיו.', audio: 'rec-outro.mp3' },
   },
   music: null,
   voiceId: 'kfiqnWKpE9m8HkyjWdgl',

@@ -4,7 +4,7 @@ import { Caption } from './components';
 import { clipSeconds, type Cue, type ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
 import { CLIP_LEAD, CLIP_TAIL, PatreonClip } from './scenes/PatreonClip';
-import { SITE_FLOW_FRAMES, SiteFlow, T } from './scenes/SiteFlow';
+import { d, SITE_FLOW_FRAMES, SiteFlow, T } from './scenes/SiteFlow';
 import { BODY, C, FPS } from './theme';
 
 const XFADE = 15;
@@ -44,9 +44,9 @@ export function Explainer(props: ExplainerProps) {
     ['intro', 0, s + 25],
     ['locked', s + 25, s + T.clickConnect - 5],
     ['check', s + T.clickConnect, s + T.connected + 20],
-    ['ask', s + T.connected + 30, s + T.clickSearch],
-    ['answer', s + T.clickSearch + 6, s + 590],
-    ['toLive', s + 596, s + SITE_FLOW_FRAMES - 10],
+    ['ask', s + T.connected + 12, s + T.clickSearch],
+    ['answer', s + T.clickSearch + 6, s + d(590)],
+    ['toLive', s + d(596), s + SITE_FLOW_FRAMES - 10],
     ['patreon', p + 8, clipFrom],
     ['outro', tl.outro + 10, tl.total],
   ];
