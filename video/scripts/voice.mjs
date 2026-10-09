@@ -4,7 +4,7 @@
  * Writes public/voice/<cue>.mp3, which the video picks up automatically.
  *
  *   npm run voice -- --list-voices          list the voices on the account (find your clone's id)
- *   npm run voice -- --voice <id>           generate every line that changed since last run
+ *   npm run voice                           generate every line that changed (voice: voiceId in content.ts)
  *   npm run voice -- --voice <id> --only intro,ask --force
  *
  * Env: ELEVENLABS_API_KEY (unless a network secret injects the xi-api-key header), ELEVENLABS_VOICE_ID (instead of --voice),
@@ -51,15 +51,15 @@ if (flag('list-voices')) {
   process.exit(0);
 }
 
-const voice = opt('voice') || process.env.ELEVENLABS_VOICE_ID;
+const { defaultProps } = await import(join(ROOT, 'src', 'content.ts'));
+const voice = opt('voice') || process.env.ELEVENLABS_VOICE_ID || defaultProps.voiceId;
 if (!voice) {
-  console.error('Pass --voice <id> or set ELEVENLABS_VOICE_ID. Run with --list-voices to find it.');
+  console.error('Pass --voice <id>, set ELEVENLABS_VOICE_ID, or set voiceId in content.ts. Run with --list-voices to find it.');
   process.exit(1);
 }
 const model = process.env.ELEVENLABS_MODEL || 'eleven_v3';
 const only = opt('only')?.split(',');
 
-const { defaultProps } = await import(join(ROOT, 'src', 'content.ts'));
 const lines = Object.entries(defaultProps.narration).filter(([cue]) => !only || only.includes(cue));
 
 mkdirSync(OUT, { recursive: true });

@@ -41,6 +41,8 @@ export type ExplainerProps = {
   narration: Record<Cue, { maxSec: number; caption: string | null; voice: string; audio: string | null }>;
   /** Optional background music in video/public/, ducked under the voice and the live clip. */
   music: string | null;
+  /** ElevenLabs voice used by `npm run voice` ("shayka", the owner's cloned voice). */
+  voiceId: string;
 };
 
 export type Cue = 'intro' | 'locked' | 'check' | 'ask' | 'answer' | 'toLive' | 'patreon' | 'outro';
@@ -92,4 +94,5 @@ export const defaultProps: ExplainerProps = {
     outro: { maxSec: 5.5, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו בפטרון.', audio: null },
   },
   music: null,
+  voiceId: 'kfiqnWKpE9m8HkyjWdgl',
 };
