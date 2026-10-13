@@ -1,32 +1,62 @@
-curves 486 by layer {'01': 249, '03': 9, '04': 13, '05': 6, '06': 19, '07': 6, 'K3': 184}
-dangling endpoints (tol 0.020): 9
-   ('04', 'HOG_START_443', 59.66, -0.41, 'nearest 0.088 mm: KEEL_HOG_INTERFACE_STRAIGHT_445')
-   ('05', 'KEEL_HOG_INTERFACE_STRAIGHT_445', 59.66, -0.5, 'nearest 0.088 mm: HOG_START_443')
-   ('07', 'HEAD_STEM_DIAGONAL_472', 559.87, 63.56, 'nearest 0.354 mm: ?')
-   ('03', 'STERN_KNEE_OUTLINE_418', 9.64, 60.6, 'nearest 0.030 mm: STERN_KNEE_OUTLINE_419')
-   ('06', 'STEM_MIDDLE_SEAM_449', 561.96, 113.81, 'nearest 0.169 mm: ?')
-   ('01', '?', 563.37, 82.4, 'nearest 0.930 mm: ?')
-   ('01', '?', 603.47, 83.27, 'nearest 0.045 mm: BODY_OUTER_V2_214')
-   ('01', '?', 589.83, 68.06, 'nearest 1.813 mm: BODY_OUTER_V2_215')
-   ('01', '?', 589.89, 68.05, 'nearest 1.851 mm: BODY_OUTER_V2_215')
-faces 90 dangles 612 cut edges 299 invalid 0
-face x[-30.4,0.1] z[-9.6,134.1] area 1162.5  ~?
-face x[-25.5,-18.8] z[-9.1,56.9] area 110.4  ~?
-face x[-25.4,-10.9] z[-9.3,74.2] area 459.2  ~?
-face x[-16.4,12.5] z[-0.8,90.5] area 853.7  ~?, BODY_OUTER_V2, HOG_TOP_STRAIGHT, INNER_POST, INNER_POST_LOWER, POST_KEEL_TENON
-face x[-4.6,51.1] z[34.0,75.8] area 279.4  ~?, KEELSON, STERN_KNEE_OUTLINE
-face x[-0.9,562.0] z[-7.5,113.6] area 3922.8  ~?, AFT_DEADWOOD_SPLIT, APRON_UPPER, BODY_OUTER_V2, FALSE_KEEL_TOP_STRAIGHT, GRIPE_KEEL_INTERFACE, HOG_TOP_STRAIGHT, INNER_POST, KEELSON, KEEL_DIVISION
-face x[0.6,588.3] z[-9.4,69.7] area 1001.7  ~?, BODY_OUTER_V2, FALSE_KEEL_TOP_STRAIGHT, KEEL_FALSEKEEL_FRONT
-face x[5.2,16.1] z[9.6,30.7] area 98.9  ~INNER_POST_LOWER, POST_SCARF
-face x[10.4,59.7] z[0.7,11.4] area 332.5  ~?, AFT_DEADWOOD_SPLIT, HOG_TOP_STRAIGHT, POST_SCARF
-face x[41.2,526.7] z[6.1,38.6] area 2315.1  ~?, KEELSON
-face x[168.3,333.6] z[-7.7,-0.5] area 1177.2  ~FALSE_KEEL_TOP_STRAIGHT, KEEL_DIVISION_A, KEEL_DIVISION_B, KEEL_HOG_INTERFACE_STRAIGHT
-face x[333.6,504.7] z[-7.8,4.5] area 1336.3  ~FALSE_KEEL_TOP_STRAIGHT, GRIPE_FORWARD_SCARF, GRIPE_KEEL_INTERFACE, GRIPE_KEEL_SCARF, GRIPE_SCARF_CURVE, KEEL_DIVISION_B, KEEL_FALSEKEEL_FRONT, KEEL_H
-face x[479.6,547.3] z[-0.7,40.3] area 377.7  ~APRON_INNER, APRON_LOWER, APRON_UPPER, GRIPE_KEEL_SCARF, GRIPE_SCARF_CURVE, STEM_LOWER_HOOK
-face x[500.7,540.5] z[-7.7,24.9] area 525.6  ~?, APRON_HOOK, APRON_HOOK_BACK, APRON_HOOK_BASE, APRON_LOWER, GRIPE_FORWARD_SCARF
-face x[531.3,585.7] z[21.9,68.4] area 349.7  ~?, APRON_HOOK, APRON_HOOK_BACK, APRON_HOOK_BASE, APRON_INNER
-face x[539.8,568.0] z[37.0,116.6] area 398.8  ~?, BODY_OUTER_V2, STEM_LOWER_HOOK, STEM_MIDDLE_SEAM
-face x[552.0,608.2] z[47.4,106.1] area 676.6  ~?, HEAD_INNER_CURVE, HEAD_UPPER_REAR_SEAM
-face x[563.5,593.3] z[78.3,105.0] area 115.2  ~?, HEAD_INNER_CURVE, HEAD_UPPER_REAR_SEAM
-face x[569.4,608.1] z[63.4,95.7] area 290.2  ~?, BODY_OUTER_V2
-face x[573.3,580.1] z[79.8,83.1] area 8.8  ~?, HEAD_UPPER_REAR_SEAM
+gap 0.088 mm  KEEL_HOG_INTERFACE_STRAIGHT_445    (59.66,-0.50) -> HOG_START_443
+gap 0.169 mm  STEM_MIDDLE_SEAM_449               (561.96,113.81) -> BODY
+gap 0.930 mm  BODY                               (563.37,82.40) -> BODY
+gap 1.813 mm  BODY                               (589.83,68.06) -> BODY_OUTER_V2_215
+gap 0.088 mm  HOG_START_443                      (59.66,-0.41) -> KEEL_HOG_INTERFACE_STRAIGHT_445
+gap 0.354 mm  HEAD_STEM_DIAGONAL_472             (559.87,63.56) -> BODY
+gap 0.030 mm  STERN_KNEE_OUTLINE_418             (9.64,60.60) -> STERN_KNEE_OUTLINE_419
+gap 0.045 mm  BODY                               (603.47,83.27) -> BODY_OUTER_V2_214
+gap 1.851 mm  BODY                               (589.89,68.05) -> BODY_OUTER_V2_215
+divider DEADWOOD_RISING|HOG   x=59.47  z 4.14..6.45
+divider STEM|APRON-STRIP      (539.79,37.74)->(539.81,47.83)
+faces (area>3): 24
+  F00 x[-30.4,0.2] z[-9.6,134.1] area 1162.8
+  F01 x[-25.5,-18.8] z[-9.1,57.2] area 111.2
+  F02 x[-24.0,-10.9] z[-9.3,74.2] area 459.1
+  F03 x[-16.4,12.5] z[-0.8,90.5] area 848.5
+  F04 x[-4.6,51.1] z[34.0,75.8] area 279.4
+  F05 x[-0.9,59.5] z[4.1,53.1] area 507.5
+  F06 x[-0.8,168.3] z[-7.5,0.9] area 1239.1
+  F07 x[0.6,588.3] z[-9.4,69.7] area 1001.7
+  F08 x[5.2,16.1] z[9.6,30.7] area 98.9
+  F09 x[10.4,59.7] z[0.7,11.4] area 332.5
+  F10 x[41.2,526.7] z[6.1,38.6] area 2367.3
+  F11 x[59.5,539.8] z[-0.5,47.8] area 1831.6
+  F12 x[168.3,333.6] z[-7.7,-0.5] area 1177.2
+  F13 x[333.6,504.7] z[-7.8,4.5] area 1336.3
+  F14 x[479.6,547.3] z[-0.7,40.3] area 377.7
+  F15 x[500.7,540.5] z[-7.7,24.9] area 525.6
+  F16 x[531.3,585.7] z[21.9,68.4] area 349.7
+  F17 x[539.8,562.0] z[37.7,113.6] area 357.4
+  F18 x[539.8,568.0] z[37.0,116.6] area 398.7
+  F19 x[552.0,608.2] z[47.4,106.1] area 544.4
+  F20 x[559.5,585.6] z[63.6,85.4] area 132.2
+  F21 x[563.5,593.3] z[78.3,105.0] area 115.2
+  F22 x[569.4,608.1] z[63.4,95.7] area 290.2
+  F23 x[573.2,580.6] z[79.7,83.1] area 9.9
+
+part                                    area  covered   max gap closed pieces
+REAR_OUTLINE_C?                       1162.8   100.0%    0.0426    YES     18
+REAR_OUTLINE_A?                        111.2   100.0%    0.0406    YES      4
+REAR_OUTLINE_B?                        459.1   100.0%    0.0073    YES      4
+STERNPOST                              848.5   100.0%    0.0406    YES     22
+STERN_KNEE                             279.4   100.0%    0.0400    YES     11
+DEADWOOD_RISING                        507.5   100.0%    0.0098    YES     22
+KEEL_1                                1239.1   100.0%    0.0401    YES     11
+FALSE_KEEL_ALL_AND_OUTER_STEM_STRIP?    1001.7   100.0%    0.0099    YES     12
+INNER_POST_HEEL                         98.9   100.0%    0.0083    YES      4
+DEADWOOD_AFT_LOWER                     332.5   100.0%    0.0403    YES      7
+KEELSON                               2367.3   100.0%    0.0701    YES    179
+HOG_AND_FORE_STRIP_MERGED?            1831.6   100.0%    0.0097    YES    184
+KEEL_2                                1177.2   100.0%    0.0405    YES      4
+KEEL_3                                1336.3   100.0%    0.0401    YES      9
+APRON_MAIN?                            377.7   100.0%    0.0094    YES     11
+GRIPE_FOREFOOT?                        525.6   100.0%    0.0098    YES      8
+APRON_INNER?                           349.7   100.0%    0.0457    YES      8
+STEM_AFT?                              357.4   100.0%    0.0306    YES      9
+STEM_FORE?                             398.7    99.9%    0.0454    YES     14
+HEAD_BODY?                             544.4   100.0%    0.0076    YES      6
+HEAD_TRIANGLE?                         132.2   100.0%    0.0433    YES      9
+KNEE_OF_HEAD_UPPER?                    115.2   100.0%    0.0568    YES      4
+KNEE_OF_HEAD_LOWER?                    290.2   100.0%    0.0428    YES      7
+HEAD_SLIVER?                             9.9   100.0%    0.0401    YES      4
