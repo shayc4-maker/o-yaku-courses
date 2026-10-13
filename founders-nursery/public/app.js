@@ -1,5 +1,6 @@
 import { PRODUCTS, PRODUCTS_BY_ID, MAX_QTY_PER_LINE, formatShekels, describeQuantity, parseQuantity } from "./catalog.js";
 import { createCartStore, customerStore, attemptStore } from "./cart-store.js";
+import { TERMS_VERSION, REDEMPTION } from "./purchase-policy.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const el = (tag, attrs = {}, ...children) => {
@@ -99,6 +100,7 @@ function renderProducts() {
       return el("li", { class: "product-card" },
         el("h3", { text: p.name }),
         p.details.length ? el("ul", { class: "product-details" }, p.details.map((d) => el("li", { text: d }))) : null,
+        el("p", { class: "small muted", text: REDEMPTION[p.id] }),
         el("p", { class: "product-price" },
           el("span", { class: "price num", text: formatShekels(p.priceAgorot) }),
           el("span", { class: "price-suffix", text: `${p.priceSuffix} · כולל מע״מ` }),
@@ -237,6 +239,10 @@ function validateForm() {
       firstInvalid ??= f.input;
     }
   }
+  const terms = $("#c-terms");
+  $("#c-terms-error").hidden = terms.checked;
+  terms.setAttribute("aria-invalid", String(!terms.checked));
+  if (!terms.checked) firstInvalid ??= terms;
   firstInvalid?.focus();
   return !firstInvalid;
 }
@@ -258,6 +264,7 @@ function showFormError(text) {
 const ERRORS = {
   payment_unavailable: "לא הצלחנו לפתוח את דף התשלום. לא בוצע חיוב. אפשר לנסות שוב בעוד רגע.",
   invalid_customer: "יש לבדוק את הפרטים שהוזנו.",
+  terms_required: "יש לאשר את תנאי הרכישה המעודכנים. רעננו את הדף ונסו שוב.",
   empty_cart: "הסל ריק.",
   invalid_quantity: "אחת הכמויות בסל אינה תקינה.",
   unknown_product: "אחד הפריטים בסל אינו זמין. הסרנו אותו — יש לבדוק את הסל ולנסות שוב.",
@@ -296,7 +303,7 @@ async function checkout(e) {
       const key = attemptStore.keyFor(signature);
       let r;
       try {
-        r = await postCheckout({ idempotencyKey: key, items, customer });
+        r = await postCheckout({ idempotencyKey: key, items, customer, termsVersion: TERMS_VERSION, termsAccepted: true });
       } catch {
         showFormError(ERRORS.network);
         return;

@@ -3,12 +3,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { TERMS_VERSION } from "../public/purchase-policy.js";
 
 const BASE = process.env.BASE || "http://127.0.0.1:8787";
 const customer = { name: "בדיקה אוטומטית", phone: "050-1234567", email: "test@example.com" };
 const key = () => "k" + crypto.randomUUID().replace(/-/g, "");
 
 async function post(path, body, opts = {}) {
+  if (path === "/api/checkout" && !opts.skipTerms) body = { termsVersion: TERMS_VERSION, termsAccepted: true, ...body };
   const res = await fetch(BASE + path, {
     method: "POST",
     headers: { "Content-Type": opts.form ? "application/x-www-form-urlencoded" : "application/json" },
@@ -21,6 +23,27 @@ async function post(path, body, opts = {}) {
   return { status: res.status, data, text, location: res.headers.get("location") };
 }
 const getOrder = async (id, t) => (await fetch(`${BASE}/api/orders/${id}?t=${t}`)).json();
+
+test("checkout requires current terms acceptance, including direct API calls", async () => {
+  const body = { idempotencyKey: key(), customer, items: [{ id: "tshirt", qty: 1 }] };
+  for (const consent of [{}, { termsAccepted: false, termsVersion: TERMS_VERSION }, { termsAccepted: true, termsVersion: "old" }]) {
+    const r = await post("/api/checkout", { ...body, ...consent }, { skipTerms: true });
+    assert.equal(r.status, 400);
+    assert.equal(r.data.error, "terms_required");
+  }
+});
+
+test("voucher exists only after confirmed payment and stores purchase terms", async () => {
+  const r = await post("/api/checkout", { idempotencyKey: key(), customer, items: [{ id: "ceramics-group", qty: 2 }] });
+  assert.equal((await getOrder(r.data.orderId, r.data.token)).voucher, null);
+  await post("/pay/mock", { order: r.data.orderId, t: r.data.token, outcome: "success" }, { form: true });
+  const paid = await getOrder(r.data.orderId, r.data.token);
+  assert.equal(paid.voucher.example, true);
+  assert.equal(paid.voucher.termsVersion, TERMS_VERSION);
+  assert.equal(paid.voucher.number, paid.id);
+  assert.match(paid.items[0].redemption, /ינואר 2027/);
+  assert.equal(new Date(paid.voucher.expiresAt).getUTCFullYear(), new Date(paid.paidAt).getUTCFullYear() + 2);
+});
 
 function sql(query) {
   return JSON.parse(execFileSync("npx", ["wrangler", "d1", "execute", "oyaku-founders-orders", "--local", "--json", "--command", query], { encoding: "utf8" }))[0].results;

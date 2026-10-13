@@ -6,6 +6,7 @@ test("catalog prices match the brief (agorot, VAT included)", () => {
   const expected = {
     tshirt: 12000, "ceramics-group": 30000, "ceramics-private": 120000,
     "custom-pot": 120000, "akadama-10": 140000, "nursery-sqm-year": 150000,
+    "bonsai-private-lesson": 70000, "bonsai-wiring-workshop": 30000, "pine-grafting-workshop": 45000,
   };
   assert.deepEqual(Object.fromEntries(PRODUCTS.map((p) => [p.id, p.priceAgorot])), expected);
 });

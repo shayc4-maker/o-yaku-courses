@@ -42,6 +42,49 @@ function renderSummary(order) {
   $("#summary").hidden = false;
 }
 
+const LINE_STATE = { not_redeemed: "טרם מומש", partial: "מומש חלקית", full: "מומש במלואו", expired: "פג תוקף", cancelled: "בוטל" };
+const VOUCHER_STATE = {
+  partial: "השובר מומש חלקית. היתרות מעודכנות לפי רישום העסק.",
+  full: "השובר מומש במלואו. אין יתרה למימוש.",
+  expired: "תוקף השובר פג. אין יתרה למימוש.",
+  cancelled: "השובר בוטל ואינו ניתן למימוש.",
+};
+
+function renderVoucher(order) {
+  const voucher = order.voucher;
+  if (!voucher) return;
+  const date = (v) => new Date(v).toLocaleDateString("he-IL", { timeZone: "Asia/Jerusalem" });
+  const pairs = [["מספר שובר", voucher.number], ["שם הרוכש", voucher.holder],
+    ["תאריך רכישה", date(voucher.issuedAt)], ["בתוקף עד", date(voucher.expiresAt)]];
+  $("#voucher-meta").replaceChildren(...pairs.flatMap(([label, value]) => {
+    const dt = document.createElement("dt"); dt.textContent = label;
+    const dd = document.createElement("dd"); dd.textContent = value;
+    return [dt, dd];
+  }));
+  $("#voucher-items").replaceChildren(...order.items.map((item) => {
+    const li = document.createElement("li");
+    const title = document.createElement("strong"); title.textContent = `${item.name} · ${item.quantityLabel}`;
+    const p = document.createElement("p"); p.textContent = item.redemption || "לתיאום המימוש יש לפנות לעסק.";
+    li.append(title, p);
+    if (item.redeemUnits != null) {
+      // Current balance as recorded by the business. No internal notes are ever sent here.
+      const bal = document.createElement("p");
+      bal.className = "voucher-balance";
+      bal.textContent = `יתרה למימוש: ${item.remainingUnits} מתוך ${item.redeemUnits} ${item.redeemUnitLabel} · ${LINE_STATE[item.state] || ""}`;
+      li.append(bal);
+    }
+    return li;
+  }));
+  const stateNote = $("#voucher-state");
+  const stateText = VOUCHER_STATE[voucher.state];
+  stateNote.textContent = stateText || "";
+  stateNote.hidden = !stateText;
+  $("#voucher-example").hidden = !voucher.example;
+  $("#print-voucher").onclick = () => window.print();
+  $("#voucher").hidden = false;
+  document.title = `${voucher.example ? "שובר לדוגמה" : "שובר"} ${voucher.number} · אויאקו`;
+}
+
 async function fetchOrder() {
   const res = await fetch(`/api/orders/${encodeURIComponent(orderId)}?t=${encodeURIComponent(token)}`, { cache: "no-store" });
   if (!res.ok) throw new Error(String(res.status));
@@ -74,6 +117,7 @@ async function main() {
     const test = order.paymentMode === "mock";
 
     if (order.status === "paid") {
+      renderVoucher(order);
       createCartStore().clear();
       attemptStore.reset();
       setStatus("success",

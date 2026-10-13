@@ -15,13 +15,18 @@ const PERSIST = ".wrangler/state-morning-test";
 const forms = [];      // bodies Morning received
 const documents = {};  // documentId → document returned by GET /documents/:id
 let tokenCalls = 0;
+const receipts = (id, amount, orderId, extra = {}) => ({ id, type: 320, status: 0, amount, currency: "ILS",
+  remarks: `הזמנה ${orderId}`, payment: [{ type: 3, price: amount, currency: "ILS", transactionId: `tx-${id}` }], ...extra });
 
 const fake = http.createServer((req, res) => {
   let body = "";
   req.on("data", (c) => (body += c));
   req.on("end", () => {
     const send = (code, obj) => { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(obj)); };
-    if (req.method === "POST" && req.url === "/account/token") { tokenCalls++; return send(200, { token: "fake-jwt" }); }
+    if (req.method === "POST" && req.url === "/idp/v1/oauth/token") {
+      assert.deepEqual(JSON.parse(body), { grant_type: "client_credentials", client_id: "id", client_secret: "secret" });
+      tokenCalls++; return send(200, { accessToken: "fake-jwt", expiresAt: Math.floor(Date.now() / 1000) + 3600 });
+    }
     if (req.headers.authorization !== "Bearer fake-jwt") return send(401, { errorCode: 401 });
     if (req.method === "POST" && req.url === "/payments/form") {
       forms.push(JSON.parse(body));
@@ -38,22 +43,23 @@ before(async () => {
   await new Promise((ok) => fake.listen(FAKE_PORT, "127.0.0.1", ok));
   execFileSync("npx", ["wrangler", "d1", "migrations", "apply", "oyaku-founders-orders", "--local", "--persist-to", PERSIST], { stdio: "ignore" });
   const vars = {
-    PAYMENT_MODE: "morning_sandbox", MORNING_API_BASE: `http://127.0.0.1:${FAKE_PORT}`, MORNING_AUTH_FLOW: "legacy",
+    PAYMENT_MODE: "morning_sandbox", MORNING_API_BASE: `http://127.0.0.1:${FAKE_PORT}`, MORNING_AUTH_FLOW: "oauth", MORNING_AUTH_BASE: `http://127.0.0.1:${FAKE_PORT}`,
     NOTIFY_SIGNING_SECRET: SECRET, MORNING_API_KEY_ID: "id", MORNING_API_KEY_SECRET: "secret",
   };
   worker = spawn("npx", ["wrangler", "dev", "--port", String(WORKER_PORT), "--ip", "127.0.0.1", "--persist-to", PERSIST,
-    ...Object.entries(vars).flatMap(([k, v]) => ["--var", `${k}:${v}`])], { stdio: "ignore", env: { ...process.env, NO_PROXY: "127.0.0.1,localhost" } });
+    ...Object.entries(vars).flatMap(([k, v]) => ["--var", `${k}:${v}`])], { stdio: "ignore", detached: true, env: { ...process.env, NO_PROXY: "127.0.0.1,localhost" } });
   for (let i = 0; i < 60; i++) {
     try { if ((await fetch(BASE + "/api/config")).ok) return; } catch {}
     await new Promise((ok) => setTimeout(ok, 500));
   }
   throw new Error("worker did not start");
 });
-after(() => { worker?.kill(); fake.close(); });
+// Kill the whole process group: killing only npx leaves wrangler/workerd holding the port.
+after(() => { try { process.kill(-worker.pid, "SIGTERM"); } catch {} fake.close(); });
 
 const customer = { name: "בדיקת מורנינג", phone: "050-1112222", email: "m@example.com" };
 const checkout = async (items) => (await fetch(BASE + "/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ idempotencyKey: "m" + crypto.randomUUID().replace(/-/g, ""), customer, items }) })).json();
+  body: JSON.stringify({ idempotencyKey: "m" + crypto.randomUUID().replace(/-/g, ""), customer, items, termsAccepted: true, termsVersion: "2026-10-07-v1" }) })).json();
 const sig = (id) => createHmac("sha256", SECRET).update(id).digest("hex");
 const notify = (id, s, payload) => fetch(`${BASE}/api/morning/notify?order=${id}&sig=${s}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
 const status = async (o) => (await (await fetch(`${BASE}/api/orders/${o.orderId}?t=${o.token}`)).json()).status;
@@ -64,6 +70,8 @@ test("payment form request is built from the server-side catalog", async () => {
   const f = forms.at(-1);
   assert.equal(f.amount, 1740);
   assert.equal(f.currency, "ILS");
+  assert.equal(f.group, 100);
+  assert.ok(f.income.every((row) => row.vatType === 1));
   assert.deepEqual(f.income.map((i) => [i.quantity, i.price]), [[2, 120], [1, 1500]]);
   assert.equal(f.custom, o.orderId);
   assert.match(f.successUrl, /\/pay\/return\?order=.*result=success/);
@@ -80,7 +88,7 @@ test("notify with a bad signature is refused and changes nothing", async () => {
 
 test("notify → document read back → paid; redelivery is a no-op", async () => {
   const o = await checkout([{ id: "custom-pot", qty: 1 }]);
-  documents["doc-ok-000001"] = { id: "doc-ok-000001", amount: 1200, currency: "ILS", remarks: `הזמנה ${o.orderId}` };
+  documents["doc-ok-000001"] = receipts("doc-ok-000001", 1200, o.orderId);
   const r1 = await notify(o.orderId, sig(o.orderId), { documentId: "doc-ok-000001" });
   assert.equal(r1.status, 200);
   assert.equal(await status(o), "paid");
@@ -91,7 +99,7 @@ test("notify → document read back → paid; redelivery is a no-op", async () =
 
 test("notify whose document amount differs → needs_review, not paid", async () => {
   const o = await checkout([{ id: "akadama-10", qty: 2 }]);
-  documents["doc-low-00001"] = { id: "doc-low-00001", amount: 1400, currency: "ILS", remarks: `הזמנה ${o.orderId}` };
+  documents["doc-low-00001"] = receipts("doc-low-00001", 1400, o.orderId);
   await notify(o.orderId, sig(o.orderId), { documentId: "doc-low-00001" });
   assert.equal(await status(o), "needs_review");
 });
@@ -99,7 +107,7 @@ test("notify whose document amount differs → needs_review, not paid", async ()
 test("notify pointing at another order's document → needs_review", async () => {
   const a = await checkout([{ id: "tshirt", qty: 1 }]);
   const b = await checkout([{ id: "tshirt", qty: 1 }]);
-  documents["doc-a-0000001"] = { id: "doc-a-0000001", amount: 120, currency: "ILS", remarks: `הזמנה ${a.orderId}` };
+  documents["doc-a-0000001"] = receipts("doc-a-0000001", 120, a.orderId);
   await notify(b.orderId, sig(b.orderId), { documentId: "doc-a-0000001" });
   assert.equal(await status(b), "needs_review");
 });
@@ -108,6 +116,30 @@ test("notify without a usable document id → needs_review (never paid on the pa
   const o = await checkout([{ id: "tshirt", qty: 1 }]);
   await notify(o.orderId, sig(o.orderId), { status: "success", amount: 120 });
   assert.equal(await status(o), "needs_review");
+});
+
+test("unpaid invoices, cancelled receipts and incomplete payments never issue vouchers", async () => {
+  const cases = [{ type: 305 }, { status: 4 }, { status: 2 }, { payment: [] },
+    { payment: [{ type: 3, price: 10, currency: "ILS" }] }, { currency: "USD" }];
+  for (const [index, extra] of cases.entries()) {
+    const o = await checkout([{ id: "tshirt", qty: 1 }]);
+    const id = `doc-invalid-${index}`;
+    documents[id] = receipts(id, 120, o.orderId, extra);
+    await notify(o.orderId, sig(o.orderId), { documentId: id });
+    assert.equal(await status(o), "needs_review");
+    const order = await (await fetch(`${BASE}/api/orders/${o.orderId}?t=${o.token}`)).json();
+    assert.equal(order.voucher, null);
+  }
+});
+
+test("a delayed document can be verified by an identical notification retry", async () => {
+  const o = await checkout([{ id: "tshirt", qty: 1 }]);
+  const payload = { documentId: "doc-delayed-001" };
+  assert.equal((await notify(o.orderId, sig(o.orderId), payload)).status, 503);
+  assert.equal(await status(o), "awaiting_payment");
+  documents[payload.documentId] = receipts(payload.documentId, 120, o.orderId);
+  assert.equal((await notify(o.orderId, sig(o.orderId), payload)).status, 200);
+  assert.equal(await status(o), "paid");
 });
 
 test("token is reused across requests", () => {

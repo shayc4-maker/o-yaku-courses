@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>ניהול · משתלת אויאקו</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin/admin.css">
+  <script type="module" src="/admin/admin.js"></script>
+</head>
+<body class="admin">
+  <a class="skip-link" href="#view">דילוג לתוכן</a>
+  <header class="site-header admin-header">
+    <div class="wrap admin-header-row">
+      <a class="logo-link" href="#/" aria-label="ניהול — סיכום"><img src="/assets/logo-oyaku.png" alt="O‑Yaku" width="30" height="32"></a>
+      <nav class="admin-nav" aria-label="ניהול">
+        <a href="#/" data-nav="summary">סיכום</a>
+        <a href="#/orders" data-nav="orders">הזמנות</a>
+        <a href="#/buyers" data-nav="buyers">קונים</a>
+        <a href="#/products" data-nav="products">מוצרים</a>
+        <a href="#/export" data-nav="export">יצוא</a>
+      </nav>
+      <label class="scope-toggle">
+        <input type="checkbox" id="scope-test">
+        <span>מצב בדיקה</span>
+      </label>
+    </div>
+  </header>
+  <p class="scope-banner" id="scope-banner" role="status" hidden>
+    מצב בדיקה: מוצגות הזמנות הדמיה ו־Sandbox בלבד. הן אינן מכירות ואינן נספרות בסיכומים האמיתיים.
+  </p>
+  <main class="wrap admin-main" id="view" tabindex="-1" aria-live="polite">
+    <p class="muted">טוען…</p>
+  </main>
+  <footer class="wrap admin-footer small muted" id="who"></footer>
+</body>
+</html>

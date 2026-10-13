@@ -87,3 +87,17 @@ npx wrangler deploy                                    # יוצר Worker חדש 
 - ההדמיה המקורית (תיקייה מקומית ו־`chatgpt.site`) לא הייתה נגישה מסביבת העבודה. הדף נבנה לפי הפרומפט וחבילת העיצוב.
 - תמונת הפתיחה (`assets/atmosphere-juniper.jpg`) לקוחה מחבילת העיצוב ומסומנת באתר „תמונת אווירה”. יש לוודא זכויות שימוש או להחליף בתמונה מההדמיה.
 - סטיות מכוונות מחבילת העיצוב, לשם ניגודיות AA: כפתור ראשי ב־clay‑600, וטקסט משני ב־stone‑600. בתוויות עבריות ריווח האותיות מצומצם.
+
+## אזור ניהול (Admin)
+
+`/admin` ו־`/api/admin/*`: קונים, הזמנות, תיאומים ומימוש חלקי של שוברים. מוגן ב־Cloudflare Access ובאימות JWT בצד השרת.
+**חסום עד שיוגדרו `ACCESS_TEAM_DOMAIN`, `ACCESS_AUD`, `ADMIN_EMAILS`.** טרם הועלה.
+הוראות הגדרה, הרשאות, העלאה ובדיקות: [docs/ADMIN.md](docs/ADMIN.md).
+
+מיגרציות: `0001_orders` · `0002_purchase_terms` · **`0003_admin` (חדשה, טרם הוחלה על מסד הייצור)**.
+את 0003 יש להחיל לפני העלאת הקוד, ואחרי ההעלאה להריץ `scripts/backfill-admin.sql`.
+
+## השקה
+
+מסלול מלא לפי הסדר: [docs/LAUNCH-RUNBOOK.md](docs/LAUNCH-RUNBOOK.md). בדיקת הסליקה ב־Sandbox: [docs/SANDBOX-TEST.md](docs/SANDBOX-TEST.md)
+(`npm run sandbox:form`, `npm run sandbox:confirm -- <orderId> <documentId> --expect-agorot <n>`; הסקריפט מסרב לרוץ מול Production).

@@ -28,7 +28,7 @@ for (const [name, viewport] of [["mobile-360", { width: 360, height: 780 }], ["m
   await page.waitForSelector(".product-card h3");
   await page.evaluate(() => document.fonts.ready);
   await noHorizontalScroll(page, name);
-  assert.equal(await page.locator(".product-card").count(), 6);
+  assert.equal(await page.locator(".product-card").count(), 9);
   assert.equal(await page.getAttribute("html", "dir"), "rtl");
   assert.ok(await page.isVisible("#test-banner"), "test banner visible in mock mode");
   await page.screenshot({ path: `${OUT}/${name}-full.png`, fullPage: true });
@@ -123,6 +123,10 @@ const email = `e2e-${Date.now()}@example.com`;
 await page.fill("#c-name", "בדיקת דפדפן");
 await page.fill("#c-phone", "052-7654321");
 await page.fill("#c-email", email);
+await page.click("#checkout-button");
+assert.ok(await page.isVisible("#c-terms-error"));
+await page.check("#c-terms");
+log("checkout requires explicit terms acceptance");
 await page.route("**/api/checkout", (r) => r.fulfill({ status: 502, contentType: "application/json", body: JSON.stringify({ error: "payment_unavailable" }) }));
 await page.click("#checkout-button");
 await page.waitForSelector("#checkout-error:not([hidden])");
@@ -166,6 +170,7 @@ await page.screenshot({ path: `${OUT}/order-cancelled.png`, fullPage: true });
 await page.getByRole("link", { name: "חזרה לסל" }).click();
 await page.waitForSelector("#cart-dialog[open]");
 assert.equal(await page.textContent("#cart-total"), "₪1,440");
+await page.check("#c-terms");
 await page.click("#checkout-button");
 try { await page.waitForURL(/\/pay\/mock/, { timeout: 8000 }); } catch (e) {
   await page.screenshot({ path: `${OUT}/debug.png` });
@@ -180,11 +185,21 @@ await page.getByRole("button", { name: "סימולציה: תשלום נכשל" }
 await page.waitForFunction(() => document.querySelector("#status-title").textContent.includes("לא הושלם"));
 await page.getByRole("link", { name: "חזרה לסל" }).click();
 await page.waitForSelector("#cart-dialog[open]");
+await page.check("#c-terms");
 await page.click("#checkout-button");
 await page.waitForURL(/\/pay\/mock/);
 await page.getByRole("button", { name: "סימולציה: תשלום הצליח" }).click();
 await page.waitForFunction(() => document.querySelector("#status-title").textContent.includes("אושר"));
 assert.match(await page.textContent("#status-text"), /לא בוצע חיוב/);
+assert.ok(await page.isVisible("#voucher"));
+assert.match(await page.textContent("#voucher-example"), /ללא זכאות/);
+assert.match(await page.textContent("#voucher-items"), /ינואר 2027/);
+await page.emulateMedia({ media: "print" });
+assert.ok(await page.isVisible("#voucher-example"));
+assert.equal(await page.isVisible("#print-voucher"), false);
+await noHorizontalScroll(page, "voucher print");
+await page.pdf({ path: `${OUT}/voucher-example.pdf`, format: "A4", printBackground: true });
+await page.emulateMedia({ media: "screen" });
 await page.screenshot({ path: `${OUT}/order-paid-test.png`, fullPage: true });
 const final = sql(`SELECT status FROM orders WHERE customer_email = '${email}' ORDER BY created_at`);
 assert.deepEqual(final.map((r) => r.status), ["cancelled", "cancelled", "paid"]);
@@ -221,12 +236,22 @@ const m = await browser.newContext({ viewport: { width: 390, height: 844 }, loca
 const mp = await m.newPage();
 const fresh = await (await fetch(BASE + "/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ idempotencyKey: "shot" + Date.now() + "abcdefgh", customer: { name: "צילום מסך", phone: "050-0000000", email: "shot@example.com" },
-    items: [{ id: "tshirt", qty: 2 }, { id: "akadama-10", qty: 2 }, { id: "custom-pot", qty: 1 }] }) })).json();
+    items: [{ id: "tshirt", qty: 2 }, { id: "akadama-10", qty: 2 }, { id: "custom-pot", qty: 1 }], termsAccepted: true, termsVersion: "2026-10-07-v1" }) })).json();
 await mp.goto(fresh.paymentUrl);
 await noHorizontalScroll(mp, "mock pay page");
 await mp.screenshot({ path: `${OUT}/mock-payment-page.png`, fullPage: true });
 log("mock payment page", mockUrl ? "" : "");
 await m.close();
+
+const legal = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: "he-IL" });
+const lp = await legal.newPage();
+await lp.goto(BASE + "/terms.html");
+await lp.evaluate(() => document.fonts.ready);
+await noHorizontalScroll(lp, "terms mobile");
+assert.match(await lp.locator("main").textContent(), /ינואר 2027/);
+await lp.screenshot({ path: `${OUT}/terms-mobile.png`, fullPage: true });
+await legal.close();
+log("terms page mobile layout and redemption dates");
 
 await browser.close();
 console.log("\nall browser checks passed");

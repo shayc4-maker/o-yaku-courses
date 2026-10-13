@@ -1,11 +1,7 @@
 // Morning (Green Invoice) adapter.
 //
-// STATUS: NOT VERIFIED AGAINST A LIVE OR SANDBOX ACCOUNT.
-// Official docs (greeninvoice.docs.apiary.io, greeninvoice.co.il/help-center) could not be
-// opened from the environment this was written in. Endpoint paths and field names below come
-// from search excerpts of those official pages and from third-party integrations, and are
-// listed as "to verify" in founders-nursery/docs/MORNING.md. Run the sandbox checklist in that
-// file before switching PAYMENT_MODE away from "mock".
+// Prepared against https://developers.morning.co/docs/openapi.bundled.json on 2026-10-07.
+// Account-specific payment plugin and end-to-end sandbox behaviour still need verification.
 //
 // Base URLs are not hard-coded here — they come from configuration (MORNING_API_BASE,
 // MORNING_AUTH_BASE) so they can be corrected without a code change.
@@ -13,14 +9,14 @@
 let cachedToken = null; // { value, expiresAtMs, cacheKey }
 
 async function getAccessToken(env) {
-  const cacheKey = `${env.MORNING_AUTH_FLOW}:${env.MORNING_API_KEY_ID}`;
+  if (!env.MORNING_API_KEY_ID || !env.MORNING_API_KEY_SECRET) throw new Error("morning_credentials_missing");
+  const cacheKey = `${env.MORNING_AUTH_BASE}:${env.MORNING_API_BASE}:${env.MORNING_API_KEY_ID}:${env.MORNING_API_KEY_SECRET}`;
   if (cachedToken && cachedToken.cacheKey === cacheKey && cachedToken.expiresAtMs - Date.now() > 60_000) {
     return cachedToken.value;
   }
 
   let res;
-  if (env.MORNING_AUTH_FLOW === "oauth") {
-    // Reported (third-party, 2026) OAuth 2.0 client-credentials flow. To verify.
+  if (!env.MORNING_AUTH_FLOW || env.MORNING_AUTH_FLOW === "oauth") {
     res = await fetch(`${env.MORNING_AUTH_BASE}/idp/v1/oauth/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -67,12 +63,13 @@ const agorotToShekels = (a) => Math.round(a) / 100;
 export async function createPaymentPage(env, order, urls) {
   const body = {
     description: `משתלת אויאקו — הזמנה ${order.id}`,
-    type: 320, // receipt-invoice (חשבונית מס קבלה). To verify against the business's document settings.
+    type: 320, // חשבונית מס / קבלה for this VAT-registered business.
     lang: "he",
     currency: order.currency,
     vatType: 0,
     amount: agorotToShekels(order.totalAgorot),
     maxPayments: 1,
+    group: Number(env.MORNING_GROUP || 100), // Grow requires a payment group; 100 = credit card.
     client: {
       name: order.customer.name,
       emails: [order.customer.email],
@@ -85,8 +82,7 @@ export async function createPaymentPage(env, order, urls) {
     custom: order.id,
   };
   if (env.MORNING_SEND_INCOME_LINES !== "false") {
-    // Per-line vatType for VAT-inclusive prices. The meaning of the values must be confirmed in
-    // the sandbox: the charged total has to equal order.totalAgorot exactly.
+    // Official ItemVatType 1 means VAT included in the unit price.
     body.income = order.lines.map((l) => ({
       description: l.name,
       quantity: l.quantity,
@@ -100,8 +96,12 @@ export async function createPaymentPage(env, order, urls) {
 
   const res = await morningFetch(env, "/payments/form", { method: "POST", body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok || !data.url) {
-    throw new Error(`morning_form_failed: HTTP ${res.status} ${data.errorCode ?? ""} ${data.errorMessage ?? ""}`.trim());
+  if (!res.ok || data.success === false || (data.errorCode != null && data.errorCode !== 0) || !data.url) {
+    throw new Error(`morning_form_failed: HTTP ${res.status} code ${data.errorCode ?? "unknown"}`);
+  }
+  const paymentUrl = new URL(data.url);
+  if (paymentUrl.protocol !== "https:" && !(env.PAYMENT_MODE === "morning_sandbox" && ["127.0.0.1", "localhost"].includes(paymentUrl.hostname))) {
+    throw new Error("morning_form_insecure_url");
   }
   return { paymentUrl: data.url };
 }
@@ -123,18 +123,27 @@ export async function confirmPayment(env, orderId, payload) {
   if (!documentId) return { confirmed: false, reason: "no_document_id_in_notification" };
 
   const res = await morningFetch(env, `/documents/${encodeURIComponent(documentId)}`, { method: "GET" });
-  if (!res.ok) return { confirmed: false, reason: `document_lookup_http_${res.status}` };
+  if (!res.ok) return { confirmed: false, reason: `document_lookup_http_${res.status}`, retryable: [404, 408, 429].includes(res.status) || res.status >= 500 };
   const doc = await res.json().catch(() => null);
-  if (!doc) return { confirmed: false, reason: "document_lookup_unreadable" };
+  if (!doc) return { confirmed: false, reason: "document_lookup_unreadable", retryable: true };
+  if (doc.id !== documentId) return { confirmed: false, reason: "document_id_mismatch" };
+  if (doc.type !== 320) return { confirmed: false, reason: "not_payment_receipt" };
+  if (![0, 1].includes(doc.status)) return { confirmed: false, reason: "document_cancelled_or_unverified_status" };
 
   const references = [doc.remarks, doc.description, doc.custom].filter(Boolean).join(" ");
-  if (!references.includes(orderId)) return { confirmed: false, reason: "document_does_not_reference_order" };
-  if (typeof doc.amount !== "number") return { confirmed: false, reason: "document_amount_missing" };
+  if (!new RegExp(`\\b${orderId}\\b`).test(references)) return { confirmed: false, reason: "document_does_not_reference_order" };
+  if (!Number.isFinite(doc.amount) || doc.amount <= 0 || doc.currency !== "ILS") return { confirmed: false, reason: "document_amount_or_currency_invalid" };
+  if (!Array.isArray(doc.payment) || !doc.payment.length || doc.payment.some((p) =>
+    ![3, 10].includes(p.type) || p.currency !== doc.currency || !Number.isFinite(p.price) || p.price <= 0)) {
+    return { confirmed: false, reason: "document_has_no_verified_online_payments" };
+  }
+  const paidAgorot = doc.payment.reduce((sum, p) => sum + Math.round(p.price * 100), 0);
+  if (paidAgorot !== Math.round(doc.amount * 100)) return { confirmed: false, reason: "document_payment_total_mismatch" };
 
   return {
     confirmed: true,
     amountAgorot: Math.round(doc.amount * 100),
-    currency: doc.currency || null,
+    currency: doc.currency,
     documentId,
     transactionId: doc.payment?.[0]?.transactionId ?? null,
   };

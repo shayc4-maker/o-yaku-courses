@@ -3,27 +3,33 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "oyaku-founders-nursery",
+  "account_id": "f6748e8d1bcd76c6d4234fd177d488a9",
   "main": "src/worker.js",
   "compatibility_date": "2026-09-01",
 
   // Not reachable on a *.workers.dev address until you flip this at launch.
   "workers_dev": false,
   "preview_urls": false,
+  "routes": [{ "pattern": "nursery.o-yaku.com", "custom_domain": true }],
 
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
     // API and payment routes always go to the Worker, never to static files.
-    "run_worker_first": ["/api/*", "/pay/*"]
+    "run_worker_first": ["/api/*", "/pay/*", "/admin", "/admin/*"]
   },
+
+  // The admin UI is bundled into the Worker as text (not in ./public), so it is only ever served
+  // after the Access check in src/admin/router.js.
+  "rules": [{ "type": "Text", "globs": ["**/admin-ui/*.html", "**/admin-ui/*.css", "**/admin-ui/*.client.js"], "fallthrough": false }],
 
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "oyaku-founders-orders",
       // Replace with the id printed by: npx wrangler d1 create oyaku-founders-orders
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "8dcd1f6e-a580-4326-8892-02d97f7dedf5",
       "migrations_dir": "migrations"
     }
   ],
@@ -32,15 +38,21 @@
   "vars": {
     "PAYMENT_MODE": "mock",
     "ALLOW_LIVE_PAYMENTS": "no",
-    "PUBLIC_BASE_URL": "",
+    "PUBLIC_BASE_URL": "https://nursery.o-yaku.com",
     "ROUND_OPENS_AT": "",
-    "MORNING_AUTH_FLOW": "legacy",
+    "MORNING_AUTH_FLOW": "oauth",
     "MORNING_API_BASE": "",
     "MORNING_AUTH_BASE": "",
     "MORNING_SEND_INCOME_LINES": "true",
     "MORNING_INCOME_VAT_TYPE": "1",
     "MORNING_PLUGIN_ID": "",
-    "MORNING_GROUP": ""
+    "MORNING_GROUP": "100",
+    // Admin area (Cloudflare Access). While any of these is empty, /admin and /api/admin are blocked.
+    // ACCESS_TEAM_DOMAIN: https://<team>.cloudflareaccess.com · ACCESS_AUD: the Access application's AUD tag
+    // ADMIN_EMAILS: comma-separated owner email(s), also listed in the Access policy.
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "ADMIN_EMAILS": ""
   },
 
   "observability": { "enabled": true }

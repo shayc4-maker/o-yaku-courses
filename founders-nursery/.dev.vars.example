@@ -10,6 +10,15 @@ MORNING_API_KEY_SECRET=
 
 # Local overrides of wrangler.jsonc vars, e.g. to try the Morning sandbox:
 # PAYMENT_MODE=morning_sandbox
+# MORNING_AUTH_FLOW=oauth
 # MORNING_API_BASE=https://sandbox.d.greeninvoice.co.il/api/v1
 # MORNING_AUTH_BASE=https://api.sandbox.morning.dev
+# MORNING_GROUP=100
 # PUBLIC_BASE_URL=https://<a tunnel URL that Morning can reach>
+
+# Local development of the public site: keep payment redirects on this machine.
+# PUBLIC_BASE_URL=http://127.0.0.1:8787
+
+# Admin area (Cloudflare Access). Set as plain vars in wrangler.jsonc for production, not here.
+# Locally the admin area is exercised by the tests in test/admin*.mjs, which start their own
+# Worker with a throwaway test key. There is no local login bypass.

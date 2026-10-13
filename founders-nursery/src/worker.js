@@ -5,9 +5,11 @@ import {
 } from "./util.js";
 import {
   getOrder, getOrderByIdempotencyKey, insertOrder, setPaymentUrl, setStatusIfAwaiting,
-  recordEvent, setEventOutcome, applyConfirmedPayment, markNeedsReview, publicOrderView,
+  recordEvent, setEventOutcome, applyConfirmedPayment, markNeedsReview, publicOrderView, getRedeemedByLine,
 } from "./orders.js";
 import * as morning from "./payments/morning.js";
+import { TERMS_VERSION } from "../public/purchase-policy.js";
+import { isAdminPath, handleAdmin } from "./admin/router.js";
 
 // PAYMENT_MODE:
 //   mock             — default. Local test page, no provider is contacted, nothing is charged.
@@ -29,7 +31,7 @@ const TOKEN_RE = /^[0-9a-f]{48}$/;
 const IDEMPOTENCY_RE = /^[A-Za-z0-9_-]{16,64}$/;
 
 function validateCustomer(raw) {
-  if (!raw || typeof raw !== "object") return null;
+  if (!raw || typeof raw !== "object") return { errors: { customer: "invalid" } };
   const name = typeof raw.name === "string" ? raw.name.trim().replace(/\s+/g, " ") : "";
   const email = typeof raw.email === "string" ? raw.email.trim() : "";
   const phone = typeof raw.phone === "string" ? raw.phone.trim() : "";
@@ -78,6 +80,10 @@ async function handleCheckout(request, env) {
   if (round === "not_open") return json({ error: "round_not_open" }, 403);
   if (round === "closed") return json({ error: "round_closed" }, 403);
   const body = await readJson(request);
+  if (!body || typeof body !== "object") throw new HttpError(400, "invalid_json");
+  if (body.termsAccepted !== true || body.termsVersion !== TERMS_VERSION) {
+    return json({ error: "terms_required" }, 400);
+  }
 
   if (!IDEMPOTENCY_RE.test(body.idempotencyKey || "")) throw new HttpError(400, "invalid_idempotency_key");
   const priced = priceCart(body.items);
@@ -105,6 +111,7 @@ async function handleCheckout(request, env) {
     currency: priced.currency,
     totalAgorot: priced.totalAgorot,
     customer: c.customer,
+    termsVersion: TERMS_VERSION,
     lines: priced.lines,
   };
   try {
@@ -145,7 +152,7 @@ async function handleCheckout(request, env) {
 async function handleOrderStatus(url, env, orderId) {
   const order = await loadAuthorizedOrder(env, orderId, url.searchParams.get("t"));
   if (!order) return json({ error: "not_found" }, 404);
-  return json(publicOrderView(order));
+  return json(publicOrderView(order, await getRedeemedByLine(env.DB, order.id)));
 }
 
 // Where the customer lands after the hosted payment page. This is navigation only:
@@ -179,7 +186,10 @@ async function handleMorningNotify(request, url, env) {
 
   const eventKey = `morning:${orderId}:${await sha256Hex(raw)}`;
   const isNew = await recordEvent(env.DB, { provider: "morning", eventKey, orderId, payload: raw });
-  if (!isNew) return json({ ok: true, duplicate: true });
+  if (!isNew) {
+    const event = await env.DB.prepare("SELECT outcome FROM payment_events WHERE event_key = ?").bind(eventKey).first();
+    if (event?.outcome && !["error", "retry"].includes(event.outcome)) return json({ ok: true, duplicate: true });
+  }
 
   let payload = null;
   try {
@@ -193,16 +203,18 @@ async function handleMorningNotify(request, url, env) {
     const result = await morning.confirmPayment(env, orderId, payload);
     if (result.confirmed) {
       outcome = await applyConfirmedPayment(env.DB, orderId, result);
+    } else if (result.retryable) {
+      await setEventOutcome(env.DB, eventKey, "retry");
+      return json({ error: "verification_pending" }, 503);
     } else {
       await markNeedsReview(env.DB, orderId, `notify_unconfirmed: ${result.reason}`);
       outcome = `needs_review:${result.reason}`;
     }
   } catch (err) {
-    // Leave the event recorded and the order for manual reconciliation. Reply 200 so the
-    // provider does not keep retrying an event we already hold.
-    console.error("notify processing failed", orderId, err.message);
-    await markNeedsReview(env.DB, orderId, `notify_error: ${String(err.message).slice(0, 200)}`);
-    outcome = "error";
+    // Persist the attempt but allow an identical provider retry after a transient failure.
+    console.error("notify processing failed", orderId);
+    await setEventOutcome(env.DB, eventKey, "error");
+    return json({ error: "verification_unavailable" }, 503);
   }
   await setEventOutcome(env.DB, eventKey, outcome);
   return json({ ok: true });
@@ -305,6 +317,8 @@ export default {
     const { pathname } = url;
     const method = request.method;
     try {
+      // Admin first: authenticated inside handleAdmin before anything else happens.
+      if (isAdminPath(pathname)) return await handleAdmin(request, env, url);
       if (pathname === "/api/config" && method === "GET") return json(publicConfig(env));
       if (pathname === "/api/catalog" && method === "GET") return json({ products: PRODUCTS });
       if (pathname === "/api/checkout" && method === "POST") return await handleCheckout(request, env);

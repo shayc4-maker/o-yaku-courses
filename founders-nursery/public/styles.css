@@ -114,11 +114,10 @@ button { font:inherit; color:inherit; }
 .hero-actions { margin-top:var(--space-8); }
 .hero-actions .btn { border-bottom-color:transparent; }
 .hero-figure { margin:0; }
-.hero-figure img { border-radius:var(--radius-xs); aspect-ratio:4/3; object-fit:cover; width:100%; }
+.hero-figure img { border-radius:var(--radius-xs); object-fit:contain; width:100%; height:auto; }
 .hero-figure figcaption { margin-top:var(--space-3); font-size:var(--text-xs); color:var(--text-meta); }
 @media (min-width: 900px) {
   .hero { grid-template-columns:1.1fr 1fr; gap:var(--space-10); padding-block:var(--space-11) var(--space-12); }
-  .hero-figure img { aspect-ratio:1/1; }
 }
 
 /* Facts */
@@ -239,3 +238,26 @@ button { font:inherit; color:inherit; }
 .mock-actions { display:grid; gap:var(--space-4); }
 .mock-actions .btn { width:100%; }
 .mock-pay .test-banner { border:1px solid var(--ochre-500); border-radius:var(--radius-sm); }
+/* Purchase terms and printable voucher share the page's paper and hairline language. */
+.terms-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.6; margin-block: 18px 8px; }
+.terms-check input { width: 18px; height: 18px; flex: 0 0 18px; margin-top: 4px; }
+.legal-page h2 { margin-block: 32px 12px; }
+.legal-page ul { padding-inline-start: 22px; }
+.legal-page li { margin-block: 12px; }
+.voucher { border: 1px solid #DDD7CF; border-radius: 4px; padding: 24px; margin-block: 28px; }
+.voucher-example { color: #A6383E; font-weight: 700; border-bottom: 1px solid #DDD7CF; padding-bottom: 12px; }
+.voucher-meta { display: grid; grid-template-columns: auto 1fr; gap: 8px 20px; margin-block: 20px; }
+.voucher-meta dd { margin: 0; overflow-wrap: anywhere; }
+.voucher-items { padding-inline-start: 20px; }
+.voucher-items li { margin-block: 20px; }
+.voucher-items p { margin-block: 6px; }
+.voucher-balance { font-weight: 600; color: var(--text-heading); }
+.voucher-state { font-weight: 700; color: var(--status-danger-fg); background: var(--status-danger-bg); padding: 8px 12px; border-radius: 4px; }
+@media print {
+  .site-header, #status-box, #summary, #actions, #print-voucher, .print-hint, #test-banner { display: none !important; }
+  body { background: white; color: black; }
+  .page-simple { padding: 0; }
+  .voucher { border: 0; padding: 0; }
+  .voucher li { break-inside: avoid; }
+  .voucher a { color: inherit; text-decoration: none; }
+}

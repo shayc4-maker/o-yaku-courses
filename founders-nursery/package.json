@@ -9,7 +9,11 @@
     "test": "node --test test/*.test.mjs",
     "test:api": "node --test test/api.e2e.mjs",
     "test:browser": "node test/browser.e2e.mjs",
-    "test:morning-flow": "node --test test/morning-flow.e2e.mjs"
+    "test:morning-flow": "node --test test/morning-flow.e2e.mjs",
+    "test:admin": "node --test --test-concurrency=1 test/admin.e2e.mjs test/admin-guards.e2e.mjs",
+    "test:admin-browser": "node test/admin-browser.e2e.mjs",
+    "sandbox:form": "node scripts/sandbox-verify.mjs form",
+    "sandbox:confirm": "node scripts/sandbox-verify.mjs confirm"
   },
   "devDependencies": {
     "playwright": "^1.63.0",

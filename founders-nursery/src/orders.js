@@ -1,4 +1,6 @@
 import { nowIso } from "./util.js";
+import { REDEMPTION, voucherExpiry } from "../public/purchase-policy.js";
+import { redeemUnitsFor, normalizeEmail, voucherState, lineState } from "./fulfillment.js";
 
 export async function getOrder(db, orderId) {
   const order = await db.prepare("SELECT * FROM orders WHERE id = ?").bind(orderId).first();
@@ -19,12 +21,19 @@ export async function getOrderByIdempotencyKey(db, key) {
 // which the caller treats as "another request already created this order".
 export async function insertOrder(db, order, lines) {
   const ts = nowIso();
+  const email = normalizeEmail(order.customer.email);
   const stmts = [
+    // Buyer per normalized email. Existing buyers keep their first-seen details; the order keeps its own.
+    db
+      .prepare("INSERT INTO buyers (email_normalized, name, phone, created_at) VALUES (?, ?, ?, ?) ON CONFLICT(email_normalized) DO NOTHING")
+      .bind(email, order.customer.name, order.customer.phone, ts),
     db
       .prepare(
         `INSERT INTO orders (id, access_token, idempotency_key, request_fingerprint, status, payment_mode,
-           currency, total_agorot, customer_name, customer_email, customer_phone, created_at, updated_at)
-         VALUES (?, ?, ?, ?, 'awaiting_payment', ?, ?, ?, ?, ?, ?, ?, ?)`,
+           currency, total_agorot, customer_name, customer_email, customer_phone, created_at, updated_at, terms_version, terms_accepted_at,
+           buyer_id)
+         VALUES (?, ?, ?, ?, 'awaiting_payment', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+           (SELECT id FROM buyers WHERE email_normalized = ?))`,
       )
       .bind(
         order.id,
@@ -39,17 +48,32 @@ export async function insertOrder(db, order, lines) {
         order.customer.phone,
         ts,
         ts,
+        order.termsVersion,
+        ts,
+        email,
       ),
-    ...lines.map((l) =>
-      db
+    ...lines.map((l) => {
+      const ru = redeemUnitsFor(l.productId, l.quantity);
+      return db
         .prepare(
           `INSERT INTO order_items (order_id, product_id, name, unit_label, quantity_label,
-             unit_price_agorot, quantity, line_total_agorot) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+             unit_price_agorot, quantity, line_total_agorot, redemption_text, redeem_units, redeem_unit_label)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
-        .bind(order.id, l.productId, l.name, l.unitLabel, l.quantityLabel, l.unitPriceAgorot, l.quantity, l.lineTotalAgorot),
-    ),
+        .bind(order.id, l.productId, l.name, l.unitLabel, l.quantityLabel, l.unitPriceAgorot, l.quantity, l.lineTotalAgorot,
+          REDEMPTION[l.productId], ru.units, ru.label);
+    }),
   ];
   await db.batch(stmts);
+}
+
+// Redeemed units per line (corrections included), for the public voucher and the admin area.
+export async function getRedeemedByLine(db, orderId) {
+  const { results } = await db
+    .prepare("SELECT product_id, COALESCE(SUM(quantity), 0) AS redeemed FROM redemptions WHERE order_id = ? GROUP BY product_id")
+    .bind(orderId)
+    .all();
+  return Object.fromEntries(results.map((r) => [r.product_id, r.redeemed]));
 }
 
 export async function setPaymentUrl(db, orderId, url) {
@@ -119,7 +143,16 @@ export async function markNeedsReview(db, orderId, reason) {
     .run();
 }
 
-export function publicOrderView(order) {
+// Customer-facing view. Never includes internal notes, admin identities or redemption history.
+export function publicOrderView(order, redeemedByLine = {}, nowMs = Date.now()) {
+  const paid = order.status === "paid" && !!order.paid_at;
+  const expiresAt = paid ? voucherExpiry(order.paid_at) : null;
+  const flags = { paid, cancelled: !!order.voucher_cancelled_at, expired: paid && Date.parse(expiresAt) <= nowMs };
+  const lines = order.items.map((i) => {
+    const units = i.redeem_units ?? redeemUnitsFor(i.product_id, i.quantity).units;
+    const redeemed = redeemedByLine[i.product_id] ?? 0;
+    return { i, units, redeemed };
+  });
   return {
     id: order.id,
     status: order.status,
@@ -128,13 +161,30 @@ export function publicOrderView(order) {
     totalAgorot: order.total_agorot,
     createdAt: order.created_at,
     paidAt: order.paid_at,
-    items: order.items.map((i) => ({
+    voucher: paid ? {
+      number: order.id,
+      holder: order.customer_name,
+      issuedAt: order.paid_at,
+      expiresAt,
+      termsVersion: order.terms_version,
+      example: order.payment_mode !== "morning_live",
+      state: voucherState(lines, flags),
+    } : null,
+    items: lines.map(({ i, units, redeemed }) => ({
       productId: i.product_id,
       name: i.name,
       quantity: i.quantity,
       quantityLabel: i.quantity_label,
       unitPriceAgorot: i.unit_price_agorot,
       lineTotalAgorot: i.line_total_agorot,
+      redemption: i.redemption_text,
+      ...(paid ? {
+        redeemUnits: units,
+        redeemUnitLabel: i.redeem_unit_label ?? redeemUnitsFor(i.product_id, i.quantity).label,
+        redeemedUnits: redeemed,
+        remainingUnits: flags.cancelled || flags.expired ? 0 : Math.max(0, units - redeemed),
+        state: lineState({ ...flags, units, redeemed }),
+      } : {}),
     })),
   };
 }
