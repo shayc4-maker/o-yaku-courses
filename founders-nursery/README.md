@@ -101,3 +101,5 @@ npx wrangler deploy                                    # יוצר Worker חדש 
 
 מסלול מלא לפי הסדר: [docs/LAUNCH-RUNBOOK.md](docs/LAUNCH-RUNBOOK.md). בדיקת הסליקה ב־Sandbox: [docs/SANDBOX-TEST.md](docs/SANDBOX-TEST.md)
 (`npm run sandbox:form`, `npm run sandbox:confirm -- <orderId> <documentId> --expect-agorot <n>`; הסקריפט מסרב לרוץ מול Production).
+
+**בדיקה חיה ב־₪1:** `./scripts/go-live-test.sh` (ראו [docs/LAUNCH-RUNBOOK.md](docs/LAUNCH-RUNBOOK.md)). מדליק סליקה אמיתית ומוצר בדיקה זמני בלבד אחרי שמקלידים `LIVE`; `--revert` מחזיר למצב בטוח.

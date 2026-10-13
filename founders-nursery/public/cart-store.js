@@ -59,7 +59,7 @@ export function createCartStore() {
       return () => listeners.delete(fn);
     },
     items: () => items.slice(),
-    priced: () => (items.length ? priceCart(items) : { ok: true, lines: [], totalAgorot: 0 }),
+    priced: () => (items.length ? priceCart(items, { allowHidden: true }) : { ok: true, lines: [], totalAgorot: 0 }),
     count: () => items.reduce((n, i) => n + i.qty, 0),
     // Adds to an existing line. Returns the resulting quantity, or null if it would be invalid.
     add(id, qty) {

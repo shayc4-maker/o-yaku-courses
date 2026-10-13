@@ -8,7 +8,7 @@ test("catalog prices match the brief (agorot, VAT included)", () => {
     "custom-pot": 120000, "akadama-10": 140000, "nursery-sqm-year": 150000,
     "bonsai-private-lesson": 70000, "bonsai-wiring-workshop": 30000, "pine-grafting-workshop": 45000,
   };
-  assert.deepEqual(Object.fromEntries(PRODUCTS.map((p) => [p.id, p.priceAgorot])), expected);
+  assert.deepEqual(Object.fromEntries(PRODUCTS.filter((p) => !p.hidden).map((p) => [p.id, p.priceAgorot])), expected);
 });
 
 test("parseQuantity accepts only whole numbers 1..99", () => {
@@ -49,4 +49,12 @@ test("priceCart rejects invalid carts", () => {
 test("akadama quantity reads as bags", () => {
   assert.equal(describeQuantity(PRODUCTS_BY_ID["akadama-10"], 2), "2 חבילות · 20 שקים");
   assert.equal(describeQuantity(PRODUCTS_BY_ID["nursery-sqm-year"], 3), "3 מ״ר לשנה");
+});
+
+test("the ₪1 live-test product is hidden: priceable only when explicitly allowed, never listed", () => {
+  assert.equal(priceCart([{ id: "live-test", qty: 1 }]).error, "unknown_product");
+  const allowed = priceCart([{ id: "live-test", qty: 1 }], { allowHidden: true });
+  assert.equal(allowed.ok, true);
+  assert.equal(allowed.totalAgorot, 100);
+  assert.equal(PRODUCTS.filter((p) => !p.hidden).length, 9);
 });

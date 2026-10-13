@@ -19,7 +19,7 @@ const MINUS = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" strok
 const PLUS = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 
 const cart = createCartStore();
-let config = { paymentMode: "mock", liveCharges: false, roundOpensAt: null, roundDays: 14 };
+let config = { paymentMode: "mock", liveCharges: false, roundOpensAt: null, roundDays: 14, testProduct: false };
 
 // ---------------------------------------------------------------- quantity stepper
 
@@ -74,7 +74,7 @@ function stepper({ id, label, value, onChange }) {
 function renderProducts() {
   const grid = $("#product-grid");
   grid.replaceChildren(
-    ...PRODUCTS.map((p) => {
+    ...PRODUCTS.filter((p) => !p.hidden || (config.testProduct && new URLSearchParams(location.search).get("test") === "1")).map((p) => {
       const qtyId = `qty-${p.id}`;
       const hint = el("span", { class: "qty-hint", id: `${qtyId}-hint`, "aria-live": "polite" });
       const updateHint = (q) => {
@@ -401,6 +401,8 @@ async function init() {
     const res = await fetch("/api/config");
     if (res.ok) config = { ...config, ...(await res.json()) };
   } catch { /* keep the safe defaults: test mode banner on */ }
+  // The temporary ₪1 test product appears only for the owner (/?test=1) while the server allows it.
+  if (config.testProduct && new URLSearchParams(location.search).get("test") === "1") renderProducts();
   $("#test-banner").hidden = config.liveCharges;
   if (!config.liveCharges) $("#checkout-note").textContent =
     "מצב בדיקה: דף התשלום הוא דף לדוגמה ולא יבוצע חיוב. בגרסה הפעילה התשלום יתבצע בעמוד מאובטח של ספק הסליקה, ופרטי האשראי לא יוזנו באתר הזה.";

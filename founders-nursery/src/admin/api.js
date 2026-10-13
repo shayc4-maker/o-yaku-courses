@@ -416,7 +416,8 @@ async function productRows(env, scope, ms) {
     .all();
   const byId = Object.fromEntries(results.map((r) => [r.product_id, r]));
   // Catalog order for the nine current products, plus any product that only exists in old orders.
-  const ids = [...PRODUCTS.map((p) => p.id), ...results.map((r) => r.product_id).filter((id) => !PRODUCTS_BY_ID[id])];
+  const listed = PRODUCTS.filter((p) => !p.hidden).map((p) => p.id);
+  const ids = [...listed, ...results.map((r) => r.product_id).filter((id) => !listed.includes(id))];
   return ids.map((id) => {
     const p = PRODUCTS_BY_ID[id];
     const r = byId[id] || { qty: 0, units: 0, revenue_agorot: 0, redeemed: 0, remaining: 0, lapsed: 0 };

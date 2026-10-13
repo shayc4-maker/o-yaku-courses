@@ -85,6 +85,18 @@ export const PRODUCTS = [
     unit: { one: "מ״ר לשנה", many: "מ״ר לשנה" },
     details: ["מקום לעצים שלכם", "כולל השקיה, דישון והשגחה"],
   },
+  // Temporary ₪1 product for one real end-to-end payment + refund test. Never listed publicly:
+  // the server accepts it only while the LIVE_TEST_PRODUCT variable is "yes", and the page shows it
+  // only for the owner at /?test=1. Remove the variable (redeploy) when the test is done.
+  {
+    id: "live-test",
+    hidden: true,
+    name: "בדיקת סליקה (₪1)",
+    priceAgorot: 100,
+    priceSuffix: "לבדיקה",
+    unit: { one: "בדיקה", many: "בדיקות" },
+    details: ["מוצר בדיקה זמני, ללא מימוש"],
+  },
 ];
 
 export const PRODUCTS_BY_ID = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
@@ -128,7 +140,7 @@ export function parseQuantity(value) {
 
 // Validates a cart of the form [{ id, qty }] and prices it from the catalog.
 // Duplicate ids are rejected rather than merged so the caller sees exactly what was priced.
-export function priceCart(rawItems) {
+export function priceCart(rawItems, { allowHidden = false } = {}) {
   if (!Array.isArray(rawItems) || rawItems.length === 0) {
     return { ok: false, error: "empty_cart" };
   }
@@ -140,7 +152,7 @@ export function priceCart(rawItems) {
   for (const raw of rawItems) {
     if (!raw || typeof raw !== "object") return { ok: false, error: "invalid_line" };
     const product = PRODUCTS_BY_ID[raw.id];
-    if (!product) return { ok: false, error: "unknown_product" };
+    if (!product || (product.hidden && !allowHidden)) return { ok: false, error: "unknown_product" };
     if (seen.has(product.id)) return { ok: false, error: "duplicate_product" };
     seen.add(product.id);
     const qty = parseQuantity(raw.qty);

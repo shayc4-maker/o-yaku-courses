@@ -44,7 +44,7 @@ before(async () => {
   execFileSync("npx", ["wrangler", "d1", "migrations", "apply", "oyaku-founders-orders", "--local", "--persist-to", PERSIST], { stdio: "ignore" });
   const vars = {
     PAYMENT_MODE: "morning_sandbox", MORNING_API_BASE: `http://127.0.0.1:${FAKE_PORT}`, MORNING_AUTH_FLOW: "oauth", MORNING_AUTH_BASE: `http://127.0.0.1:${FAKE_PORT}`,
-    NOTIFY_SIGNING_SECRET: SECRET, MORNING_API_KEY_ID: "id", MORNING_API_KEY_SECRET: "secret",
+    NOTIFY_SIGNING_SECRET: SECRET, MORNING_API_KEY_ID: "id", MORNING_API_KEY_SECRET: "secret", LIVE_TEST_PRODUCT: "yes",
   };
   worker = spawn("npx", ["wrangler", "dev", "--port", String(WORKER_PORT), "--ip", "127.0.0.1", "--persist-to", PERSIST,
     ...Object.entries(vars).flatMap(([k, v]) => ["--var", `${k}:${v}`])], { stdio: "ignore", detached: true, env: { ...process.env, NO_PROXY: "127.0.0.1,localhost" } });
@@ -139,6 +139,17 @@ test("a delayed document can be verified by an identical notification retry", as
   assert.equal(await status(o), "awaiting_payment");
   documents[payload.documentId] = receipts(payload.documentId, 120, o.orderId);
   assert.equal((await notify(o.orderId, sig(o.orderId), payload)).status, 200);
+  assert.equal(await status(o), "paid");
+});
+
+test("₪1 live-test product: sent to Morning as exactly ₪1 and paid only after a matching document", async () => {
+  assert.equal((await (await fetch(`${BASE}/api/config`)).json()).testProduct, true);
+  const o = await checkout([{ id: "live-test", qty: 1 }]);
+  const f = forms.at(-1);
+  assert.equal(f.amount, 1);
+  assert.deepEqual(f.income.map((i) => [i.quantity, i.price, i.vatType]), [[1, 1, 1]]);
+  documents["doc-test-0001"] = receipts("doc-test-0001", 1, o.orderId);
+  await notify(o.orderId, sig(o.orderId), { documentId: "doc-test-0001" });
   assert.equal(await status(o), "paid");
 });
 

@@ -29,6 +29,12 @@ for (const [name, viewport] of [["mobile-360", { width: 360, height: 780 }], ["m
   await page.evaluate(() => document.fonts.ready);
   await noHorizontalScroll(page, name);
   assert.equal(await page.locator(".product-card").count(), 9);
+  await page.goto(BASE + "/?test=1");
+  await page.waitForSelector(".product-card h3");
+  await page.waitForTimeout(400);
+  assert.equal(await page.locator(".product-card").count(), 9, "test product stays hidden while the server flag is off");
+  await page.goto(BASE + "/");
+  await page.waitForSelector(".product-card h3");
   assert.equal(await page.getAttribute("html", "dir"), "rtl");
   assert.ok(await page.isVisible("#test-banner"), "test banner visible in mock mode");
   await page.screenshot({ path: `${OUT}/${name}-full.png`, fullPage: true });

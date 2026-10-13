@@ -86,7 +86,7 @@ async function handleCheckout(request, env) {
   }
 
   if (!IDEMPOTENCY_RE.test(body.idempotencyKey || "")) throw new HttpError(400, "invalid_idempotency_key");
-  const priced = priceCart(body.items);
+  const priced = priceCart(body.items, { allowHidden: env.LIVE_TEST_PRODUCT === "yes" });
   if (!priced.ok) return json({ error: priced.error }, 400);
   const c = validateCustomer(body.customer);
   if (c.errors) return json({ error: "invalid_customer", fields: c.errors }, 400);
@@ -308,6 +308,8 @@ function publicConfig(env) {
     // ISO date-time of the round's opening, once decided. Empty = no dates or countdown shown.
     roundOpensAt: env.ROUND_OPENS_AT || null,
     roundDays: 14,
+    // The temporary ₪1 test product is purchasable only while this is true.
+    testProduct: env.LIVE_TEST_PRODUCT === "yes",
   };
 }
 
@@ -320,7 +322,7 @@ export default {
       // Admin first: authenticated inside handleAdmin before anything else happens.
       if (isAdminPath(pathname)) return await handleAdmin(request, env, url);
       if (pathname === "/api/config" && method === "GET") return json(publicConfig(env));
-      if (pathname === "/api/catalog" && method === "GET") return json({ products: PRODUCTS });
+      if (pathname === "/api/catalog" && method === "GET") return json({ products: PRODUCTS.filter((p) => !p.hidden) });
       if (pathname === "/api/checkout" && method === "POST") return await handleCheckout(request, env);
       const m = pathname.match(/^\/api\/orders\/([^/]+)$/);
       if (m && method === "GET") return await handleOrderStatus(url, env, m[1]);

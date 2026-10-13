@@ -172,7 +172,7 @@ async function viewOrders(params) {
   const data = await api(withScope(`/orders?${p}`));
   const form = h("form", { class: "filters", role: "search" },
     inputField("q", "חיפוש (מספר, שם, טלפון, אימייל)", { type: "search", value: p.get("q") || "", wide: true }),
-    selectField("product", "מוצר", [["", "הכול"], ...PRODUCTS.map((x) => [x.id, x.name])], p.get("product") || ""),
+    selectField("product", "מוצר", [["", "הכול"], ...PRODUCTS.filter((x) => !x.hidden).map((x) => [x.id, x.name])], p.get("product") || ""),
     selectField("payment", "תשלום", [["", "הכול"], ...Object.entries(PAYMENT)], p.get("payment") || ""),
     selectField("redemption", "מימוש", [["", "הכול"], ...Object.entries(STATE).filter(([k]) => k !== "na")], p.get("redemption") || ""),
     inputField("from", "מתאריך", { type: "date", value: p.get("from") || "" }),

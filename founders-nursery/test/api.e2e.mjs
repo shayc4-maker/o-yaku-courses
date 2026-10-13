@@ -149,3 +149,12 @@ test("pages carry noindex", async () => {
   const html = await (await fetch(BASE + "/")).text();
   assert.match(html, /<meta name="robots" content="noindex/);
 });
+
+test("the ₪1 test product is refused, unlisted and flagged off unless LIVE_TEST_PRODUCT is enabled", async () => {
+  const r = await post("/api/checkout", { idempotencyKey: key(), customer, items: [{ id: "live-test", qty: 1 }] });
+  assert.equal(r.status, 400);
+  assert.equal(r.data.error, "unknown_product");
+  assert.equal((await (await fetch(`${BASE}/api/config`)).json()).testProduct, false);
+  const catalog = await (await fetch(`${BASE}/api/catalog`)).json();
+  assert.ok(!catalog.products.some((p) => p.id === "live-test"));
+});
