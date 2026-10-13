@@ -9,6 +9,7 @@ from shapely.geometry import LineString, Point, Polygon
 from shapely.ops import unary_union, polygonize_full, snap, nearest_points
 
 src3, kee3, out3, outpng, outtxt = sys.argv[1:6]
+hogc = R.File3dm.Read(sys.argv[6]) if len(sys.argv) > 6 else None
 m = R.File3dm.Read(src3); k = R.File3dm.Read(kee3); layers = [l.FullPath for l in m.Layers]
 rep = []
 def log(*a):
@@ -20,6 +21,7 @@ def add(layer, name, crv): S.append(dict(layer=layer, name=name, crv=crv))
 for o in m.Objects:
     a, g = o.Attributes, o.Geometry; L = layers[a.LayerIndex]
     if L[:2] in ('00', '98', '02'): continue
+    if hogc and L[:2] == '01' and a.Name.startswith('BODY_OUTER_V2_') and 19 <= int(a.Name.split('_')[-1]) <= 198: continue   # replaced by the smooth contour
     if L.startswith('03') and not a.Name and type(g).__name__ == 'NurbsCurve': continue   # whole purple spline
     if type(g).__name__ == 'PolyCurve':
         for i in range(g.SegmentCount): add(L[:2], a.Name or 'BODY', g.SegmentCurve(i))
@@ -28,6 +30,10 @@ for o in k.Objects:
     if o.Attributes.Name == 'KEELSON_V3_CLOSED':
         g = o.Geometry
         for i in range(g.SegmentCount): add('K3', 'KEELSON_V3', g.SegmentCurve(i))
+
+if hogc:
+    for o in hogc.Objects:
+        if o.Attributes.Name.startswith('HOGC_'): add('01', 'HOG_CONTOUR_V3', o.Geometry)
 
 def dense(c, n=None):
     d = c.Domain; t = type(c).__name__
@@ -240,11 +246,14 @@ NAMES = {
  (531, 350): ('APRON_INNER?', False), (540, 357): ('STEM_AFT?', False), (540, 399): ('STEM_FORE?', False), (552, 544): ('HEAD_BODY?', False),
  (560, 132): ('HEAD_TRIANGLE?', False), (564, 115): ('KNEE_OF_HEAD_UPPER?', False), (569, 290): ('KNEE_OF_HEAD_LOWER?', False), (573, 10): ('HEAD_SLIVER?', False),
 }
+def _lookup(p):
+    for (x0, ar), v in NAMES.items():
+        if abs(p.bounds[0] - x0) < 1.0 and abs(p.area - ar) <= max(1.0, 0.05 * ar): return v
+    return None
 def nm(p):
-    v = NAMES.get((int(round(p.bounds[0])), int(round(p.area))))
-    return v[0] if v else None
+    v = _lookup(p); return v[0] if v else None
 def confident(p):
-    v = NAMES.get((int(round(p.bounds[0])), int(round(p.area)))); return bool(v and v[1])
+    v = _lookup(p); return bool(v and v[1])
 
 f = R.File3dm(); f.Settings.ModelUnitSystem = R.UnitSystem.Millimeters; f.Settings.ModelAbsoluteTolerance = 0.01
 def mk(n, rgb): l = R.Layer(); l.Name = n; l.Color = (*rgb, 255); return f.Layers.Add(l)
