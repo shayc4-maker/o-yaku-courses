@@ -3,13 +3,16 @@ rising all the way to the upper edge (top cut of the body-plan stations).
 Inputs : station18_trace_px.npy  (pixel trace of curve 18 in plan_1a_aligned.png, produced by follow18)
 Scale  : the body plan is 1.4 % smaller per pixel than the profile (calibrated on the 6 waterline rows):
          Z = -0.08393*py + 176.967 ,  Y = (2383 - px) * 0.08393   (centreline x = 2383 px)
-Usage  : python3 -I build_frame18.py <trace.npy> <out.3dm> <qa.png> [x_aft_face=0] [thickness_x=4]"""
+Usage  : python3 -I build_frame18.py <trace.npy> <out.3dm> <qa.png> [x_aft_face=0] [thickness_x=4] [cant_deg=0]
+Cant   : the body-plan outline (Y,Z) is kept; every point is moved along X by -tan(cant)*(Z-Z_bottom), so the frame plane is tilted
+         about the Y axis through its lower end. The thickness is measured normal to the tilted plane."""
 import sys, numpy as np, rhino3dm as R
 from scipy.ndimage import gaussian_filter1d
 from shapely.geometry import Polygon
 trace, out3dm, outpng = sys.argv[1:4]
 XA = float(sys.argv[4]) if len(sys.argv) > 4 else 0.0
 TX = float(sys.argv[5]) if len(sys.argv) > 5 else 4.0
+THETA = np.radians(float(sys.argv[6])) if len(sys.argv) > 6 else 0.0   # cant of the frame plane: leans AFT going up (positive = following a raked stern back)
 K, XC = 0.08393, 2383.0
 P = np.load(trace)
 # arclength resample + light smoothing
@@ -52,23 +55,24 @@ poly = Polygon(np.vstack([O2, I2[::-1]]))
 print('band valid', poly.is_valid, 'area %.1f mm2' % poly.area, ' outer top', np.round(O2[0], 2), ' inner top', np.round(I2[0], 2),
       ' post cut z', round(O2[-1, 1], 2), '->', round(I2[-1, 1], 2))
 # ---------- rhino curves ----------
-def crv(C, x, flip):
-    pts = [R.Point3d(x, (-1 if flip else 1) * y, z) for y, z in C[::2]]
-    if not np.allclose(C[::2][-1], C[-1]): pts.append(R.Point3d(x, (-1 if flip else 1) * C[-1][0], C[-1][1]))
+Z0 = float(O2[-1, 1])
+def X_of(x, z): return x - np.tan(THETA) * (z - Z0)
+def pt3(x, sg, y, z, dz=0.0): return R.Point3d(X_of(x, z), sg * y, z + dz)
+def crv(C, x, sg, dz):
+    pts = [pt3(x, sg, y, z, dz) for y, z in C[::2]]
+    if not np.allclose(C[::2][-1], C[-1]): pts.append(pt3(x, sg, C[-1][0], C[-1][1], dz))
     return R.Curve.CreateControlPointCurve(pts, 3)
 f = R.File3dm(); f.Settings.ModelUnitSystem = R.UnitSystem.Millimeters
 def layer(nm, rgb): l = R.Layer(); l.Name = nm; l.Color = (*rgb, 255); return f.Layers.Add(l)
 L_ = {}
-for xname, x in (('AFT_FACE_X%g' % XA, XA), ('FORE_FACE_X%g' % (XA + TX), XA + TX)):
+faces = (('AFT_FACE', XA, 0.0), ('FORE_FACE', XA + TX * np.cos(THETA), TX * np.sin(THETA)))
+for xname, x, dz in faces:
     L_[xname] = layer('40_FRAME_18_' + xname, (0, 0, 0) if 'AFT' in xname else (120, 120, 120))
-    for side, flip in (('PORT', True), ('STBD', False)):
-        o, i = crv(O2, x, flip), crv(I2, x, flip)
-        sg = -1 if flip else 1
-        parts = [o, R.LineCurve(R.Point3d(x, sg * O2[0, 0], O2[0, 1]), R.Point3d(x, sg * I2[0, 0], I2[0, 1])), i,
-                 R.LineCurve(R.Point3d(x, sg * I2[-1, 0], I2[-1, 1]), R.Point3d(x, sg * O2[-1, 0], O2[-1, 1]))]
-        # orientation: outer top->post, cap, inner (reversed so it runs post->top), cap
-        i.Reverse(); parts = [o, R.LineCurve(R.Point3d(x, sg * O2[-1, 0], O2[-1, 1]), R.Point3d(x, sg * I2[-1, 0], I2[-1, 1])), i,
-                              R.LineCurve(R.Point3d(x, sg * I2[0, 0], I2[0, 1]), R.Point3d(x, sg * O2[0, 0], O2[0, 1]))]
+    for side, sg in (('PORT', -1), ('STBD', 1)):
+        o, i = crv(O2, x, sg, dz), crv(I2, x, sg, dz)
+        i.Reverse()
+        parts = [o, R.LineCurve(pt3(x, sg, O2[-1, 0], O2[-1, 1], dz), pt3(x, sg, I2[-1, 0], I2[-1, 1], dz)), i,
+                 R.LineCurve(pt3(x, sg, I2[0, 0], I2[0, 1], dz), pt3(x, sg, O2[0, 0], O2[0, 1], dz))]
         pc = R.PolyCurve()
         for c in parts: pc.Append(c)
         a = R.ObjectAttributes(); a.Name = 'FRAME18_%s_%s_CLOSED' % (side, xname); a.LayerIndex = L_[xname]; f.Objects.AddCurve(pc, a)
@@ -95,9 +99,10 @@ sys.path.insert(0, '/tmp/claude-0/-home-user-o-yaku-courses/156e7236-f04f-5437-b
 from p5map import model_to_p5
 from PIL import Image; Image.MAX_IMAGE_PIXELS = None
 im = np.array(Image.open('/tmp/claude-0/-home-user-o-yaku-courses/156e7236-f04f-5437-b27d-17e93e416883/scratchpad/st/plan_5_aligned.png'))
-x0, x1, z0, z1 = -35, 60, 30, 150
+x0, x1, z0, z1 = -62, 40, 30, 152
 a_, b_ = model_to_p5(x0, z0); c_, d_ = model_to_p5(x1, z1)
 ax.imshow(im[int(d_):int(b_), int(a_):int(c_)], cmap='gray', extent=(x0, x1, z0, z1), origin='upper', aspect='equal')
-ax.add_patch(plt.Rectangle((XA, O2[-1, 1]), TX, Z_TOP - O2[-1, 1], fc='red', ec='red', alpha=.55))
-ax.axvline(0, color='red', lw=.8); ax.set_xlim(x0, x1); ax.set_ylim(z0, z1); ax.set_title('side view on plan_5: frame at line 18 (red), X %g..%g, Z %.1f..%.1f' % (XA, XA + TX, O2[-1, 1], Z_TOP))
+quad = [(X_of(XA, Z0), Z0), (X_of(XA, Z_TOP), Z_TOP), (X_of(XA, Z_TOP) + TX * np.cos(THETA), Z_TOP + TX * np.sin(THETA)), (XA + TX * np.cos(THETA), Z0 + TX * np.sin(THETA))]
+ax.add_patch(plt.Polygon(quad, fc='red', ec='red', alpha=.55))
+ax.axvline(0, color='red', lw=.8); ax.set_xlim(x0, x1); ax.set_ylim(z0, z1); ax.set_title('side view on plan_5: frame 18 (red), cant %.1f deg aft, Z %.1f..%.1f, top X=%.1f' % (np.degrees(THETA), O2[-1, 1], Z_TOP, X_of(XA, Z_TOP)))
 plt.tight_layout(); plt.savefig(outpng, dpi=75)
