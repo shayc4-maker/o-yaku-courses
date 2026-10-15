@@ -1,0 +1,41 @@
+{
+ "scale_mm_per_px": 0.08467,
+ "centre_line_y_px": 1098.0,
+ "cubes": [
+  {
+   "id": "C1",
+   "y_mm": 40.0,
+   "aft_face_dx_mm": 4.2
+  },
+  {
+   "id": "C2",
+   "y_mm": 23.2,
+   "aft_face_dx_mm": 1.4
+  },
+  {
+   "id": "C3",
+   "y_mm": 7.6,
+   "aft_face_dx_mm": 0.0
+  },
+  {
+   "id": "C4",
+   "y_mm": -7.3,
+   "aft_face_dx_mm": 0.1
+  },
+  {
+   "id": "C5",
+   "y_mm": -23.3,
+   "aft_face_dx_mm": 1.8
+  },
+  {
+   "id": "C6",
+   "y_mm": -40.4,
+   "aft_face_dx_mm": 5.2
+  }
+ ],
+ "cube_size_mm": {
+  "sided_y": 3.0,
+  "fore_aft_x": 3.5
+ },
+ "source": "plan_4a.tif, builder purple frames (scan 2026-10-15_223956.pdf)"
+}

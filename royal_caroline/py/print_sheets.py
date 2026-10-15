@@ -9,7 +9,7 @@ def page(img,title,corner_labels,grid=None,landscape=False):
     W,H=A4 if not landscape else (A4[1],A4[0])
     P=Image.new('RGB',(W,H),'white'); d=ImageDraw.Draw(P)
     m=90; avail=(W-2*m,H-2*m-60); s=min(avail[0]/img.size[0],avail[1]/img.size[1])
-    im=img.convert('RGB').resize((int(img.size[0]*s),int(img.size[1]*s)),Image.LANCZOS)
+    im=img.convert('RGB').resize((int(img.size[0]*s),int(img.size[1]*s)),Image.LANCZOS); im=Image.blend(im,Image.new('RGB',im.size,'white'),0.5)   # plan lightened to 50 % so pen colours stand out
     ox,oy=m,m+60; P.paste(im,(ox,oy)); d.text((m,m-10),title,fill=(0,0,0),font=F)
     w,h=im.size
     if grid:

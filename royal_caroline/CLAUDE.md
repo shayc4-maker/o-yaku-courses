@@ -15,3 +15,4 @@
 - Rhino 8 `.3dm` (layer per part; closed curve plus solid), STEP when booleans are needed. Keep files under 30 MB (split or zip) so they can be sent to the builder.
 - Check solids (valid, no clashes) before sending; say plainly what was not checked (for example not opened in Rhino).
 - Commit and push to the session branch after each deliverable; update STATE.md with a few lines; send the file or image to the builder with SendUserFile.
+- Printable marking sheets: lighten the plan to 50 % brightness so the builder's coloured pen marks show; corner crosses with source coordinates; the builder scans back (`py/scan_register.py` registers by the crosses; template match, scan is a different page size).
