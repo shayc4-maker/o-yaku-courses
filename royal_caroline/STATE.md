@@ -1,5 +1,7 @@
 # Royal Caroline 1:48 — project state (handover for a new session)
 
+Working rules are in `royal_caroline/CLAUDE.md`; read them first.
+
 ## Who / what
 - The builder works in Hebrew, uses **Rhino 8 on a Mac**, and checks everything visually against the plans.
 - Goal: a POF (plank-on-frame) model at 1:48. Deliverables are a Rhino 8 `.3dm`, DXF cut files and QA overlays (plan + lines).
