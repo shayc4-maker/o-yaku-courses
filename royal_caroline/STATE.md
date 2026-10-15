@@ -62,7 +62,8 @@
 3. **Keelson is a separate part with its own contour.**
    - It is notched over the frames, about 1 mm deep. The frames rise into keelson notches.
 4. **The stern knee is included** (upper and lower edges marked). The **post top is raised to Z 90.5**, per dots 244/245; the v5 contour still stops at 83.8 and must be updated.
-5. When the builder sends a red sketch, it is **shape/topology reference only, not precise**. Use the dots for positions.
+5. **SOS images and the reference plans are for orientation only.** Never take dimensions or geometry directly from them; measurements come from the builder's plans (plan_5, plan_1a/1b) and dots.
+6. When the builder sends a red sketch, it is **shape/topology reference only, not precise**. Use the dots for positions.
 
 ## Current status (approved vs open)
 - **Done:** lines v2 (`qa/lines_*.png`), after the builder's red-sketch corrections:
