@@ -41,7 +41,9 @@ def region(y0):
     cs,_=cv2.findContours(m,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
     if not cs: return None
     c=max(cs,key=cv2.contourArea)[:,0,:]
+    if len(c)<4: return None
     pg=Polygon([(GX[0]+a*0.1,GZ[0]+b*0.1) for a,b in c]).buffer(0.05).simplify(0.04)
+    if pg.is_empty: return None
     return max(pg.geoms,key=lambda g:g.area) if pg.geom_type=='MultiPolygon' else pg
 TH=5.3; HB=TH/2; Ymax=float(np.nanmax(Y[:, 0]))
 W=(Ymax-HB)/5; print('Ymax',round(Ymax,2),'strip width',round(W,2))
@@ -88,5 +90,35 @@ for ys in (1,-1):
     import math
     cyl=r3.Cylinder(r3.Circle(r3.Point3d(0,0,0),2.0),x1h-x0h)
     br=cyl.ToBrep(True,True); br.Transform(r3.Transform.Rotation(math.pi/2,r3.Vector3d(0,1,0),r3.Point3d(0,0,0))); br.Translate(r3.Vector3d(x0h,ys*yc,zc)); at=r3.ObjectAttributes(); at.LayerIndex=ih; at.Name='hawse_hole_%s'%('S' if ys>0 else 'P'); out.Objects.AddBrep(br,at)
-out.Write('rhino/RoyalCaroline_bow_HT_v1.3dm',7)
+
+# ---- sanding marks: final hull line on the outer face + depth contours (25/50/75 %), allowance dots
+il=L('HT_SAND_LINE',(255,0,0)); ic=L('HT_SAND_CONTOURS',(255,140,0)); it=L('HT_SAND_NOTES',(0,0,0))
+def curve3(c,yv):
+    pl=r3.Polyline(len(c))
+    for x,z in c: pl.Add(x,yv,z)
+    return pl.ToPolylineCurve()
+notes=[]
+for k in range(1,6):
+    y0,y1,pg0=HT[k]
+    for side in ('S','P'):
+        ys=1 if side=='S' else -1; ht=(6-k) if side=='S' else (5+k)
+        yo=ys*y1   # outer face
+        pg1=region(y1-0.01)
+        lv=[(f,region(y0+f*(y1-y0)-0.01)) for f in (0.25,0.5,0.75)]
+        if pg1 is not None and not pg1.is_empty:
+            at=r3.ObjectAttributes(); at.LayerIndex=il; at.Name='HT%d_sand_line_outer_face'%ht; out.Objects.AddCurve(curve3(list(pg1.exterior.coords),yo),at)
+        for f,pg in lv:
+            if pg is None or pg.is_empty: continue
+            at=r3.ObjectAttributes(); at.LayerIndex=ic; at.Name='HT%d_sand_%d%%'%(ht,int(f*100)); out.Objects.AddCurve(curve3(list(pg.exterior.coords),yo),at)
+        # inner face outline = stock edge (no sanding along it)
+        mx=0.0
+        if pg1 is not None and not pg1.is_empty:
+            from shapely.geometry import Point
+            mx=max(pg1.distance(Point(p)) for p in pg0.exterior.coords)
+        else: mx=float('nan')
+        c=pg0.representative_point(); txt=('HT%d sand to red line, max %.1f mm'%(ht,mx)) if mx==mx else 'HT%d sand to hull'%ht
+        at=r3.ObjectAttributes(); at.LayerIndex=it; out.Objects.AddTextDot(txt,r3.Point3d(c.x,yo,c.y),at)
+        notes.append((ht,round(mx,2) if mx==mx else None))
+print('max in-plane allowance per HT',notes)
+out.Write('rhino/RoyalCaroline_bow_HT_v2.3dm',7)
 print(rows); print('hole x',round(x0h,1),round(x1h,1),'y',round(yc,1))
