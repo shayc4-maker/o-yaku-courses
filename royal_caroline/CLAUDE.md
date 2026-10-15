@@ -11,6 +11,8 @@
 - Anything touching the frames aligns to the frames (seats from `data/backbone_contour_v5.json`), not to the dots.
 - Mark sanding/bevel allowance on parts that need it.
 
+- Choose control points that give clean smooth splines (drop points that cause waviness). Yellow on the builder's marks = curved line (spline), everything else straight. Do not make a joint between a straight line and a curve tangent unless needed (or approximately).
+
 ## Deliverables
 - Rhino 8 `.3dm` (layer per part; closed curve plus solid), STEP when booleans are needed. Keep files under 30 MB (split or zip) so they can be sent to the builder.
 - Check solids (valid, no clashes) before sending; say plainly what was not checked (for example not opened in Rhino).
