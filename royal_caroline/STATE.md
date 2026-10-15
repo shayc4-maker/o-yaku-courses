@@ -96,3 +96,8 @@
 - **Planned:**
   - The builder will download the full-size images manually and upload them.
   - **Optional, not set up yet:** an SOS login cookie as a Network secret, so sessions can fetch full-size images. Use header `Cookie`, host `shipsofscale.com`, value `xf_user=...`.
+
+## Session 2026-10-15 (cont.)
+- Builder approved lines v2; uploaded 5 full-size SOS images to `research/sos_full/` (1: hawse timbers/filling pieces, 2: frame 5 sections, 3-4: frame 21 sections with chocks, 5: disposition of frames, 610.5 mm between frames 1-18 and 627.0 overall).
+- `py/faces.py` (shapely polygonize) on `scan/lines_v1.json` closes only 5 regions: keel in 3 scarfed pieces (split at X=168.3 and 333.6), a deadwood wedge (X 10-60, Z 1-11) and a stern-post piece (X 5-16, Z 10-31). QA: `qa/faces_v2.png`.
+- The rest (stem, apron, gripe, head, post, knee, keelson) is open chains and needs the builder to name the part boundaries (chains of dot ids or a red sketch) before closed parts are built.
