@@ -80,3 +80,19 @@
   2. Extend the contour (post top at 90.5) and build closed parts from the lines: keel, false keel, hog, post, inner post, deadwood pieces, knee, keelson, stem/apron/gripe/head pieces. Output `.3dm` (layers per part) plus DXF.
   3. Then: complete the forward cant frames to the correct height; refit the frames to the new seats; continue fixing parts one by one (the builder judged the earlier full model "good from afar, full of mismatches").
 - **Lesson learned:** guessing dot connectivity from the hatched plan is unreliable. Ask the builder for chains or sketches instead, then build the geometry.
+
+## Research (Ships of Scale), added 2026-10-15
+- **`research/RoyalCaroline_SOS_references.html`:** an index of 184 plan and structure images from 13 SOS threads. Each entry has a thumbnail, a "full" link (needs login) and a "post" link.
+- **Most relevant: Jeronimo (Karl), 1:48 POF from the same Bellabarba 1:48 plans.**
+  - Thread: https://shipsofscale.com/sosforums/threads/royal-caroline-1749-m-1-48-by-jeronimo-completed-build.3178/
+  - #1: disposition of frames.
+  - #6, #7, #35, #36: per-frame timber drawings (made by "Mike").
+  - #3, #4, #33, #34: the backbone, with a **horizontal seat notch per frame** (same as the builder's rule).
+  - #39, #41: hawse timbers.
+  - #58–#74: keelson and riders.
+  - #70–#77: stern framing.
+  - **Lesson from his build:** leave bevel allowance on the frames; his first frame set ended up too thin.
+- **Original NMM draughts (1749, 1:48):** photos are #26–#29, #847–#850, #1172 and #1173.
+- **Planned:**
+  - The builder will download the full-size images manually and upload them.
+  - **Optional, not set up yet:** an SOS login cookie as a Network secret, so sessions can fetch full-size images. Use header `Cookie`, host `shipsofscale.com`, value `xf_user=...`.
