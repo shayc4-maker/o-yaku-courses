@@ -73,12 +73,12 @@ for s_,sg in (('S',1),('P',-1)):
         pl.Add(pl_[0][0],yc-2.0,pl_[0][1])
         ex=r3.Extrusion.Create(pl.ToPolylineCurve(),4.0,True); br=ex.ToBrep(True)
         v=np.array([br.Vertices[k].Location.Y for k in range(len(br.Vertices))]); br.Translate(r3.Vector3d(0,yc-2.0-v.min(),0))
-        xf=r3.Transform(1.0); xf.M12=sg*tz; xf.M13=-sg*tz*ZB
+        xf=r3.Transform(1.0); xf.M12=-sg*tz; xf.M13=sg*tz*ZB
         assert br.Transform(xf)
         vv=np.array([[br.Vertices[k].Location.X,br.Vertices[k].Location.Y,br.Vertices[k].Location.Z] for k in range(len(br.Vertices))])
         assert br.IsSolid and br.IsValid,(s_,y)
         at=r3.ObjectAttributes(); at.LayerIndex=ic; at.Name='COUNTER_TIMBER_%s%d'%(s_,i+1); f.Objects.AddBrep(br,at)
         if i==2 and sg==1: print('outer S top vertex y range',vv[:,1].min().round(1),vv[:,1].max().round(1),'z',vv[:,2].min(),vv[:,2].max().round(1))
 f.Write('rhino/RoyalCaroline_stern_v3.3dm',7)
-json.dump({'angle_deg':ANG,'counter_Y':Y,'splay_deg':SPLAY,'foot_shift':DROP,'ztop':ZTOP,'R_plan':R},open('data/stern_v3_params.json','w'))
+json.dump({'angle_deg':ANG,'counter_Y':Y,'splay_deg':SPLAY,'foot_shift':DROP,'ztop':ZTOP,'R_plan':R,'splay_direction':'inward at the top (converging towards the centre line)'},open('data/stern_v3_params.json','w'))
 print(len(f.Objects),'objects')
