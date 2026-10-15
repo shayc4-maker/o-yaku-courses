@@ -171,3 +171,4 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - Aft view (plan_7): yellow top arch is a clean parabola (max deviation 0.45 mm, vertex x 1410 px, centre line 1420 px, R about 85 mm: drop 9.4 mm at Y 40.6). The lower yellow curve (tuck near the rudder) is not used yet.
 - 2D for approval: `qa/stern_points_2d_v1.png`. Waiting for approval before rebuilding the six timbers.
 - Builder: straight lines are also given by dots on the page (not only yellow = curve). The 13 dots near the wing transom / stern knee band (`data/stern_lower_points.json`, ids 1-13 in `qa/stern_lower_points.png`) are corners of straight edges (blocks at Z about 75.8, 65.5/61.6, 57.5 and the diagonal band); connectivity to be given by the builder as id chains.
+- Knee edges made parallel (builder): blue upper curve = offset of the green lower spline by 2.5 mm (the strip width): `data/stern_side_points_v2.json`, `qa/stern_knee_parallel.png`.
