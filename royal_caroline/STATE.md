@@ -105,3 +105,7 @@
 - Batch 2 of SOS images saved in `research/sos_full/` (6-10): 6 hawse timbers end view (HT1-10, deck clamps), 7 photo of the stepped inner face of the frames/clamps, 8 photo of the bow hawse timbers with numbered pairs, 9 photo of a hawse-timber template with the first frame's timbers, 10 hawse timbers sheet (plan, side view, end view with dimensions).
 - Batch 3 of SOS images saved in `research/sos_full/` (11-15): 11 stern frames 40-47 with the transom/counter framing and a laminated stern block; 12 close-up of the laminated transom-seat steps; 13 bow-on view of the frame set with cross-beams and the keel/stem; 14 aft end showing the notched (joggled) keelson/deadwood seat; 15 full frame set from the side with the continuous top rail.
 - Image 16 saved in `research/sos_full/`: stern frames 38-45 beside the transom frame, side view of the aft end.
+
+## Parts v1 (2026-10-15)
+- Builder approved lines v2 and said go ahead. Built 19 closed profile parts from `data/backbone_split_v5.json` (all valid polygons), sternpost top raised to dots 244/245 (Z 90.5). Script `py/build_parts_v1.py`; outputs `data/backbone_parts_v1.json`, `rhino/RoyalCaroline_backbone_parts_v1.3dm` (layer per part, closed polyline in XZ, Y=0), `rhino/RoyalCaroline_backbone_parts_v1.dxf`, QA `qa/parts_v1.png`.
+- Open: `DEADWOOD_RISING` is still one part that includes the keelson with its frame seat steps; per rule 3 the keelson should be a separate notched part. Parts are 2D profiles (no thickness yet; builder picks stock).
