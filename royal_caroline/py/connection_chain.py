@@ -28,7 +28,7 @@ def pav(v):      # isotonic (non-decreasing) regression of the slopes
         while len(out)>1 and out[-2][0]>out[-1][0]:
             m=(out[-2][0]*out[-2][1]+out[-1][0]*out[-1][1])/(out[-2][1]+out[-1][1]); n=out[-2][1]+out[-1][1]; out[-2:]=[[m,n]]
     return np.concatenate([[m]*n for m,n in out])
-def concave_only(y,z,Yend=42.0):      # slope never decreases (z''>=0, 'concave' in the builder's wording); ends keep their values
+def concave_only(y,z,Yend=44.5):      # slope never decreases (z''>=0, 'concave' in the builder's wording); ends keep their values
     m=y<=Yend; yy,zz=y[m],z[m]; sl=np.gradient(zz,yy); si=pav(sl)
     zn=zz[0]+np.concatenate([[0],np.cumsum(0.5*(si[1:]+si[:-1])*np.diff(yy))]); zn=zn+(zz[-1]-zn[-1])*(yy-yy[0])/(yy[-1]-yy[0])
     out=z.copy(); out[m]=zn; return out

@@ -13,7 +13,7 @@ def hermite(P0,T0,P1,T1,n=60):
 def build(fn,X):
     ztop,zk0,zk1=ks(X); O,I,tck=M.frame_profile(X); fy,fz=O[0]
     if not abs(O[0,1]-(ztop-M.OVER))<1e-6:
-        zb=37.0 if fn==48 else ztop-M.OVER; ext=[[M.YB,zb],[M.YB+0.02,zb+1.0],[M.YB+0.35*(fy-M.YB),zb+0.45*(fz-zb)],[M.YB+0.8*(fy-M.YB),zb+0.8*(fz-zb)]]; O=np.vstack([ext,O]); tck,u=splprep(O.T,k=3,s=0)
+        zb=37.0 if fn==48 else ztop-M.OVER; ext=[[M.YB,zb],[M.YB+0.25,zb+1.0],[M.YB+0.35*(fy-M.YB),zb+0.45*(fz-zb)],[M.YB+0.8*(fy-M.YB),zb+0.8*(fz-zb)]]; O=np.vstack([ext,O]); tck,u=splprep(O.T,k=3,s=0)
         dy,dz=splev(u,tck,der=1); n=np.c_[dz,-dy]; n/=np.hypot(*n.T)[:,None]; I=O-M.W*n
     zf=zk0+0.5*(zk1-zk0)
     itck=splprep(I.T,k=3,s=0)[0]; uu=np.linspace(0,1,2000); iy,iz=splev(uu,itck); dy,dz=splev(uu,itck,der=1)
