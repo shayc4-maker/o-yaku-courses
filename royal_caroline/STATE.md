@@ -193,3 +193,4 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - Double frames W=8 gap 3: F46 X24-32, F47 13-21, F48 2-10 (A=aft layer, F=fwd layer, 4 mm each, S/P). Templates H1/H2; outer Y and Z range interpolated quadratically in X through H2(12), H1(24), frame1(39).
 - Transoms 2,3,wing cut to F48 aft face X=2.0; tenons (rib-shaped, 2.2 deep, 0.6 inset) fused to transoms, pockets (+0.1) cut in FRAME48_A. No clashes among new parts. Not checked: backbone clash, frames 1-45 refit, T1, opened in Rhino.
 - Files: rhino/RoyalCaroline_stern_frames_v1.step, _meshes.3dm, qa/stern_frames_v1.png
+- v1b: F48 outer clamped to stern outline (bowl knots + 48.8 above wing, 50% on F47); T2/T3 rebuilt as smooth lofts with the wing's plan arch dx=kp*(y^2-Yc0^2); no clashes.

@@ -29,10 +29,14 @@ def new_poly(xc):
     T,(yt,zbt,ztt)=(H1,O[1]) if xc>=16 else (H2,O[0])
     yo=np.array([fitq([O[k][0][i] for k in range(3)],xc) for i in range(len(SS))])
     zb=fitq([O[k][1] for k in range(3)],xc); zt=fitq([O[k][2] for k in range(3)],xc)
+    zs=zb+SS*(zt-zb); Lim=np.interp(zs,[0,63.77,67.21,70.36,73.8,75.0,140.0],[200,40.5,44.7,46.5,47.2,48.8,48.8])
+    f=1.0 if xc<=9 else (0.5 if xc<=20 else 0.0); dl=np.where(zs>=63.0,f*np.maximum(0,yo-Lim),0.0); dl=np.convolve(np.pad(dl,3,mode='edge'),np.ones(7)/7,'valid'); yo=yo-dl
     pts=[]
     for y,z in T.exterior.coords[:-1]:
         s=(z-zbt)/(ztt-zbt); pts.append((y+np.interp(s,SS,yo)-np.interp(s,SS,yt), zb+s*(zt-zb)))
-    return Polygon(pts).buffer(0),(zb,zt)
+    P=Polygon(pts).buffer(0)
+    if P.geom_type!='Polygon': P=max(P.geoms,key=lambda g:g.area); print('MULTI',xc)
+    return P,(zb,zt)
 def prism(P,x0,w=4.0,mirror=False):
     mp=BRepBuilderAPI_MakePolygon()
     for y,z in list(P.exterior.coords)[:-1]: mp.Add(gp_Pnt(x0,-y if mirror else y,z))
@@ -50,8 +54,18 @@ XF=2.0; TD=2.2
 def box(x0,x1,y0,y1,z0,z1): return BRepPrimAPI_MakeBox(gp_Pnt(x0,y0,z0),gp_Pnt(x1,y1,z1)).Shape()
 trs={}; pockets=[]; PA,_=new_poly(4.0)
 from shapely.geometry import box as sb
+from OCP.BRepOffsetAPI import BRepOffsetAPI_ThruSections
+def arched(poly,hw):   # XZ section shifted in X by the wing's plan arc kp*(y^2-Yc0^2), smooth loft
+    ts=BRepOffsetAPI_ThruSections(True,False)
+    for y in np.linspace(-hw,hw,9):
+        dx=S.kp*(y*y-S.Yc[0]**2); mp=BRepBuilderAPI_MakePolygon()
+        for x,z in poly: mp.Add(gp_Pnt(x+dx,y,z))
+        mp.Close(); ts.AddWire(mp.Wire())
+    ts.Build(); return ts.Shape()
+T=json.load(open('data/stern_transom_outline_v2.json'))['transoms_normalized']
+src={'TRANSOM_2':arched(T['T2']['poly'],37.8),'TRANSOM_3':arched(T['T3']['poly'],12.7),'WING_TRANSOM':S.allp['WING_TRANSOM']}
 for n in ('TRANSOM_2','TRANSOM_3','WING_TRANSOM'):
-    t=BRepAlgoAPI_Common(S.allp[n],box(-100,XF,-100,100,0,200)).Shape()
+    t=BRepAlgoAPI_Common(src[n],box(-100,XF,-100,100,0,200)).Shape()
     sec=BRepAlgoAPI_Common(t,box(XF-0.3,XF,-100,100,0,200)).Shape(); b=Bnd_Box(); BRepBndLib.Add_s(sec,b)
     z0,z1=b.CornerMin().Z()+0.7,b.CornerMax().Z()-0.7; h=b.CornerMax().Y()-0.7
     for sg in (False,True):
@@ -121,10 +135,16 @@ P,_=new_poly(4.0)
 ax[0].plot(*zip(*F1.exterior.coords) if F1.geom_type=='Polygon' else [[],[]],'k:',lw=.5)
 for n,(z0,z1) in {'T3':(53.3,57.6),'T2':(61.5,65.5),'WING':(71.8,75.8)}.items(): ax[0].axhspan(z0,z1,color='orange',alpha=.3); ax[0].text(0,(z0+z1)/2,n,ha='center')
 ax[0].set_aspect('equal'); ax[0].legend(); ax[0].set_title('aft view YZ')
-from OCP.BRepBndLib import BRepBndLib
-cols={'COUNTER':'gray','TRANSOM':'orange','WING':'orange','FRAME':'tab:blue'}
-for n,s in allp.items():
-    b=Bnd_Box(); BRepBndLib.Add_s(s,b); c=next(v for k,v in cols.items() if n.startswith(k))
-    ax[1].add_patch(plt.Rectangle((b.CornerMin().X(),b.CornerMin().Z()),b.CornerMax().X()-b.CornerMin().X(),b.CornerMax().Z()-b.CornerMin().Z(),fill=False,ec=c,lw=.8))
-ax[1].set_xlim(-55,45); ax[1].set_ylim(10,150); ax[1].set_aspect('equal'); ax[1].set_title('side XZ bounding boxes')
+for z,nm in ((55.4,'T3'),(63.5,'T2'),(73.8,'WING')):
+    for n,sh in allp.items():
+        if not (n.startswith('TRANSOM') or n.startswith('WING') or n.startswith('FRAME4')): continue
+        sl=BRepAlgoAPI_Common(sh,box(-100,100,-100,100,z-0.05,z+0.05)).Shape(); BRepMesh_IncrementalMesh(sl,0.05)
+        ex=TopExp_Explorer(sl,TopAbs_FACE); xs=[];ys=[]
+        while ex.More():
+            fc=TopoDS.Face(ex.Current()); lc=TopLoc_Location(); tr=BRep_Tool.Triangulation_s(fc,lc)
+            if tr is not None:
+                for i in range(1,tr.NbNodes()+1): p=tr.Node(i).Transformed(lc.Transformation()); xs.append(p.X()); ys.append(p.Y())
+            ex.Next()
+        if xs: ax[1].scatter(ys,[x+{55.4:-40,63.5:0,73.8:40}[z]*0 for x in xs],s=0.5,c='orange' if not n.startswith('FRAME') else 'tab:red')
+ax[1].set_aspect('equal'); ax[1].set_title('plan XY slices at Z=55.4/63.5/73.8 (Y horizontal, X vertical)'); ax[1].set_ylim(-12,12)
 plt.savefig('qa/stern_frames_v1.png',dpi=80)
