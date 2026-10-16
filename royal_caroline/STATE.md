@@ -207,3 +207,6 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 
 ## סיכום סשן 16.10.2026
 ראה `docs/SESSION_2026-10-16_stern_frames.md` (מה נבנה, לקחים, בעיות פתוחות) ו-`docs/NEXT_PROMPT.md` (פרומפט המשך).
+
+## Refit frames 1-45: 2D for approval (2026-10-16)
+- `qa/frames_refit_2d_v1.png` from `data/frames_vs_seats_v1.json`: shift needed per frame (seat floor Z minus v10 floor bottom Z): aft frames 1-7 down 1.0..4.7 mm (floating), 8-10 about 0, frames 11-45 up 1.0..3.9 mm (mid-ship about +2.4..2.8, floors cut into the keel). Frame X matches seats within 0.64 mm (no X change). Nothing rebuilt; waiting for approval and answers (see chat). Items 1, 3, 4 (builder feedback on the 3dm, transom 1, sanding marks) not started.
