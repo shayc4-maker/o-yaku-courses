@@ -1,0 +1,5 @@
+קרא קודם `royal_caroline/CLAUDE.md`, אחר כך `royal_caroline/STATE.md` (הסעיפים האחרונים: v10 + assembly v8) ו-`royal_caroline/docs/SESSION_2026-10-16_stern_frames.md`.
+ענף: `claude/awesome-pascal-xaztf9` (גם `claude/happy-gates-4ngx6c`). שפה: עברית, מינימום טוקנים, 2D לאישור לפני בנייה, בלי דגימת פיקסלים, ספלינים נקיים בנקודות מינימליות. אם משהו לא ברור: לבקש עקומה מצוירת ב-`rhino/RoyalCaroline_aftview_frames46_48_REF.3dm` (שכבה BUILD_HERE) או סימון אדום, לא לנחש.
+מצב: צלעות 46-48 בנויות (`py/stern_frames_v10.py`), החלק האחורי והשדרית ב-`rhino/RoyalCaroline_stern_assembly_v8.3dm`, הרכבה מלאה ב-`rhino/RoyalCaroline_assembly_v3.zip`. הבילדר עדיין לא אישר את התלת.
+משימה הבאה: (1) לקבל תגובת הבילדר על הקובץ בריינו, בעיקר ה"אוזן" ב-F48, המרפק ב-46/47 והאם ה"ח" נכון (2) התאמת צלעות 1-45 למושבי הקיל החדשים (`data/backbone_contour_v5.json` seats; להשוות ל-`data/frames_vs_seats_v1.json`) (3) טראנסום 1 (4) סימוני שיוף על החלק האחורי (5) לעדכן STATE.md ולהעלות.
+לפני כל בנייה חדשה: להציג 2D של הצורה ולחכות לאישור.
