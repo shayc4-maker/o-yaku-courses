@@ -23,25 +23,14 @@ def Yst(z,X):
 def Ywl(k,X):
     v=WL[k]; idx=np.where(np.diff(np.sign(v[:,0]-X))!=0)[0]; return None if len(idx)==0 else float(np.interp(X,[v[idx[0],0],v[idx[0]+1,0]],[v[idx[0],1],v[idx[0]+1,1]]))
 WLK=[('WL_I_plan',8.7),('WL_II_plan',17.4),('WL_III_plan',26.1),('WL_IV_plan',34.8),('WL_V_plan',43.4)]
-def hull_points(i,X):
-    cand=[]
-    for k,z in WLK:
-        y=Ywl(k,X)
-        if y is not None and y>3.6: cand.append((y,z))
-    for z in (14,20,30,40,52,56,66,76,86,96,104):
-        if any(abs(z-q[1])<3.5 for q in cand): continue
-        y=Yst(z,X)
-        if not np.isnan(y) and y>3.6: cand.append((y,z))
-    cand=sorted(cand,key=lambda q:q[1]); out=[]
-    for p in cand:
-        if not out or p[0]>out[-1][0]-0.3 or p[1]>60: out.append(p)
-    pts=out; sl=(pts[1][0]-pts[0][0])/(pts[1][1]-pts[0][1]); zf=pts[0][1]-(pts[0][0]-3.2)/sl; foot=(3.2,zf)
-    old=C.face_outer(i,X); zt=pts[-1][1]; ytop=pts[-1][0]; sh=ytop-np.interp(zt,old[:,1],old[:,0])
-    top=[(np.interp(z,old[:,1],old[:,0])+sh*max(0,1-(z-zt)/40),z) for z in (zt+12,zt+26,142)]
-    P=np.array([foot]+pts+top); P=P[np.argsort(P[:,1])]; return P
+import hull_loft_sections as HL
 def hull_line(i,X):
-    P=hull_points(i,X); tk,u=splprep(P.T,k=3,s=len(P)*0.35); y,z=splev(np.linspace(0,1,600),tk)       # smoothing spline: the points come from different sources (waterlines, stations, plan outline) and carry ~0.5 mm noise
-    y=np.where(np.arange(600)<3,y,y); return np.c_[y,z]
+    """exact hull line at X = section of the lofted body-plan station splines; sampled at ~14 points on the exact section and joined by an interpolating spline; plan outline above the last station point"""
+    P=HL.section(min(X,527.7)); zz=np.round(P[:,1],2); _,ui=np.unique(zz,return_index=True); P=P[ui]; P=P[np.argsort(P[:,1])]
+    z0,z1=P[0,1],P[-1,1]; zs=np.r_[z0,np.linspace(z0,z1,13)[1:]]; pts=[(float(np.interp(z,P[:,1],P[:,0])),float(z)) for z in zs]
+    old=C.face_outer(i,X); sh=pts[-1][0]-np.interp(z1,old[:,1],old[:,0]); top=[(np.interp(z,old[:,1],old[:,0])+sh*max(0,1-(z-z1)/40),z) for z in (z1+12,z1+26,142)]
+    pts=np.array(pts+top); pts[0,0]=max(pts[0,0],3.2)
+    tk,u=splprep(pts.T,k=3,s=0); y,z=splev(np.linspace(0,1,600),tk); return np.c_[y,z]
 def keel_levels(X):
     g=UB.intersection(LineString([(X,-30),(X,200)])); sg=sorted((l.bounds[1],l.bounds[3]) for l in getattr(g,'geoms',[g]))
     sg=[s for s in sg if s[1]-s[0]>0.05]; mrg=[list(sg[0])]
