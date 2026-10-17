@@ -13,6 +13,11 @@ PCS=json.load(open('data/frame_pieces_v10.json'))['pieces']; X=json.load(open('d
 def outer_line(fr):
     sel=[p for p in PCS if p['frame']==fr and p['layer']=='A' and p['side'] in('S','C')]
     U=unary_union([(Polygon(p['poly']).buffer(0).intersection(box(0,-10,100,200)) if p['side']=='C' else Polygon(p['poly']).buffer(0)).buffer(0.02) for p in sel]).buffer(-0.02)
+    if U.geom_type!='Polygon':
+        for r_ in (0.2,0.5,1.0,2.0):
+            V=U.buffer(r_).buffer(-r_)
+            if V.geom_type=='Polygon': U=V; break
+        else: U=max(U.geoms,key=lambda g:g.area)
     ring=np.array(U.exterior.coords)[:-1]; ib=int(np.argmin(ring[:,1]+0.001*ring[:,0])); it=int(np.argmax(ring[:,1]*1000+ring[:,0]))
     def chain(a,b):
         idx=[a]
