@@ -40,7 +40,8 @@ def hull_points(i,X):
     top=[(np.interp(z,old[:,1],old[:,0])+sh*max(0,1-(z-zt)/40),z) for z in (zt+12,zt+26,142)]
     P=np.array([foot]+pts+top); P=P[np.argsort(P[:,1])]; return P
 def hull_line(i,X):
-    P=hull_points(i,X); tk,u=splprep(P.T,k=3,s=0); y,z=splev(np.linspace(0,1,600),tk); return np.c_[y,z]
+    P=hull_points(i,X); tk,u=splprep(P.T,k=3,s=len(P)*0.35); y,z=splev(np.linspace(0,1,600),tk)       # smoothing spline: the points come from different sources (waterlines, stations, plan outline) and carry ~0.5 mm noise
+    y=np.where(np.arange(600)<3,y,y); return np.c_[y,z]
 def keel_levels(X):
     g=UB.intersection(LineString([(X,-30),(X,200)])); sg=sorted((l.bounds[1],l.bounds[3]) for l in getattr(g,'geoms',[g]))
     sg=[s for s in sg if s[1]-s[0]>0.05]; mrg=[list(sg[0])]
