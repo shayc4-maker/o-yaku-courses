@@ -28,7 +28,7 @@ n_in=np.c_[-dy,dx]/np.hypot(dx,dy)[:,None]
 # make sure the normal points inward (towards the inner chain)
 mid=len(x)//2; 
 if np.dot(n_in[mid],(inner_old[len(inner_old)//2]-np.array([x[mid],y[mid]])))<0: n_in=-n_in
-arc=np.r_[0,np.cumsum(np.hypot(np.diff(x),np.diff(y)))]; d=5.0+(4.3-5.0)*arc/arc[-1]
+arc=np.r_[0,np.cumsum(np.hypot(np.diff(x),np.diff(y)))]; f=arc/arc[-1]; d=np.where(f<2/3,6.0+(4.0-6.0)*f/(2/3),4.0)      # 6.0 at the base, shrinking linearly to 4.0 at 2/3 of the length; the top third stays parallel at 4.0
 dense=np.c_[x,y]+n_in*d[:,None]
 # the new line from a few points joined by a spline: points at equal arc length
 K=8; ids=[int(round(i*(len(x)-1)/(K-1))) for i in range(K)]; pts=dense[ids]
@@ -37,10 +37,10 @@ dev=np.abs(np.hypot(*(np.c_[xs,ys][:,None,:]-dense[None,:,:]).transpose(2,0,1)).
 fig,ax=plt.subplots(1,2,figsize=(14,10))
 for a,(xl,yl) in zip(ax,(((0,70),(0,150)),((0,45),(0,50)))):
     a.plot(outer[:,0],outer[:,1],'b',lw=2,label='outer line (plans, piece outline)'); a.plot(inner_old[:,0],inner_old[:,1],color='gray',lw=1,ls=':',label='old inner edge of the pieces')
-    a.plot(xs,ys,'r',lw=2,label=f'new inner line: spline through {K} points, offset 5.0 -> 4.3 mm'); a.plot(pts[:,0],pts[:,1],'ro',ms=5)
-    for i in (0,len(x)//2,len(x)-1):
+    a.plot(xs,ys,'r',lw=2,label=f'new inner line: spline through {K} points, offset 6.0 -> 4.0 mm (at 2/3), top third parallel 4.0'); a.plot(pts[:,0],pts[:,1],'ro',ms=5)
+    for i in (0,int(len(x)*2/3),len(x)-1):
         a.plot([x[i],dense[i,0]],[y[i],dense[i,1]],'k',lw=.8); a.text((x[i]+dense[i,0])/2,(y[i]+dense[i,1])/2,f'{d[i]:.1f}',fontsize=8)
     a.set_xlim(*xl); a.set_ylim(*yl); a.set_aspect('equal'); a.grid(alpha=.3)
 ax[0].legend(fontsize=8); ax[0].set_title('builder frame 5 (our frame 41, layer A, S side)'); ax[1].set_title('zoom on the base')
-plt.savefig('qa/frame5_inner_line_2d.png',dpi=70,bbox_inches='tight')
+plt.savefig('qa/frame5_inner_line_2d_v2.png',dpi=70,bbox_inches='tight')
 print('outer length %.1f mm, base point %s, top point %s, spline vs exact offset max dev %.3f mm'%(L,outer[0].round(1),outer[-1].round(1),dev))
