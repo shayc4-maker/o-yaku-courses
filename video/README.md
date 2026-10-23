@@ -51,3 +51,22 @@ npm run render
 
 Only lines whose text changed are regenerated (`public/voice/manifest.json`); add `--force` or
 `--only intro,ask` to redo specific lines. Default model is `eleven_v4` (`ELEVENLABS_MODEL` to change).
+
+## Site simulation from the real site
+
+The site scenes are snapshots of the **current** `shayc4-maker/o-yaku-website` `main`, rendered with a
+fake transport (no credentials, no model calls, no outside network) and stepped through the real
+flow. Remotion adds scrolling, the cursor, camera and captions (`src/scenes/RealSite.tsx`).
+
+```bash
+# 1. a scratch copy of the site (never your clone), with its locked dependencies
+git -C ../../o-yaku-website archive origin/main | tar -x -C /tmp/site && (cd /tmp/site && npm ci --ignore-scripts)
+# 2. build the site with the capture harness, then capture every state
+node capture/build.mjs /tmp/site /tmp/site-build
+node capture/record.mjs /tmp/site-build public/capture   # needs Playwright + Chromium
+```
+
+`capture/fixtures.json` holds the public data the fake server returns (species, lessons, site texts,
+read once from the live database). Its `answer` is a **simulated** engine answer composed from the
+cited knowledge segments; the engine did not produce it. Re-capture whenever the site changes; if the
+captured page layout moves, check the box-based cursor targets in `RealSite.tsx`.

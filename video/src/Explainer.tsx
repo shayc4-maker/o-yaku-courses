@@ -4,7 +4,7 @@ import { Caption } from './components';
 import { clipSeconds, type Cue, type ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
 import { CLIP_LEAD, CLIP_TAIL, PatreonClip } from './scenes/PatreonClip';
-import { d, SITE_FLOW_FRAMES, SiteFlow, T } from './scenes/SiteFlow';
+import { R, REAL_SITE_FRAMES as SITE_FLOW_FRAMES, RealSite } from './scenes/RealSite';
 import { BODY, C, FPS } from './theme';
 
 const XFADE = 15;
@@ -46,11 +46,11 @@ export function Explainer(props: ExplainerProps) {
   // [cue, from, to] in absolute frames, anchored to the animation's own events.
   const cues: [Cue, number, number][] = [
     ['intro', 0, s + 25],
-    ['locked', s + 25, s + T.clickConnect - 5],
-    ['check', s + T.clickConnect, s + T.connected + 20],
-    ['ask', s + T.connected + 12, s + T.clickSearch],
-    ['answer', s + T.clickSearch + 6, s + d(590)],
-    ['toLive', s + d(596), s + SITE_FLOW_FRAMES - 10],
+    ['locked', s + R.blocked + 10, s + R.clickLogin],
+    ['check', s + R.clickLogin + 4, s + R.homeMember],
+    ['ask', s + R.homeMember, s + R.clickAsk2 + 10],
+    ['answer', s + R.stage0 + 10, s + R.answer + 100],
+    ['toLive', s + R.answer + 100, s + SITE_FLOW_FRAMES - 8],
     ['patreon', p + 8, clipFrom],
     ['outro', tl.outro + 10, tl.total],
   ];
@@ -64,7 +64,7 @@ export function Explainer(props: ExplainerProps) {
       <Sequence from={s} durationInFrames={SITE_FLOW_FRAMES}>
         <FadeIn>
           <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 40%, ${C.stone100}, ${C.stone200})` }} />
-          <SiteFlow question={props.question} sources={props.sources} />
+          <RealSite />
         </FadeIn>
       </Sequence>
 

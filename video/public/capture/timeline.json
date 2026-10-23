@@ -1,0 +1,487 @@
+{
+ "viewport": {
+  "w": 1600,
+  "h": 888,
+  "dpr": 2
+ },
+ "question": "איך מרכיבים עלווה חדשה על ערער?",
+ "shots": [
+  {
+   "name": "home",
+   "file": "000-home.jpg",
+   "height": 2120,
+   "boxes": {
+    "input": {
+     "x": 496,
+     "y": 806,
+     "w": 697,
+     "h": 54
+    },
+    "submit": {
+     "x": 390,
+     "y": 812,
+     "w": 81,
+     "h": 54
+    },
+    "exampleFicus": {
+     "x": 847,
+     "y": 882,
+     "w": 163,
+     "h": 35
+    },
+    "questionArea": {
+     "x": 200,
+     "y": 594,
+     "w": 1200,
+     "h": 360
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "ficus-filled",
+   "file": "001-ficus-filled.jpg",
+   "height": 2120,
+   "boxes": {
+    "input": {
+     "x": 496,
+     "y": 806,
+     "w": 697,
+     "h": 54
+    },
+    "submit": {
+     "x": 390,
+     "y": 812,
+     "w": 81,
+     "h": 54
+    },
+    "questionArea": {
+     "x": 200,
+     "y": 594,
+     "w": 1200,
+     "h": 360
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "blocked",
+   "file": "002-blocked.jpg",
+   "height": 2204,
+   "boxes": {
+    "login": {
+     "x": 725,
+     "y": 990,
+     "w": 124,
+     "h": 32
+    },
+    "alert": {
+     "x": 390,
+     "y": 974,
+     "w": 820,
+     "h": 64
+    },
+    "questionArea": {
+     "x": 200,
+     "y": 594,
+     "w": 1200,
+     "h": 444
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "lessons",
+   "file": "003-lessons.jpg",
+   "height": 1547,
+   "boxes": {
+    "homeLink": {
+     "x": 1180,
+     "y": 24,
+     "w": 21,
+     "h": 30
+    }
+   },
+   "url": "http://localhost:8765/lessons"
+  },
+  {
+   "name": "home-member",
+   "file": "004-home-member.jpg",
+   "height": 2120,
+   "boxes": {
+    "input": {
+     "x": 496,
+     "y": 806,
+     "w": 697,
+     "h": 54
+    },
+    "submit": {
+     "x": 390,
+     "y": 812,
+     "w": 81,
+     "h": 54
+    },
+    "questionArea": {
+     "x": 200,
+     "y": 594,
+     "w": 1200,
+     "h": 360
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-01",
+   "file": "005-type-01.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-02",
+   "file": "006-type-02.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-03",
+   "file": "007-type-03.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-04",
+   "file": "008-type-04.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-05",
+   "file": "009-type-05.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-06",
+   "file": "010-type-06.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-07",
+   "file": "011-type-07.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-08",
+   "file": "012-type-08.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-09",
+   "file": "013-type-09.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-10",
+   "file": "014-type-10.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-11",
+   "file": "015-type-11.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-12",
+   "file": "016-type-12.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-13",
+   "file": "017-type-13.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-14",
+   "file": "018-type-14.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-15",
+   "file": "019-type-15.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-16",
+   "file": "020-type-16.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-17",
+   "file": "021-type-17.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-18",
+   "file": "022-type-18.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-19",
+   "file": "023-type-19.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-20",
+   "file": "024-type-20.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-21",
+   "file": "025-type-21.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-22",
+   "file": "026-type-22.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-23",
+   "file": "027-type-23.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-24",
+   "file": "028-type-24.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-25",
+   "file": "029-type-25.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-26",
+   "file": "030-type-26.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-27",
+   "file": "031-type-27.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-28",
+   "file": "032-type-28.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-29",
+   "file": "033-type-29.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-30",
+   "file": "034-type-30.jpg",
+   "height": 2120,
+   "boxes": {},
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "type-31",
+   "file": "035-type-31.jpg",
+   "height": 2120,
+   "boxes": {
+    "input": {
+     "x": 496,
+     "y": 806,
+     "w": 697,
+     "h": 54
+    },
+    "submit": {
+     "x": 390,
+     "y": 812,
+     "w": 81,
+     "h": 54
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "stage-sent",
+   "file": "036-stage-sent.jpg",
+   "height": 2418,
+   "boxes": {
+    "waiting": {
+     "x": 1076,
+     "y": 988,
+     "w": 85,
+     "h": 26
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "stage-approved",
+   "file": "037-stage-approved.jpg",
+   "height": 2418,
+   "boxes": {
+    "waiting": {
+     "x": 403,
+     "y": 1027,
+     "w": 794,
+     "h": 160
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "stage-retrieval",
+   "file": "038-stage-retrieval.jpg",
+   "height": 2418,
+   "boxes": {
+    "waiting": {
+     "x": 403,
+     "y": 1027,
+     "w": 794,
+     "h": 160
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "stage-selection",
+   "file": "039-stage-selection.jpg",
+   "height": 2418,
+   "boxes": {
+    "waiting": {
+     "x": 403,
+     "y": 1027,
+     "w": 794,
+     "h": 160
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "stage-generation",
+   "file": "040-stage-generation.jpg",
+   "height": 2418,
+   "boxes": {
+    "waiting": {
+     "x": 403,
+     "y": 1027,
+     "w": 794,
+     "h": 160
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "stage-references",
+   "file": "041-stage-references.jpg",
+   "height": 2418,
+   "boxes": {
+    "waiting": {
+     "x": 403,
+     "y": 1027,
+     "w": 794,
+     "h": 160
+    }
+   },
+   "url": "http://localhost:8765/"
+  },
+  {
+   "name": "answer",
+   "file": "042-answer.jpg",
+   "height": 3107,
+   "boxes": {
+    "answer": {
+     "x": 390,
+     "y": 974,
+     "w": 820,
+     "h": 967
+    },
+    "sourcesHeading": {
+     "x": 390,
+     "y": 1381,
+     "w": 820,
+     "h": 20
+    },
+    "source3": {
+     "x": 498,
+     "y": 1663,
+     "w": 684,
+     "h": 26
+    },
+    "source3Link": {
+     "x": 954,
+     "y": 1722,
+     "w": 88,
+     "h": 23
+    },
+    "followUp": {
+     "x": 390,
+     "y": 1886,
+     "w": 820,
+     "h": 55
+    }
+   },
+   "url": "http://localhost:8765/"
+  }
+ ],
+ "errors": []
+}

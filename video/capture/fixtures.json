@@ -1,0 +1,594 @@
+{
+ "_note": "Public site data read once (read-only) on 2026-10-23 from Supabase savgrjvgtpnaciqgqnuv. 'answer' is a SIMULATED engine answer composed from the cited knowledge_segments for the video; it was not produced by the engine.",
+ "species": [
+  {
+   "species_key": "maple",
+   "display_name_he": "אדר כפני",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [
+    "אדר"
+   ],
+   "notes_he": null
+  },
+  {
+   "species_key": "buergerianum",
+   "display_name_he": "אדר תלת אונתי",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "ulmus-zelkova",
+   "display_name_he": "אולמוס/זלקובה",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [
+    "אולמוס",
+    "זלקובה"
+   ],
+   "notes_he": null
+  },
+  {
+   "species_key": "pine",
+   "display_name_he": "אורן",
+   "category": "conifer",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "tabor-oak",
+   "display_name_he": "אלון תבור",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "bougainvillea",
+   "display_name_he": "בוגנוויליה",
+   "category": "evergreen_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [
+    "בוגנוויליה"
+   ],
+   "notes_he": null
+  },
+  {
+   "species_key": "wisteria",
+   "display_name_he": "ויסטריה",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "rose",
+   "display_name_he": "ורד",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "olive",
+   "display_name_he": "זית",
+   "category": "evergreen_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "leucophyllum",
+   "display_name_he": "לבן עלה",
+   "category": "evergreen_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "lagerstroemia",
+   "display_name_he": "לגרסטרמיה",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "celtis",
+   "display_name_he": "מיש",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "juniper",
+   "display_name_he": "ערער",
+   "category": "conifer",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [
+    "עברים",
+    "ערים",
+    "הערים"
+   ],
+   "notes_he": null
+  },
+  {
+   "species_key": "ficus",
+   "display_name_he": "פיקוס",
+   "category": "evergreen_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [
+    "פיקוסים"
+   ],
+   "notes_he": null
+  },
+  {
+   "species_key": "chojubai",
+   "display_name_he": "פריש יפני ננסי",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "pomegranate",
+   "display_name_he": "רימון",
+   "category": "deciduous_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  },
+  {
+   "species_key": "kinzu",
+   "display_name_he": "תפוז הונג-קונג",
+   "category": "evergreen_broadleaf",
+   "status": "approved",
+   "is_public": true,
+   "aliases": [],
+   "notes_he": null
+  }
+ ],
+ "lessons": [
+  {
+   "lesson_key": "l7c255e4eaa",
+   "title_he": "אסטרטגיות צמיחה 2",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "ficus",
+    "olive"
+   ]
+  },
+  {
+   "lesson_key": "l97ee42ca2e",
+   "title_he": "הכנת חומרי גלם מחטניים, מרץ 2026",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "ld47e3511b3",
+   "title_he": "הכנת חומרי גלם רחבי עלים אפריל 2026",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "ficus",
+    "maple",
+    "rose",
+    "ulmus-zelkova"
+   ]
+  },
+  {
+   "lesson_key": "l3bf2fa5d8e",
+   "title_he": "הרכבות מחטניים ינואר 2026",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "l0988fe7bb7",
+   "title_he": "הרכבות סתיו ערערים 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper"
+   ]
+  },
+  {
+   "lesson_key": "lc245bfb225",
+   "title_he": "הרכבות קידוח",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": []
+  },
+  {
+   "lesson_key": "l3ba7703d03",
+   "title_he": "הרכבת שורשים בטרידנט 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "buergerianum",
+    "maple"
+   ]
+  },
+  {
+   "lesson_key": "l2dff54200a",
+   "title_he": "זיתים 101 יולי 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "olive"
+   ]
+  },
+  {
+   "lesson_key": "l960851f695",
+   "title_he": "לייב בוגי מאי 2 2026",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "bougainvillea"
+   ]
+  },
+  {
+   "lesson_key": "l482ef371b7",
+   "title_he": "לייב הברכות אוויר 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "ficus"
+   ]
+  },
+  {
+   "lesson_key": "l2d9cff6059",
+   "title_he": "לייב מעקב יוני 2026",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "ficus",
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "l278bb1f501",
+   "title_he": "לייב סתיו נשירים 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": []
+  },
+  {
+   "lesson_key": "l859248ec3e",
+   "title_he": "לייב עבודת שורשים מחטניים 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "l83ee0b29d4",
+   "title_he": "מזיקים ומחלות 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "lb5b57b8fe6",
+   "title_he": "מעקב הרכבות ספטמבר 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "lbfa7a977f1",
+   "title_he": "מעקב ערער נובמבר 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper"
+   ]
+  },
+  {
+   "lesson_key": "lf48989aea5",
+   "title_he": "מעקב ערער נובמבר 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "le34dedd64e",
+   "title_he": "סתיו אורנים 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "l642352755a",
+   "title_he": "עבודת סתיו ועיצוב נשירים דצמבר 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "celtis",
+    "lagerstroemia",
+    "maple"
+   ]
+  },
+  {
+   "lesson_key": "l0c49cfe35e",
+   "title_he": "עבודת סתיו על נשירים 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": []
+  },
+  {
+   "lesson_key": "l208457bfdd",
+   "title_he": "עבודת קיץ אוגוסט 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "pine",
+    "tabor-oak"
+   ]
+  },
+  {
+   "lesson_key": "l4a62532763",
+   "title_he": "עיצוב אורן גן סתיו 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "lf527013f4d",
+   "title_he": "עיצוב אורנים סתיו 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "ld689fbf1e5",
+   "title_he": "עיצוב ערער ירון 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper"
+   ]
+  },
+  {
+   "lesson_key": "l5125b140c3",
+   "title_he": "עיצוב פרוקמבנס סתיו 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper"
+   ]
+  },
+  {
+   "lesson_key": "l8c1fb319fc",
+   "title_he": "פתרון בעיות 1 יולי 2026",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "ficus"
+   ]
+  },
+  {
+   "lesson_key": "l619a902c1a",
+   "title_he": "שיעור ערערים סתיו 2024",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper"
+   ]
+  },
+  {
+   "lesson_key": "l30e7c7712f",
+   "title_he": "שיעור פיקוסים",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "ficus"
+   ]
+  },
+  {
+   "lesson_key": "l86a77f9111",
+   "title_he": "שיעור תחילת אביב 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": [
+    "juniper",
+    "maple",
+    "pine"
+   ]
+  },
+  {
+   "lesson_key": "l989b73b55e",
+   "title_he": "תנועת שרף ופצעים 2025",
+   "duration_seconds": null,
+   "lesson_kind": "topical",
+   "preview_open_public": false,
+   "species": []
+  }
+ ],
+ "siteContent": [
+  {
+   "key": "home.hero",
+   "value": {
+    "text": "ידע מעשי בבונסאי, שיעורים מוקלטים, תהליכי פיתוח של עצים ומאגר ידע שמתעדכן לאורך זמן.",
+    "title": "בונסאי ללא פשרות",
+    "subtitle": "O-YAKU · בית ספר לבונסאי"
+   },
+   "version": 4,
+   "updated_at": "2026-10-08T16:19:59.69+00:00"
+  },
+  {
+   "key": "knowledge.categories",
+   "value": {
+    "items": [
+     "רחבי עלים נשירים",
+     "רחבי עלים ירוקי עד",
+     "מחטניים"
+    ]
+   },
+   "version": 1,
+   "updated_at": "2026-09-06T18:56:48.483948+00:00"
+  },
+  {
+   "key": "site.profile",
+   "value": {
+    "contact_email": "help@o-yaku.com",
+    "instagram_url": "https://www.instagram.com/shay.c4/",
+    "site_texts": "{\"copy.4c3ed782\":\"כלי בונסאי בהתאמה אישית\",\"copy.92d2c4e3\":\"התאמה מדויקת של גודל, צורה, צבע וגימור לעץ הבונסאי שלך. מאגר גלזורות מיוחדות שפותח בסטודיו והקפדה על פרטים ואיכות.\"}"
+   },
+   "version": 8,
+   "updated_at": "2026-10-09T07:42:25.92+00:00"
+  }
+ ],
+ "blockedMessage": "המנוע פתוח כרגע למנויים, ולדמו מלא בתחום הערערים בלבד.",
+ "answer": {
+  "ok": true,
+  "query": "איך מרכיבים עלווה חדשה על ערער?",
+  "insufficient": false,
+  "answer_he": "כדי להחליף עלווה מקומית גסה בעלוות איטויגאווה עדינה וצפופה, מרכיבים ייחור איטויגאווה על העורק החי של הערער [1].\n\nלפני החיתוך משחיזים את הסכין עד שהיא חדה כתער ומחטאים אותה באלכוהול, כדי שהתאים ייחתכו נקי ולא יימעכו [2].\n\nעל הייחור חושפים את הקמביום משני צדי הניצן עד שנוצר משולש. בעורק מבצעים חתך בזווית של 30 עד 45 מעלות בהחדרה חזקה של הסכין, פותחים מעט את החתך ומשחילים את הייחור עד שנקודות הקמביום נפגשות, במכה אחת ובלי להזיז יותר [3].\n\nאחרי ההשחלה מהדקים בחוזקה עם חוט כדי שהייחור לא יזוז. החוט נשאר גם אחרי ניתוק הכלי, עד לאיחוי מלא, ובסוף אוטמים במשחת החלמה שאינה נוזלית, כדי שלא תחלחל ותסתום את הקמביום [4].",
+  "sources": [
+   {
+    "index": 1,
+    "segment_key": "l0988fe7bb7-seg-001",
+    "lesson_key": "l0988fe7bb7",
+    "lesson_title_he": "הרכבות סתיו ערערים 2024",
+    "source_kind": "lesson",
+    "patreon_url": "https://www.patreon.com/posts/shy-vr-hrkbvt-b-112241338",
+    "title_he": "החלפת עלוות ערער מקומית באיטויגאווה",
+    "excerpt_he": "היתרונות בהחלפת עלוות ערער מקומית קוצנית וגסה בעלוות איטויגאווה עדינה וצפופה באמצעות הרכבה.",
+    "content_he": "הרכבה של ערער מסוג איטויגאווה על ערער בעל עלווה מקומית מבוצעת במטרה להחליף את העלווה. העלווה המקומית מתאפיינת בקשקשים גסים ועוברת בקלות לצמיחה יובינילית קוצנית תחת סטרס, תכונה המקשה על יצירת פדים ומבנה טוב. עלוות איטויגאווה, לעומתה, הופכת לאחר מספר שנים לצפופה, עדינה ונוחה מאוד לעבודה.",
+    "time_label_he": "0:00–2:08",
+    "season_text": null,
+    "action_months": [],
+    "why_he": null
+   },
+   {
+    "index": 2,
+    "segment_key": "l0988fe7bb7-seg-009",
+    "lesson_key": "l0988fe7bb7",
+    "lesson_title_he": "הרכבות סתיו ערערים 2024",
+    "source_kind": "lesson",
+    "patreon_url": "https://www.patreon.com/posts/shy-vr-hrkbvt-b-112241338",
+    "title_he": "הכנת הסכין ואופן החיתוך",
+    "excerpt_he": "הצורך בסכין סטרילית וחדה כתער כדי להבטיח חיתוך תאים נקי והחלמה אופטימלית של ההרכבה.",
+    "content_he": "יש להשתמש בסכין חדה מאוד שעברה השחזה וחיטוי באלכוהול ממש לפני תחילת העבודה. רמת החדות חייבת לאפשר גילוח שיער. ככל שהסכין חדה יותר, חיתוך התאים נקי יותר מבלי למעוך אותם, מה שמבטיח חיבור והחלמה מהירים יותר.",
+    "time_label_he": "11:05–12:25",
+    "season_text": null,
+    "action_months": [],
+    "why_he": null
+   },
+   {
+    "index": 3,
+    "segment_key": "l0988fe7bb7-seg-012",
+    "lesson_key": "l0988fe7bb7",
+    "lesson_title_he": "הרכבות סתיו ערערים 2024",
+    "source_kind": "lesson",
+    "patreon_url": "https://www.patreon.com/posts/shy-vr-hrkbvt-b-112241338",
+    "title_he": "ביצוע חתך ב-90 מעלות והשחלת הייחור",
+    "excerpt_he": "השלבים הטכניים לביצוע החתכים והשחלת הייחור ליצירת מגע יציב בין שכבות הקמביום בחתך של 90 מעלות.",
+    "content_he": "חושפים את הקמביום משני צדי הניצן על הייחור עד לייצור משולש. בעורק המאחסן מבוצע חתך בזווית של 30 עד 45 מעלות באמצעות החדרה חזקה של הסכין. פותחים מעט את החתך, ומשחילים לתוכו את הייחור החשוף עד להשגת מגע בין נקודות הקמביום במכה אחת מבלי להזיז יותר.",
+    "time_label_he": "20:05–22:12",
+    "season_text": null,
+    "action_months": [],
+    "why_he": null
+   },
+   {
+    "index": 4,
+    "segment_key": "l0988fe7bb7-seg-013",
+    "lesson_key": "l0988fe7bb7",
+    "lesson_title_he": "הרכבות סתיו ערערים 2024",
+    "source_kind": "lesson",
+    "patreon_url": "https://www.patreon.com/posts/shy-vr-hrkbvt-b-112241338",
+    "title_he": "קשירה ואטימה של אזור ההרכבה",
+    "excerpt_he": "קיבוע הייחור המוחדר בעזרת חוט ללא תזוזה ואטימת האזור במשחת החלמה לא-נוזלית להגנה על הקמביום.",
+    "content_he": "לאחר ההשחלה, יש לסגור ולהדק בחוזקה את הייחור לתוך החתך באמצעות חוט למניעת תזוזה מוחלטת. החוט נשאר קבוע גם לאחר ניתוק הכלי, עד לאיחוי מלא. בסיום, אוטמים בעזרת משחת החלמה (קאט פייסט) שאינה נוזלית, כדי למנוע חלחול של חומר האטימה שיסתום את הקמביום.",
+    "time_label_he": "22:12–23:30",
+    "season_text": null,
+    "action_months": [],
+    "why_he": null
+   }
+  ],
+  "follow_up_links": [
+   {
+    "kind": "species",
+    "species_key": "juniper",
+    "display_name_he": "ערער"
+   }
+  ]
+ }
+}

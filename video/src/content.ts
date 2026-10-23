@@ -112,24 +112,25 @@ export const defaultProps: ExplainerProps = {
   },
   narration: {
     intro: { maxSec: 4.3, caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: 'rec-intro.mp3' },
-    locked: { maxSec: 3.7, caption: 'מנוע השאלות החדש, פתוח למנויי O-YAKU ב-Patreon', voice: 'מנוע השאלות החדש פתוח למנויי הפטרון שלנו.', audio: 'rec-locked.mp3' },
-    check: { maxSec: 4.7, caption: 'התחברות בלחיצה, ובדיקה קצרה שהמנוי פעיל', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: 'rec-check.mp3' },
-    ask: { maxSec: 6.8, caption: 'שואלים כל שאלה בתחום הבונסאי', voice: 'שואלים כל שאלה בתחום הבונסאי. למשל: איך מרכיבים עלווה על ערער?', audio: 'rec-ask.mp3' },
-    answer: { maxSec: 5.1, caption: 'התשובה מגיעה עם מקורות מהשיעורים והלייבים', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: 'rec-answer.mp3' },
-    toLive: { maxSec: 3.9, caption: 'וכל מקור מוביל לרגע המדויק בלייב', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: 'rec-toLive.mp3' },
+    locked: { maxSec: 3.7, caption: 'מנוע השאלות פתוח למנויים · בלי מנוי, דמו בתחום הערערים בלבד', voice: 'מנוע השאלות החדש פתוח למנויי הפטרון שלנו.', audio: 'rec-locked.mp3' },
+    check: { maxSec: 6, caption: 'התחברות עם Patreon · כל השיעורים נפתחים', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: 'rec-check.mp3' },
+    ask: { maxSec: 6.3, caption: 'שואלים כל שאלה בתחום הבונסאי', voice: 'שואלים כל שאלה בתחום הבונסאי. למשל: איך מרכיבים עלווה על ערער?', audio: 'rec-ask.mp3' },
+    answer: { maxSec: 7.8, caption: 'התשובה נבנית מהשיעורים, עם מקור וזמן בהקלטה לכל קטע', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: 'rec-answer.mp3' },
+    toLive: { maxSec: 3.5, caption: 'וכל מקור מוביל לשיעור עצמו בפטרון', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: 'rec-toLive.mp3' },
     // the live clip starts right after this line
-    patreon: { maxSec: 3.1, caption: 'הלייב נפתח בפטרון, בדיוק מהרגע הנכון', voice: 'ואתם ברגע המדויק בלייב.', audio: 'rec-patreon.mp3' },
+    patreon: { maxSec: 3.1, caption: 'השיעור נפתח בפטרון · ההסבר נמצא ב-20:05–22:12', voice: 'ואתם ברגע המדויק בלייב.', audio: 'rec-patreon.mp3' },
     outro: { maxSec: 5.6, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו עכשיו.', audio: 'rec-outro.mp3' },
   },
   music: null,
-  soundtrack: 'soundtrack.wav', // owner's Fairlight mix, -16 LUFS (kept out of git)
+  // The Fairlight mix was timed to the previous site simulation; re-mix for the real-site version.
+  soundtrack: null,
   voiceId: 'kfiqnWKpE9m8HkyjWdgl',
 };
 
 /** Version B: the clearest work shots, partly sped up, narrated over a low live sound. */
 export const narratedProps: ExplainerProps = {
   ...defaultProps,
-  soundtrack: null, // the Fairlight mix was made for version A's timing
+  soundtrack: null,
   live: {
     ...defaultProps.live,
     segments: [
