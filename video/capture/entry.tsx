@@ -10,6 +10,8 @@ import fixtures from './fixtures.json';
 type Stage = 'approved' | 'retrieval' | 'selection' | 'generation' | 'references';
 const STAGES: Stage[] = ['approved', 'retrieval', 'selection', 'generation', 'references'];
 const SUPABASE = `${location.origin}/sb`;
+declare const __CAPTURE_LIVE_READS__: boolean;
+const LIVE_READS = __CAPTURE_LIVE_READS__;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -67,6 +69,8 @@ globalThis.fetch = async (input, init) => {
     }
     return answerStream();
   }
+  // Live public reads (forwarded by server.mjs) when built with CAPTURE_LIVE_READS=1.
+  if (LIVE_READS && path.startsWith('/rest/v1/')) return realFetch(url.href, init);
   if (path.startsWith('/rest/v1/')) {
     const table = path.slice('/rest/v1/'.length);
     if (table === 'species') return json(fixtures.species);

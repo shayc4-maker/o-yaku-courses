@@ -8,7 +8,7 @@
  * The site checkout must have its locked dependencies installed (npm ci). The harness files are
  * copied into <site>/tools/video-capture/ of THAT copy, so pass a scratch copy, not your clone.
  */
-import { cpSync, mkdirSync, readFileSync, readdirSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -35,6 +35,7 @@ await build({
     'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(`http://localhost:${PORT}/sb`),
     'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify('capture-anon'),
     'import.meta.env.DEV': 'false', 'import.meta.env.PROD': 'true',
+    __CAPTURE_LIVE_READS__: process.env.CAPTURE_LIVE_READS === '1' ? 'true' : 'false',
   },
   logLevel: 'warning',
 });
@@ -54,8 +55,6 @@ const cssFile = path.join(out, 'app.css');
 const css = readFileSync(cssFile, 'utf8').replace(/@import\s+url\("https:\/\/fonts\.googleapis\.com[^)]*\);?/g, '');
 writeFileSync(cssFile, fontCss + '\n' + css);
 
-for (const f of readdirSync(path.join(site, 'public'), { withFileTypes: true })) {
-  if (f.isFile()) copyFileSync(path.join(site, 'public', f.name), path.join(out, f.name));
-}
+cpSync(path.join(site, 'public'), out, { recursive: true });
 writeFileSync(path.join(out, 'index.html'), `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>O-YAKU</title><link rel="stylesheet" href="/app.css"></head><body><div id="root"></div><script type="module" src="/app.js"></script></body></html>`);
 console.log('built', out);
