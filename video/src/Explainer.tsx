@@ -103,10 +103,16 @@ export function Explainer(props: ExplainerProps) {
         <Audio
           src={staticFile(props.music)}
           volume={(f) => {
-            const inClip = f >= clipFrom && f < clipTo;
-            const underVoice = cues.some(([cue, a, b]) => voiceFile(cue) && f >= a && f < b);
-            const fadeOut = interpolate(f, [tl.total - 45, tl.total], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-            return (inClip ? 0.03 : underVoice ? 0.08 : 0.22) * fadeOut;
+            const target = (t: number) => {
+              const inClip = t >= clipFrom && t < clipTo;
+              const underVoice = cues.some(([cue, a, b]) => voiceFile(cue) && t >= a && t < b);
+              return inClip ? 0.03 : underVoice ? 0.08 : 0.22;
+            };
+            // Average over ±12 frames so level changes ramp instead of jumping.
+            let sum = 0;
+            for (let t = f - 12; t <= f + 12; t++) sum += target(t);
+            const fade = interpolate(f, [0, 20, tl.total - 45, tl.total], [0, 1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+            return (sum / 25) * fade;
           }}
         />
       ) : null}
