@@ -121,7 +121,7 @@ export const defaultProps: ExplainerProps = {
     patreon: { maxSec: 3.1, caption: 'השיעור נפתח בפטרון · ההסבר נמצא ב-20:05–22:12', voice: 'ואתם ברגע המדויק בלייב.', audio: 'rec-patreon.mp3' },
     outro: { maxSec: 5.6, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו עכשיו.', audio: 'rec-outro.mp3' },
   },
-  music: null,
+  music: 'music/fantasy-quest.mp3', // Pixabay "Fantasy Adventure Quest" (Alex Morgan), normalized -16 LUFS; not in git
   // The Fairlight mix was timed to the previous site simulation; re-mix for the real-site version.
   soundtrack: null,
   voiceId: 'kfiqnWKpE9m8HkyjWdgl',
