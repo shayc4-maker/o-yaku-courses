@@ -1,0 +1,87 @@
+{
+ "viewport": {
+  "w": 1600,
+  "h": 888,
+  "dpr": 2
+ },
+ "shots": [
+  {
+   "name": "articles",
+   "file": "p00-articles.jpg",
+   "height": 1739,
+   "boxes": {},
+   "url": "http://localhost:8765/articles"
+  },
+  {
+   "name": "article",
+   "file": "p01-article.jpg",
+   "height": 8904,
+   "boxes": {},
+   "url": "http://localhost:8765/articles/elm-development"
+  },
+  {
+   "name": "ceramics",
+   "file": "p02-ceramics.jpg",
+   "height": 3611,
+   "boxes": {
+    "calculator": {
+     "x": 200,
+     "y": 2445,
+     "w": 1200,
+     "h": 711
+    }
+   },
+   "url": "http://localhost:8765/ceramics"
+  },
+  {
+   "name": "calc-1",
+   "file": "p03-calc-1.jpg",
+   "height": 3611,
+   "boxes": {
+    "calculator": {
+     "x": 200,
+     "y": 2445,
+     "w": 1200,
+     "h": 711
+    }
+   },
+   "url": "http://localhost:8765/ceramics"
+  },
+  {
+   "name": "calc-2",
+   "file": "p04-calc-2.jpg",
+   "height": 3611,
+   "boxes": {
+    "calculator": {
+     "x": 200,
+     "y": 2445,
+     "w": 1200,
+     "h": 711
+    }
+   },
+   "url": "http://localhost:8765/ceramics"
+  },
+  {
+   "name": "calc-3",
+   "file": "p05-calc-3.jpg",
+   "height": 3611,
+   "boxes": {
+    "calculator": {
+     "x": 200,
+     "y": 2445,
+     "w": 1200,
+     "h": 711
+    }
+   },
+   "url": "http://localhost:8765/ceramics"
+  },
+  {
+   "name": "shop",
+   "file": "p06-shop.jpg",
+   "height": 3506,
+   "boxes": {},
+   "url": "http://localhost:8765/shop"
+  }
+ ],
+ "errors": []
+}

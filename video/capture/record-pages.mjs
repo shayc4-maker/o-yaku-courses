@@ -35,12 +35,13 @@ async function settle() {
   await page.waitForLoadState('networkidle');
   await page.evaluate(async () => {
     await document.fonts.ready;
+    document.querySelectorAll('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
     // Lazy images: scroll through once so every image decodes before the full-page shot.
-    for (let y = 0; y < document.documentElement.scrollHeight; y += 700) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); }
+    for (let y = 0; y < document.documentElement.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 200)); }
     window.scrollTo(0, 0);
-    await Promise.all([...document.images].map((img) => img.complete ? null : new Promise((r) => { img.onload = img.onerror = r; })));
+    await Promise.all([...document.images].map((img) => img.complete ? img.decode().catch(() => null) : new Promise((r) => { img.onload = img.onerror = r; })));
   });
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(1200);
 }
 async function shot(name, boxes = {}) {
   const resolved = {};
@@ -59,11 +60,11 @@ async function shot(name, boxes = {}) {
 // Articles: list, then the first article.
 await page.goto(`http://localhost:${PORT}/articles`); await settle();
 await shot('articles');
-const firstArticle = page.locator('main a[href^="/articles/"]').first();
-if (await firstArticle.count()) {
-  await firstArticle.click(); await settle();
-  await shot('article');
-}
+// Article cards open on click (no link); pick the elm development log, which has many photos.
+await page.getByText('פיתוח אולמוס לאורך זמן', { exact: true }).first().click();
+await page.waitForURL(/\/articles\/.+/);
+await settle();
+await shot('article');
 
 // Ceramics: page, then the calculator in a few states.
 await page.goto(`http://localhost:${PORT}/ceramics`); await settle();

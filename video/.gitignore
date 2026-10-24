@@ -8,3 +8,4 @@ public/soundtrack.wav
 public/capture/*.jpg
 # licensed background music (Pixabay), not committed
 public/music/
+public/capture-pages/*.jpg

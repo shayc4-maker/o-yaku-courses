@@ -5,6 +5,7 @@ import { clipSeconds, type Cue, type ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
 import { CLIP_LEAD, CLIP_TAIL, PatreonClip } from './scenes/PatreonClip';
 import { R, REAL_SITE_FRAMES as SITE_FLOW_FRAMES, RealSite } from './scenes/RealSite';
+import { SiteTour, TOUR_FRAMES } from './scenes/SiteTour';
 import { BODY, C, FPS } from './theme';
 
 const XFADE = 15;
@@ -14,8 +15,9 @@ export function timeline(props: ExplainerProps) {
   const site = INTRO_FRAMES - XFADE;
   const patreon = site + SITE_FLOW_FRAMES - XFADE;
   const patreonFrames = CLIP_LEAD + clipFrames + CLIP_TAIL;
-  const outro = patreon + patreonFrames - XFADE;
-  return { site, patreon, patreonFrames, outro, total: outro + OUTRO_FRAMES };
+  const tour = patreon + patreonFrames - XFADE;
+  const outro = tour + TOUR_FRAMES - XFADE;
+  return { site, patreon, patreonFrames, tour, outro, total: outro + OUTRO_FRAMES };
 }
 
 /** Cross-fades a scene in over its first XFADE frames. */
@@ -72,6 +74,12 @@ export function Explainer(props: ExplainerProps) {
         <FadeIn>
           <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 40%, #f1efed, ${C.stone300})` }} />
           <PatreonClip live={props.live} timestamp={timestamp} muteLive={stem === 'voice' || stem === 'none'} />
+        </FadeIn>
+      </Sequence>
+
+      <Sequence from={tl.tour} durationInFrames={TOUR_FRAMES}>
+        <FadeIn>
+          <SiteTour />
         </FadeIn>
       </Sequence>
 
