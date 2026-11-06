@@ -40,15 +40,14 @@ def full(half):
 parts=np.load('/tmp/claude-0/x/parts3d.npy',allow_pickle=True).item(); out={k:v for k,v in parts.items() if not k.startswith('FRAME')}
 lines=[]
 for b in FR:
-    xc=F.XF[46-b-1]
+    xc=F.XF[46-b-1]; fm,im=F.face_poly(xc-4,xc-4); fc,ic=F.face_poly(xc,xc); fp,ip=F.face_poly(xc+4,xc+4)
+    env=unary_union([fm.buffer(0.01),fc.buffer(0.01),fp.buffer(0.01)]).buffer(-0.01)      # ONE common cut outline for A and F: inner minimum .. outer maximum over the three faces
+    floor=min(im['keel_top'],ic['keel_top'],ip['keel_top'])-DEPTH; env=unary_union([env,box(0,floor,F.KB,max(im['keel_top'],ic['keel_top'],ip['keel_top']))])
+    blank=full(env)
     for lay,(x0,x1) in (('A',(xc-4,xc)),('F',(xc,xc+4))):
-        fa,ia=F.face_poly(x0,x0); fb,ib=F.face_poly(x1,x1)
-        env=unary_union([fa.buffer(0.01),fb.buffer(0.01)]).buffer(-0.01)
-        # flat tab: ONE horizontal floor at the lower of the two final floors, tab walls vertical; flat seat at the keelson = the higher of the two (already the union top at the centre)
-        floor=min(ia['keel_top'],ib['keel_top'])-DEPTH; env=unary_union([env,box(0,floor,F.KB,max(ia['keel_top'],ib['keel_top']))])
-        blank=full(env); out['FRAME%02d_%s'%(b,lay)]=dict(v=None,t=None,blank=True)
         v,t=mesh_of(prism_x(blank,x0,x1)); out['FRAME%02d_%s'%(b,lay)]=dict(v=v,t=t)
-        for X,hp,sign in ((x0,fa,-1),(x1,fb,1)):
-            r=np.array(full(hp).exterior.coords); lines.append(dict(name='LASER%02d_%s_%s'%(b,lay,'back' if sign<0 else 'front'),pts=np.c_[np.full(len(r),X+sign*0.03),r[:,0],r[:,1]].round(3).tolist()))
-        print('frame',b,lay,'blank area %.0f mm2; floor %.2f (final floors %.2f / %.2f), seat %.2f / %.2f'%(blank.area,floor,ia['keel_top']-DEPTH,ib['keel_top']-DEPTH,ia['ks_bot'],ib['ks_bot']))
+    for X,hp,nm in ((xc-4,fm,'back'),(xc+4,fp,'front')):
+        r=np.array(full(hp).exterior.coords); sg=-1 if nm=='back' else 1; lines.append(dict(name='LASER%02d_%s'%(b,nm),pts=np.c_[np.full(len(r),X+sg*0.03),r[:,0],r[:,1]].round(3).tolist()))
+    lm=full(fc); r=np.array(lm.exterior.coords); lines.append(dict(name='LASER%02d_mid'%b,pts=np.c_[np.full(len(r),xc),r[:,0],r[:,1]].round(3).tolist()))
+    print('frame',b,'common blank area %.0f mm2 (final faces %.0f / %.0f / %.0f); floor %.2f; seats %.2f / %.2f / %.2f'%(blank.area,full(fm).area,full(fc).area,full(fp).area,floor,im['ks_bot'],ic['ks_bot'],ip['ks_bot']))
 np.save('/tmp/claude-0/x/parts_blanks.npy',dict(parts=out,lines=lines),allow_pickle=True)
