@@ -30,6 +30,10 @@ for k in ('VI','VII'):
     t=WL[k]; p=t[-25:]; dx,dy=p[-1]-p[0]; R=LF.follow(g,t[-1,0],t[-1,1],dx,dy,hw=3,miss_max=8,stop_wide=12,max_steps=900)
     j=next((i for i in range(len(R)) if R[i,1]>=1160),len(R)-1); WL[k]=np.r_[t,R[1:j+1]]
 for k in ('VI',): WL[k]=WL[k][WL[k][:,0]>=4262]
+# bow part of VI/VII re-followed (the Roman numeral labels next to the lines disturbed the column method there)
+for k in ('VI','VII'):
+    t=WL[k]; t=t[t[:,0]<=9900]; p=t[-25:]; dx,dy=p[-1]-p[0]; R=LF.follow(g,t[-1,0],t[-1,1],dx,dy,hw=3,miss_max=8,stop_wide=12,max_steps=1500)
+    j=next((i for i in range(len(R)) if R[i,1]>=1160),len(R)-1); WL[k]=np.r_[t,R[1:j+1]]
 for k,v in WL.items(): print(k,len(v),v[0].round(0),v[-1].round(0))
 
 # ---- calibration of Y and points ----
