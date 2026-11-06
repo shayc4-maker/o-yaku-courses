@@ -6,7 +6,7 @@ Image.MAX_IMAGE_PIXELS=None
 import bodyplan_points_all as B
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 cf=B.CFG['fwd']; C=json.load(open('data/bodyplan_splines_v1.json')); im=Image.open('plans/plan_1b_aligned.png').convert('RGB')
-END={1:(2.85,26.05),2:(2.95,12.10),3:(2.85,2.80),4:(3.30,-0.55),5:(3.30,-0.55),6:(3.30,-0.55),7:(3.30,-0.55),8:(3.30,-0.55)}
+END={1:(2.85,26.05),2:(2.95,12.35),3:(2.85,2.80),4:(3.30,-0.55),5:(3.30,-0.55),6:(3.30,-0.55),7:(3.30,-0.55),8:(3.30,-0.55)}
 json.dump({str(n):dict(first=C[str(n)]['points'][0],end=list(e)) for n,e in END.items()},open('data/bodyplan_ends_proposed_v1.json','w'))
 fig,axs=plt.subplots(2,4,figsize=(24,14))
 for n in range(1,9):
