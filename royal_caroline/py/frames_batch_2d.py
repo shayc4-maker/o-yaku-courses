@@ -48,7 +48,11 @@ def face_poly(Xf,Xlay):
 def face_poly_sharp(Xf,Xlay):
     """no radii, no tangent joins: floor (horizontal, +-KB) -> straight to the exact hull line; seat (horizontal) -> straight out until it meets the inner line"""
     keel_top,(ks_bot,ks_top)=keel_levels(Xlay); leg_bot=keel_top-PEN_LOW
-    P=hull_line(Xf); O=P[np.argsort(P[:,1])]; O=O[O[:,0]>=KB-1e-6]
+    P=hull_line(Xf); O=P[np.argsort(P[:,1])]
+    # the floor (horizontal at leg_bot) runs outward until it meets the EXACT hull line; nothing is added or bent
+    below=np.where(O[:,1]<leg_bot)[0]
+    if len(below)==0 or below[-1]+1>=len(O): raise ValueError('hull line does not cross the floor level (floor %.2f, hull starts at %.2f)'%(leg_bot,O[0,1]))
+    j=below[-1]; a_,b_=O[j],O[j+1]; t_=(leg_bot-a_[1])/(b_[1]-a_[1]); Pf=a_+t_*(b_-a_); O=np.vstack([Pf,O[j+1:]])
     sm=np.c_[savgol_filter(O[:,0],11,3),savgol_filter(O[:,1],11,3)]; d_=np.gradient(sm,axis=0); d_/=np.hypot(*d_.T)[:,None]; m=np.c_[-d_[:,1],d_[:,0]]; I=O+m*T
     if INNER_SMOOTH:
         from scipy.interpolate import splprep as _sp,splev as _sv
@@ -61,7 +65,7 @@ def face_poly_sharp(Xf,Xlay):
     if j==i0: seat_end=np.array([I[j,0],ks_bot]); top=np.vstack([[[0.0,ks_bot]],[[KB,ks_bot]],I[j:]]) if I[j,0]>KB+1e-6 else np.vstack([[[0.0,ks_bot],[KB,ks_bot]],I[j:]])
     else:
         a,b=I[j-1],I[j]; t_=(ks_bot-a[1])/(b[1]-a[1]); Pc=a+t_*(b-a); top=np.vstack([[[0.0,ks_bot]],[Pc],I[j:]])
-    poly=Polygon(np.vstack([[[0,leg_bot],[KB,leg_bot]],O,top[::-1]])).buffer(0).intersection(box(0,-10,200,300))
+    poly=Polygon(np.vstack([[[0,leg_bot]],O,top[::-1]])).buffer(0).intersection(box(0,-10,200,300))
     return poly,dict(keel_top=keel_top,ks_bot=ks_bot,ks_top=ks_top,leg_bot=leg_bot,zt=ks_bot,O=O,I=I)
 _face_poly_old=face_poly
 def face_poly(Xf,Xlay):
