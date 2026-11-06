@@ -11,16 +11,16 @@ import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 from frame_arm import arm,KB,DEPTH,kK,RAISE
 xc=F.XF[46-b-1]; fc={'X-4':xc-4,'X':xc,'X+4':xc+4}; cols={'X-4':'tab:blue','X':'k','X+4':'tab:red'}
 arms={n:arm(X) for n,X in fc.items()}
-for n,(p,i) in arms.items(): print('%-4s inner horizontal line %.2f | outer line at the keel wall %.2f (wall %.2f mm) | inner line natural at the wall %.2f -> moves %.2f mm to meet the floor end | arm area %.0f mm2 valid %s'%(n,i['floor'],i['hull_at_wall'],i['floor']-i['hull_at_wall'],i['inner_at_wall_natural'],i['floor']-i['inner_at_wall_natural'],p.area,p.is_valid))
+for n,(p,i) in arms.items(): print('%-4s floor %.2f seat %.2f (gap filled %.2f mm) | outer line at the keel wall %.2f (wall %.2f mm) | inner line natural at the wall %.2f -> moves %.2f mm to meet the seat end | half area %.0f mm2 valid %s'%(n,i['floor'],i['seat'],i['seat']-i['floor'],i['hull_at_wall'],i['floor']-i['hull_at_wall'],i['inner_at_wall_natural'],i['seat']-i['inner_at_wall_natural'],p.area,p.is_valid))
 mir=lambda g: __import__('shapely.affinity',fromlist=['scale']).scale(g,xfact=-1,yfact=1,origin=(0,0))
 fig,axs=plt.subplots(1,3,figsize=(24,10))
 def draw(a,xl,yl,title):
     for n,(p,i) in arms.items():
-        for g in (p,mir(p)): a.plot(*g.exterior.xy,color=cols[n],lw=1.4)
-        a.plot([-KB,KB],[i['floor']]*2,color=cols[n],lw=2)
+        from shapely.ops import unary_union as _u
+        for gg in (lambda g:(g.geoms if hasattr(g,'geoms') else [g]))(_u([p.buffer(0.01),mir(p).buffer(0.01)]).buffer(-0.01)): a.plot(*gg.exterior.xy,color=cols[n],lw=1.4)
     a.set_aspect('equal'); a.set_xlim(*xl); a.set_ylim(*yl); a.grid(alpha=.3); a.set_title(title,fontsize=10)
-f=arms['X'][1]['floor']
+f=arms['X'][1]['floor']; sx=arms['X'][1]['seat']
 draw(axs[0],(-85,85),(-5,115),'frame %d X=%.1f: final lines at X-4 (blue), X (black), X+4 (red)'%(b,xc))
-draw(axs[1],(-14,14),(f-8,f+8),'keel contact: wall at Y=2.65, inner horizontal line (pocket floor +2 mm), inner line meets its end')
+draw(axs[1],(-14,14),(f-8,sx+8),'centre: floor on the keel (pocket floor) and seat under the keelson (keelson spline) - the frame fills the gap; wall at Y=2.65')
 draw(axs[2],(-30,30),(f-8,f+22),'wider view of the same area')
 fig.savefig('qa/frame%d_one_2d.png'%b,dpi=55,bbox_inches='tight')
