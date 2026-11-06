@@ -234,3 +234,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 approved ST10 (v3 + convergence point F=(1.0,-0.3)); ST09 points sent (`data/st09_points_v2.json`), top ends at row 891 (above it only the handwritten 9 arrow).
 
 - 2026-11-06 approved ST09 (v2); ST08 points sent (`data/st08_points.json`): builder spline for ST08 sits ~2 mm inside the ink, points taken as the ink line just outside ST09.
+
+- 2026-11-06 approved ST08; ST07 points sent (`data/st07_points.json`) from the forward plan: clean rows = 2nd line from the right; merged band 7+8 = left part; foot points = builder spline.
