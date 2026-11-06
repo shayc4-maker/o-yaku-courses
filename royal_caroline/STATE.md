@@ -318,3 +318,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 builder answers: outer (iron) hull line stops at the keel wall (vertical wall); only ONE horizontal line = keel pocket floor, backbone width; inner line deviates slightly inward and meets its end. Frame 5 2D: `python3 py/frame_one_2d.py 5` -> qa/frame5_one_2d.png. Not yet propagated to frames_batch_2d.py / 3D blanks.
 
 - 2026-11-06 side view of keel with pockets and the frame-5 arm end face: py/keel_side_frame.py 5 -> qa/keel_side_frame5.png (pocket 1.0 mm; arm end face 3.2-3.7 mm below the floor, covers the keel side wall). py/frame_arm.py = arm function.
+
+- 2026-11-06 builder: raise the inner horizontal line by 2 mm (no thin neck at the keel wall) and let the inner line leave the 3.2 offset to meet it. frame_arm.py RAISE=2.0. Frame 5: inner horizontal 8.79/9.70/10.75, wall 5.2-5.7 mm, inner line moves 2.5-3.1 mm. qa/frame5_one_2d.png, qa/keel_side_frame5.png.
