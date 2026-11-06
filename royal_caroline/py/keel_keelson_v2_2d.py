@@ -3,7 +3,7 @@ import sys,json,numpy as np
 sys.path.insert(0,'py'); import step_chain as S
 from scipy.interpolate import UnivariateSpline
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
-DEPTH=2.0; XJ=526.6
+DEPTH=1.0; XJ=526.6
 XF=json.load(open('data/frames_X.json'))['X_mm']
 d=json.load(open('data/keelson_from_step_v1.json')); sK_=UnivariateSpline(d['ref_knots_X'],d['ref_knots_Z'],k=3,s=0)
 c=json.load(open('data/keel_keelson_clean_v1.json')); kx=np.array(c['keel_line']['X']); kz=np.array(c['keel_line']['Z'])-c['keel_raise']
@@ -32,10 +32,10 @@ json.dump(dict(depth=DEPTH,keelson_spline=dict(X=xs[::10].round(2).tolist(),Z=ke
 fig,axs=plt.subplots(3,1,figsize=(18,17),gridspec_kw={'height_ratios':[1,1,.8]})
 for a_,(xl,yl) in zip(axs,(((470,535),(0,45)),((260,330),(-2,12)),((45,535),(-3,60)))):
     xx=np.linspace(max(xl[0],45),min(xl[1],XJ+8),800); a_.plot(xx,keelson(xx),'g',lw=2.2,label='keelson inner spline (smooth, no pockets)'); a_.plot(xx,keel_surface(xx),color='tab:brown',lw=1.0,label='keel surface spline')
-    sl=(keel_surface(xx+.05)-keel_surface(xx-.05))/.1; a_.plot(xx,keel_surface(xx)-DEPTH*np.sqrt(1+sl**2),color='tab:brown',lw=1.0,ls='--',label='pocket floor spline (2 mm, parallel)')
+    sl=(keel_surface(xx+.05)-keel_surface(xx-.05))/.1; a_.plot(xx,keel_surface(xx)-DEPTH*np.sqrt(1+sl**2),color='tab:brown',lw=1.0,ls='--',label='pocket floor spline (1 mm, parallel)')
     a_.plot(keel_top[:,0],keel_top[:,1],color='k',lw=1.6,label='keel top outline with pockets')
     for b,a,bb in pk:
         if xl[0]-8<a<xl[1]: a_.axvspan(a,bb,color='tab:blue',alpha=.08); a_.text((a+bb)/2,yl[1]-(yl[1]-yl[0])*.04,str(b),ha='center',fontsize=8 if a_ is not axs[2] else 5)
     a_.set_xlim(*xl); a_.set_ylim(*yl); a_.grid(alpha=.3); a_.set_ylabel('Z (mm)')
-axs[0].legend(loc='upper left'); axs[0].set_title('New keel and keelson (2D): smooth keelson spline; keel with 2 mm pockets, two parallel splines; blue = frame width 8 mm')
+axs[0].legend(loc='upper left'); axs[0].set_title('New keel and keelson (2D): smooth keelson spline; keel with 1 mm pockets, two parallel splines; blue = frame width 8 mm')
 fig.savefig('qa/keel_keelson_v2_2d.png',dpi=55,bbox_inches='tight')

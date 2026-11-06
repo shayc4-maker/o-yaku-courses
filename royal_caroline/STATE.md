@@ -296,3 +296,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 builder: keelson = one smooth spline, no pockets; keel has 2 mm pockets with two parallel splines; frame is CUT with allowance = difference between the spline levels at the layer faces (innermost min .. outermost max) and sanded to the final surface (laser mark = final line). `py/frame_allowance_2d.py 5 23` -> `qa/frame_allowance_5_23.png`: frame 5 allowance ~0.9-1.05 mm per layer, frame 23 ~0 (flat midships). 2D only, for approval.
 
 - 2026-11-06 NEW KEEL/KEELSON 2D (builder rules): keelson = smooth STEP spline, no pockets, frame top has no step/pocket (NOSTEP=1 option in frames_batch_2d.py); keel = surface spline + 2 mm pockets normal to the spline, floor spline parallel; 43 pockets 8 mm. `py/keel_keelson_v2_2d.py` -> `data/keel_keelson_v2.json`, `qa/keel_keelson_v2_2d.png`. Gap keelson-keel surface 2.8 mm midships. Next: frames 1-5 on it, 5 per round.
+
+- 2026-11-06 pocket depth set to 1.0 mm (measured in the STEP: keelson steps mean 0.91, deadwood 1.11, backbone.py NOTCH=1.0; ~2 mm only at the bow). `py/keel_keelson_v2_2d.py` DEPTH=1.0 -> qa/keel_keelson_v2_2d.png.
