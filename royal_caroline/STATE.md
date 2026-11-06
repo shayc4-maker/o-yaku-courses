@@ -240,3 +240,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 approved ST06 (v2) and ST07 (v2) -> approved json; ST16 points sent (`data/st16_points.json`); next ST17, 18 then global check.
 
 - 2026-11-06 approved ST16 (v2, top moved up 0.4 mm); ST17 points sent (`data/st17_points.json`).
+
+- 2026-11-06 approved ST17 (v2); ST18 points sent (`data/st18_points_v2.json`). After ST18: re-check 1-5 foot points, add F to stations ending at the foot, then spline-through-points for all and compare with builder splines.
