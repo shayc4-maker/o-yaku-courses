@@ -7,7 +7,7 @@ from scipy.signal import savgol_filter
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 import hull_new_sections as HN
 OUR=int(sys.argv[1]) if len(sys.argv)>1 else 23
-KB=2.65; T=3.2; PEN_LOW=2.5; PEN_UP=2.5
+KB=2.65; T=3.2; PEN_LOW=2.5; PEN_UP=float(__import__("os").environ.get("PEN_UP","2.5"))
 BB=json.load(open('data/step44_profiles.json')); XF=json.load(open('data/frames_X.json'))['X_mm']
 PP={k:Polygon(max(v,key=lambda q:Polygon(q).area)).buffer(0) for k,v in BB.items() if k not in('Split1[1]','Split1[2]','Boss-Extrude4[2]')}
 UB=unary_union(list(PP.values()))

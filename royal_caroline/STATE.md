@@ -266,3 +266,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 plan_6 B3 (central hull section) read: keelson bottom row 2287, top 2212 (5.9 mm), keel top row 2325 -> gap 3.0 mm (scale 0.0791 mm/px from keel width 5.3 mm). Inner/outer edge of frame band: `py/b3_inner_line.py`, `data/b3_inner_line.json`, `qa/b3_inner_line.png` (for approval). Our frame 23 at X=284 used gap 4.9 / keelson 5.0 from step44 profile.
 
 - 2026-11-06 B3 is at X~270.9 (line 9). Frame our 22 (builder 24, X=273.9) redone with B3 gap 3.0 / keelson 5.9: `python3 py/frame_central_2d.py 22 3.0 5.9` -> `qa/frame24_central_2d_B3.png`. Floor top of my frame (~7.9) is ~2 mm above the B3 inner line (~5.9).
+
+- 2026-11-06 frame 24 (our 22) corrected per B3: `PEN_UP=0.6 python3 py/frame_central_2d.py 22 3.0 5.9` (leg tops = keelson bottom+0.6, floor top Z 6.0 at the keel). Matches B3 inner line within 0.1-0.5 mm to Y=10, 0.9 at Y=18, 1.4-1.8 at Y 26-34 (my hull outer sits ~1.5 mm above the B3 drawing there).
