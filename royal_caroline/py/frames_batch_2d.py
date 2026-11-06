@@ -6,7 +6,7 @@ from scipy.interpolate import splprep,splev
 from scipy.signal import savgol_filter
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 import hull_new_sections as HN
-KB=2.65; T=3.2; PEN_LOW=2.5; PEN_UP=float(__import__("os").environ.get("PEN_UP","0.6"))
+NOSTEP=__import__('os').environ.get('NOSTEP','0')=='1'; KB=2.65; T=3.2; PEN_LOW=2.5; PEN_UP=float(__import__("os").environ.get("PEN_UP","0.6"))
 BB=json.load(open('data/step44_profiles.json')); XF=json.load(open('data/frames_X.json'))['X_mm']
 PP={k:Polygon(max(v,key=lambda q:Polygon(q).area)).buffer(0) for k,v in BB.items() if k not in('Split1[1]','Split1[2]','Boss-Extrude4[2]')}
 UB=unary_union(list(PP.values()))
@@ -33,6 +33,10 @@ def face_poly(Xf,Xlay):
     blend=herm(np.array([KB,leg_bot]),np.array([0,5.0]),p0,t0); O=np.vstack([blend,P[k+1:]]); O=O[np.argsort(O[:,1])]
     sm=np.c_[savgol_filter(O[:,0],11,3),savgol_filter(O[:,1],11,3)]; d_=np.gradient(sm,axis=0); d_/=np.hypot(*d_.T)[:,None]; m=np.c_[-d_[:,1],d_[:,0]]; I=O+m*T
     kk=int(np.where((I[:,0]>8)&(I[:,1]>zt+2.5))[0][0]); Pj=I[kk]; Tj=I[kk+2]-I[kk-2]; Tj=Tj/np.hypot(*Tj)
+    if NOSTEP:      # no step / legs at the keelson: the top is one smooth line from the keelson spline at the centre into the inner line
+        Ps=np.array([0.0,ks_bot]); L=np.hypot(*(Pj-Ps)); sp=herm(Ps,np.array([1.0,0.0])*L*0.9,Pj,Tj*L*0.9); top=np.vstack([sp,I[kk+1:]])
+        poly=Polygon(np.vstack([[[0,keel_top],[KB,keel_top],[KB,leg_bot]],O,top[::-1]])).buffer(0).intersection(box(0,-10,200,300))
+        return poly,dict(keel_top=keel_top,ks_bot=ks_bot,ks_top=ks_top,leg_bot=leg_bot,zt=ks_bot,O=O,I=I)
     Ps=np.array([KB+0.01,zt]); L=np.hypot(*(Pj-Ps)); sp=herm(Ps,np.array([1.0,0.0])*L*0.9,Pj,Tj*L*0.9)
     top=np.vstack([[[KB,ks_bot],[KB,zt]],sp[1:],I[kk+1:]])
     poly=Polygon(np.vstack([[[0,keel_top],[KB,keel_top],[KB,leg_bot]],O,top[::-1],[[0,ks_bot]]])).buffer(0).intersection(box(0,-10,200,300))
