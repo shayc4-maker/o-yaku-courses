@@ -18,22 +18,23 @@ def runs_at(c,pc,Np,Tp,half=24,w=6,thr=0.35):
 def station(n):
     c=CFG[which(n)]; v=ST[f'ST{n:02d}'][:,1:]; s=np.r_[0,np.cumsum(np.hypot(*np.diff(v,axis=0).T))]
     X,Y=px(c,v[:,0],v[:,1]); P=np.c_[X,Y]
-    # corner: trace the ink downward from the top end
-    x0,y0=X[-1],Y[-1]; xs=[];prev=x0; rows=range(int(y0)+4,int(y0)+4+700)
-    for r in rows:
-        row=c['g'][r,int(prev)-7:int(prev)+8]
-        if row.max()<60: xs.append(prev); continue
-        m=row>0.5*row.max(); idx=np.where(m)[0]; rs=np.split(idx,np.where(np.diff(idx)>1)[0]+1); rr=min(rs,key=lambda q:abs(q.mean()-7))
-        if len(rr)<=8: prev=int(prev)-7+(rr*row[rr]).sum()/row[rr].sum() if False else (int(prev)-7+(rr*row[rr]).sum()/row[rr].sum())
-        xs.append(prev)
-    xs=np.array(xs); ref=np.median(xs[:12]); dev=np.abs(xs-ref)>1.5
-    first=np.argmax(dev) if dev.any() else len(xs); vlen=first*c['k']
-    corner=None
-    if vlen>=3.0 and n<=4:   # stations 5-8 run too close together to trace; they are slanted at the top anyway
-        rc=list(rows)[first]; corner=(ref,rc)
-    return c,v,s,P,corner,x0,y0
+    # straight vertical top (ST01-03): trace the ink centre down from the ink top, corner = where it leaves the straight line
+    corner=None; top=None; x0,y0=X[-1],Y[-1]
+    if n<=2:
+        g=c['g']; rows=np.arange(int(y0)-60,int(y0)+260); prev=None; cs=[]; XG={1:3014.0,2:3087.0}[n]; x0=XG
+        for r in rows:
+            ref=prev if prev is not None else x0
+            w=g[r,int(ref)-9:int(ref)+10]; idx=np.where(w>90)[0]
+            if len(idx)==0: cs.append(np.nan); continue
+            rs=np.split(idx,np.where(np.diff(idx)>1)[0]+1); rr=min(rs,key=lambda q:abs(q.mean()-9))
+            if len(rr)>9 or (prev is None and abs(rr.mean()-9)>7): cs.append(np.nan); continue
+            cc=int(ref)-9+(rr*w[rr]).sum()/w[rr].sum(); cs.append(cc); prev=cc
+        cs=np.array(cs); ok=np.where(~np.isnan(cs))[0]; i0=ok[0]; seg=ok[(ok>=i0+25)&(ok<i0+90)]
+        fit=np.array([0.0,np.median(cs[seg])]); dev=np.abs(cs-np.polyval(fit,rows))>1.5
+        first=next(i for i in ok if i>i0+30 and dev[ok[ok>=i][:10]].all()); corner=(float(np.polyval(fit,rows[first])),int(rows[first])); top=(float(np.polyval(fit,rows[i0])),int(rows[i0]))
+    return c,v,s,P,corner,x0,y0,top
 def points(n):
-    c,v,s,P,corner,x0,y0=station(n); g=c['g']
+    c,v,s,P,corner,x0,y0,top=station(n); g=c['g']
     if corner: # arc where the spline reaches the corner row
         jc=np.argmin(abs(P[:,1]-corner[1])); sc=s[jc]; tgt=[t for t in np.arange(0,sc,10.0) if sc-t>3.0]
     else: sc=s[-1]; tgt=[t for t in np.arange(0,sc-3.0,10.0)]+[sc-1.5]
@@ -49,14 +50,14 @@ def points(n):
         out.append(P[j]+N*o)
     out=np.array(out); Ym,Zm=mm(c,out[:,0],out[:,1]); pts=list(zip(Ym,Zm))
     if corner:
-        yc,zc=mm(c,corner[0],corner[1]); pts.append((yc,zc)); r=int(y0)+4
-        while c['g'][r-1,int(corner[0])-3:int(corner[0])+4].max()>60 and r>int(y0)-80: r-=1
-        ye,ze=mm(c,corner[0],r+1); pts.append((yc,ze))
+        yc,zc=mm(c,corner[0],corner[1]); pts.append((yc,zc)); ye,ze=mm(c,top[0],top[1]); pts.append((ye,ze))
     return pts,bool(corner),med*c['k']
 if __name__=='__main__':
     allp={}
     for n in range(1,19):
-        pts,cr,med=points(n); allp[n]=dict(points=[[round(a,2),round(b,2)] for a,b in pts],straight_top=cr)
+        pts,cr,med=points(n)
+        if n==1: pts=[tuple(r) for r in np.loadtxt('data/st01_points_20mm.csv',delimiter=',',skiprows=1)[:,1:]]   # approved version
+        allp[n]=dict(points=[[round(a,2),round(b,2)] for a,b in pts],straight_top=cr)
         print(f'ST{n:02d}: {len(pts)} pts, straight top={cr}, bias {med:+.2f} mm, Z {pts[0][1]:.1f}..{pts[-1][1]:.1f}')
     # station 6 must stay inside station 7 (min 0.3 mm)
     from shapely.geometry import LineString,Point
