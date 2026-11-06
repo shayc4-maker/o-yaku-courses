@@ -250,3 +250,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 stations 8-12 now all end at F_aft (old foot points Y~2.7 dropped, ST8 start = F_aft); foot smooth. Awaiting final approval of the body plan splines.
 
 - 2026-11-06 station 8 redone on the forward plan as the outermost stroke (`data/st08_points_fwd.json`, band right edge - 2 px); previous 8 (from aft plan) sat inside 7 by up to 2 mm at Z<35. 8 starts at F_aft per builder (8-12 share the point).
+
+- 2026-11-06 waterlines phase started: top view WL I traced (`py/line_follow.py`), 27 points every 20 mm -> `data/wl1_top_points.json`, `qa/wl1_top_*.png`. Y scale of plan A1/4 NOT yet calibrated (tentative 0.0833; body plan vs plan inconsistent by 1-3 mm); side-view line pending builder choice.
