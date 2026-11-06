@@ -216,3 +216,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - `py/build_views_3dm.py` -> `rhino/RoyalCaroline_views_ref.zip` (3dm + 4 PNG textures, keep beside): body plan (X=-80, aft A1/2 + fwd A1/3), elevation (Y=0, plan_1a: X=0.08511px-357.14, Z=(2110-row)*0.085), half-breadth plan (Z=0, plan_1b: X=0.08499px-361.43, Y=(1238-row)*0.0833). Check: `qa/views_ref_check.png`. Finding: WL data in lines.dxf deviate from the A1/4 drawing near the bow (up to ~25 mm in X, stations 1-4); Y scale of plan view fitted only to ~±1.5 mm.
 
 - 2026-11-06 `py/bodyplan_st01_points.py`: ST01 on A1/3, points every 20 mm of arc on the ink centre (7 points) -> `qa/bodyplan_st01_points.png`, `data/st01_points_20mm.csv`. Awaiting builder approval.
+
+- 2026-11-06 `py/bodyplan_points_all.py`: points on all 18 body-plan stations (10 mm arc, ink centre, straight top corner on ST01-03, ST06 kept inside ST07) -> `data/bodyplan_points_v1.json`, `qa/bodyplan_points_fwd.png`, `qa/bodyplan_points_aft.png`. Awaiting approval.
