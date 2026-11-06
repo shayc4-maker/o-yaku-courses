@@ -324,3 +324,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 builder: the gap between keel and keelson must be FILLED at the frame centre; upper line meets the keelson bottom line. frame_arm.py now builds floor+seat+wall; connection of the seat end to the natural inner line unresolved: variants A/B/C in qa/frame5_variants.png (py/frame_variants.py). Waiting.
 
 - 2026-11-06 inner line continuation per builder sketch: Hermite spline from the seat-line end (KB, seat) to the exact offset line, tangent to it at the join (G1), corner at the horizontal line. frame_arm.py. Frame 5: qa/frame5_one_2d.png. Waiting for approval before 1-5.
+
+- 2026-11-06 join point of the inner-line spline moved outward (JOIN=18 mm from the wall) for a longer, more continuous transition. frame_arm.py, qa/frame5_one_2d.png.
