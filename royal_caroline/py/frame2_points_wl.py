@@ -28,8 +28,9 @@ for nm,X in FACES.items():
         yb=y_at(LB,PB,1,z)
         if yb is not None:
             a,b=ywl(k,XA),ywl(k,XB); u=(ywl(k,X)-a)/(b-a); y=ya+u*(yb-ya); info[k]='u=%.2f'%u
-        else:
+        elif False:
             Pw=wl(k); xe=Pw[-1,0]; g=float(np.clip((X-XA)/(xe-XA),0,1)); y=ywl(k,X)+(ya-ywl(k,XA))*(1-g); info[k]='anchored g=%.2f'%g
+        else: continue      # no station 1 at this level (below its start): no point, the line goes from the rabbet end to the next level
         pts.append(('WL '+k,y,z))
     uv=(ywl('VII',X)-ywl('VII',XA))/(ywl('VII',XB)-ywl('VII',XA)); info['VII u']=round(uv,2)
     for z in [z for z in PB[:,1] if z>WL['VII']+4 and z<PB[-2,1]-0.1]:
