@@ -28,9 +28,10 @@ for b in range(1,9):
     d=A[str(b)]; xc=d['X']; faces={k:full(v['half']) for k,v in d['faces'].items()}
     env=unary_union([g.buffer(0.01) for g in faces.values()]).buffer(-0.01); env=max(env.geoms,key=lambda q:q.area) if hasattr(env,'geoms') else env; env=Polygon(env.exterior).simplify(0.003)   # fill the slivers between the face outlines (frame 1 flares strongly across the 8 mm)
     blanks[b]=env
-    for lay,(x0,x1) in (('A',(xc-4,xc)),('F',(xc,xc+4))):
-        s=prism(env,x0,x1); solids['FRAME%02d_%s'%(b,lay)]=s; ok=BRepCheck_Analyzer(s).IsValid(); rep.append((b,lay,ok,vol(s),env.area*4))
-    for k,X in (('back',xc-4),('mid',xc),('front',xc+4)): lines['LASER%02d_%s'%(b,k)]=(X,np.array(faces[{'back':'X-4','mid':'X','front':'X+4'}[k]].exterior.coords))
+    xf=d.get('x_front',xc+4)
+    for lay,(x0,x1) in (('A',(xc-4,xc)),('F',(xc,xf))):
+        s=prism(env,x0,x1); solids['FRAME%02d_%s'%(b,lay)]=s; ok=BRepCheck_Analyzer(s).IsValid(); rep.append((b,lay,ok,vol(s),env.area*(x1-x0)))
+    for k,X in (('back',xc-4),('mid',xc),('front',xf)): lines['LASER%02d_%s'%(b,k)]=(X,np.array(faces[{'back':'X-4','mid':'X','front':'X+4'}[k]].exterior.coords))
     print('frame %d: blank area %.0f mm2 (faces %s)'%(b,env.area,[round(g.area) for g in faces.values()]))
 print('valid:',all(r[2] for r in rep),'| volume check (prism vs area*4): max diff %.4f mm3'%max(abs(r[3]-r[4]) for r in rep))
 # clash with the backbone STEP and between neighbouring frames
@@ -65,7 +66,8 @@ lA=layer('FRAMES_1-8_A_(back 4mm)',(200,60,60,255)); lF=layer('FRAMES_1-8_F_(fro
 bad=0
 for b,env in blanks.items():
     xc=A[str(b)]['X']
-    for lay,(x0,x1),ly in (('A',(xc-4,xc),lA),('F',(xc,xc+4),lF)):
+    xf=A[str(b)].get('x_front',xc+4)
+    for lay,(x0,x1),ly in (('A',(xc-4,xc),lA),('F',(xc,xf),lF)):
         pts=[r3.Point3d(x0,y,z) for y,z in list(env.exterior.coords)]; cur=r3.PolylineCurve(pts)
         ex=r3.Extrusion.Create(cur,float(x1-x0),True)
         if ex is None: bad+=1; continue

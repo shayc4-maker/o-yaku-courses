@@ -8,7 +8,10 @@ HN.C=json.load(open('data/bodyplan_splines_v2_ends.json')); HN._C={}; HN._CACHE=
 from scipy.interpolate import CubicSpline
 _rb=json.load(open('data/rabbet_points_v3_ends.json'))['points']; R3=CubicSpline([p[0] for p in _rb],[p[1] for p in _rb],bc_type='natural')
 def hull_line_v2(X):
-    P=HN.section(min(X,527.7)); zz=np.round(P[:,1],2); _,ui=np.unique(zz,return_index=True); P=P[ui]; P=P[np.argsort(P[:,1])]
+    if X>=527.0:          # the loft collapses in its last 0.8 mm before station 1 (Y@Z70 jumps 41.3 -> 29.4): use the approved station 1 line itself (527.8)
+        P=np.array(HN.C['1']['curve']); P=P[np.argsort(P[:,1])]
+    else: P=HN.section(X)
+    zz=np.round(P[:,1],2); _,ui=np.unique(zz,return_index=True); P=P[ui]; P=P[np.argsort(P[:,1])]
     z0,z1=P[0,1],P[-1,1]; zs=np.r_[z0,np.linspace(z0,z1,15)[1:]]; pts=np.array([(float(np.interp(z,P[:,1],P[:,0])),float(z)) for z in zs]); tk,u=splprep(pts.T,k=3,s=0); y,z=splev(np.linspace(0,1,600),tk); return np.c_[y,z]
 from scipy.interpolate import UnivariateSpline,splprep,splev
 from scipy.signal import savgol_filter
@@ -37,16 +40,17 @@ def arm(X):
     z_nat=lambda y: np.interp(y,Iy[:,0],Iy[:,1]); D=seat-float(z_nat(KB))
     # inner line: cubic Hermite in y from the seat corner to the exact offset line (tangent join). The join is moved outward (JOIN, +10 mm steps) until the whole line is concave (never bends the wrong way)
     h=0.5; zn=lambda y: float(z_nat(y)); ymaxl=float(I[:int(np.argmax(I[:,0]))+1,0].max()); best=None
-    for J in np.arange(JOIN,min(ymaxl-KB-4,120),10.0):
+    # convexity guaranteed: cubic Hermite z''(0)=(2/L)(3m-2*s0-s1) >= 0 and z''(L)=(2/L)(2*s1+s0-3m) >= 0  <=>  max(0,3m-2*s1) <= s0 <= (3m-s1)/2, feasible iff m <= s1 <= 3m (m = chord slope, s1 = natural slope at the join). Smallest join distance that is feasible.
+    for J in np.arange(JOIN,min(ymaxl-KB-4,120),2.0):
         yj=KB+J; L=yj-KB; zj=zn(yj)
-        if zj<seat+0.3: continue          # the line may not descend: join only where the offset line is above the seat level
-        s1=(zn(yj+h)-zn(yj-h))/(2*h); s0=(zn(KB+h)-zn(KB))/h
-        mch=(zj-seat)/L; s0=float(np.clip(s0,0.0,1.5*mch)); s1=float(np.clip(s1,0.0,3.0*mch))      # monotone non-decreasing cubic (Fritsch-Carlson): the line never dips below the seat
-        yy=np.linspace(KB,yj,160); u=(yy-KB)/L; zc=seat*(2*u**3-3*u**2+1)+s0*L*(u**3-2*u**2+u)+zj*(-2*u**3+3*u**2)+s1*L*(u**3-u**2)
-        cur=np.gradient(np.gradient(np.r_[zc,zn(yj+1.0),zn(yj+2.0),zn(yj+3.0)]))[:len(zc)]/((yy[1]-yy[0])**2)
-        neg=float(-min(cur[3:-3].min(),0)); 
-        if best is None or neg<best[0]: best=(neg,yj,zc,yy)
-        if neg<0.004: break
+        if zj<seat+0.3: continue
+        s1=(zn(yj+h)-zn(yj-h))/(2*h); s0n=(zn(KB+h)-zn(KB))/h; m=(zj-seat)/L
+        if not (m<=s1<=3*m): continue
+        lo=max(0.0,3*m-2*s1); hi=(3*m-s1)/2
+        if lo>hi+1e-9: continue
+        s0=float(np.clip(s0n,lo,hi)); yy=np.linspace(KB,yj,160); u=(yy-KB)/L; zc=seat*(2*u**3-3*u**2+1)+s0*L*(u**3-2*u**2+u)+zj*(-2*u**3+3*u**2)+s1*L*(u**3-u**2)
+        best=(0.0,yj,zc,yy); break
+    if best is None: raise ValueError('no convex join found')
     neg,yj,zc,yy=best; inner_conn=np.c_[yy,zc]
     inner=np.vstack([[[0.0,seat]],inner_conn,I[I[:,0]>yj+1e-9]])
     inner=inner[1:] if False else inner
