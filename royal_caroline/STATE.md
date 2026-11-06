@@ -244,3 +244,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 approved ST17 (v2); ST18 points sent (`data/st18_points_v2.json`). After ST18: re-check 1-5 foot points, add F to stations ending at the foot, then spline-through-points for all and compare with builder splines.
 
 - 2026-11-06 approved ST18; all 18 stations approved. Convergence points: F_aft (1.0,-0.3), F_fwd (3.27,-0.43) in `data/bodyplan_F_points.json` (proposed: append to stations 8-12 aft / 4-8 fwd).
+
+- 2026-11-06 all 18 stations approved; F points approved (F_aft, F_fwd, shared 2nd point G of 6/7/8). `py/bodyplan_splines_final.py` -> `data/bodyplan_splines_v1.json`, `qa/bodyplan_final_{clean,fwd,aft}.png`. IMPORTANT calibration finding: aft plan (A1/2) Y scale was 3.1 % too small (stations 8-18 sat 2.3 mm inside the builder splines and inside forward stations 1-7); Y of stations 8-18 multiplied by 1.0325 (pixel positions unchanged). After: aft mean distance to builder splines 0.15-0.3 mm.
