@@ -300,3 +300,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 pocket depth set to 1.0 mm (measured in the STEP: keelson steps mean 0.91, deadwood 1.11, backbone.py NOTCH=1.0; ~2 mm only at the bow). `py/keel_keelson_v2_2d.py` DEPTH=1.0 -> qa/keel_keelson_v2_2d.png.
 
 - 2026-11-06 frames 1-5 on the new keel/keelson (NOSTEP=1, pocket 1 mm): `NOSTEP=1 python3 py/frame_allowance_2d.py 1 2 3 4 5` -> `qa/frame_allowance_1_2_3_4_5.png`. Allowance per layer: keelson seat 0.9-2.4 mm, keel pocket floor 0.9-3.2 mm (largest at frame 1). Levels for faces beyond X=526 read at 526. Next: 6-10.
+
+- 2026-11-06 ALL 45 frames 2D on the new keel/keelson (NOSTEP, pocket 1 mm, inner line smoothed): py/frames_all_2d.py -> qa/frame_allowance_*.png (9 sheets). 3D: py/build3d_v2.py (frames 1-45 + keel + keelson meshes) -> rhino/RoyalCaroline_frames1-45_keel_keelson_v2.3dm, renders qa/render3d/n1-n5. Allowance max 2.35 mm keelson / 3.23 keel (frame 1), 37 of 90 layers < 0.1 mm both. Frames 44-45 and the stern end: keel/keelson built from X=45.
