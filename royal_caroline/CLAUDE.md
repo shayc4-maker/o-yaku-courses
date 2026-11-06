@@ -1,5 +1,7 @@
 # Royal Caroline 1:48 POF - working rules (read first, then STATE.md)
 
+Full workflow and learned rules: skill `.claude/skills/ship-plans-to-model/SKILL.md` (agent: `.claude/agents/ship-plans-agent.md`).
+
 ## Language and tokens
 - Reply in Hebrew, minimum tokens: short results, no narration, no interim reports. Send whole results plus a short list of open questions.
 
