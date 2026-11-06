@@ -1,0 +1,410 @@
+{
+ "wall_min_mm": 1.5,
+ "seats": [
+  {
+   "builder": 45,
+   "X": 39.0,
+   "face_A": 35.0,
+   "face_end": 43.0,
+   "keel_top": 10.3,
+   "keelson_bottom": 36.9,
+   "keelson_top": 41.54
+  },
+  {
+   "builder": 44,
+   "X": 50.0,
+   "face_A": 46.0,
+   "face_end": 54.0,
+   "keel_top": 7.76,
+   "keelson_bottom": 30.94,
+   "keelson_top": 35.58
+  },
+  {
+   "builder": 43,
+   "X": 61.25,
+   "face_A": 57.25,
+   "face_end": 65.25,
+   "keel_top": 6.45,
+   "keelson_bottom": 28.14,
+   "keelson_top": 30.38
+  },
+  {
+   "builder": 42,
+   "X": 73.01,
+   "face_A": 69.01,
+   "face_end": 77.01,
+   "keel_top": 4.98,
+   "keelson_bottom": 23.13,
+   "keelson_top": 26.56
+  },
+  {
+   "builder": 41,
+   "X": 84.04,
+   "face_A": 80.04,
+   "face_end": 88.04,
+   "keel_top": 3.83,
+   "keelson_bottom": 20.67,
+   "keelson_top": 23.42
+  },
+  {
+   "builder": 40,
+   "X": 94.74,
+   "face_A": 90.74,
+   "face_end": 98.74,
+   "keel_top": 3.01,
+   "keelson_bottom": 18.1,
+   "keelson_top": 20.96
+  },
+  {
+   "builder": 39,
+   "X": 106.16,
+   "face_A": 102.16,
+   "face_end": 110.16,
+   "keel_top": 2.46,
+   "keelson_bottom": 15.63,
+   "keelson_top": 18.81
+  },
+  {
+   "builder": 38,
+   "X": 117.28,
+   "face_A": 113.28,
+   "face_end": 121.28,
+   "keel_top": 2.17,
+   "keelson_bottom": 13.79,
+   "keelson_top": 17.19
+  },
+  {
+   "builder": 37,
+   "X": 128.83,
+   "face_A": 124.83,
+   "face_end": 132.83,
+   "keel_top": 2.05,
+   "keelson_bottom": 12.23,
+   "keelson_top": 15.81
+  },
+  {
+   "builder": 36,
+   "X": 139.7,
+   "face_A": 135.7,
+   "face_end": 143.7,
+   "keel_top": 2.02,
+   "keelson_bottom": 10.41,
+   "keelson_top": 14.78
+  },
+  {
+   "builder": 35,
+   "X": 150.69,
+   "face_A": 146.69,
+   "face_end": 154.69,
+   "keel_top": 2.02,
+   "keelson_bottom": 9.78,
+   "keelson_top": 13.94
+  },
+  {
+   "builder": 34,
+   "X": 161.69,
+   "face_A": 157.69,
+   "face_end": 165.69,
+   "keel_top": 2.02,
+   "keelson_bottom": 8.73,
+   "keelson_top": 13.28
+  },
+  {
+   "builder": 33,
+   "X": 172.64,
+   "face_A": 168.64,
+   "face_end": 176.64,
+   "keel_top": 2.04,
+   "keelson_bottom": 8.18,
+   "keelson_top": 12.77
+  },
+  {
+   "builder": 32,
+   "X": 183.72,
+   "face_A": 179.72,
+   "face_end": 187.72,
+   "keel_top": 2.07,
+   "keelson_bottom": 7.43,
+   "keelson_top": 12.45
+  },
+  {
+   "builder": 31,
+   "X": 194.54,
+   "face_A": 190.54,
+   "face_end": 198.54,
+   "keel_top": 2.1,
+   "keelson_bottom": 7.25,
+   "keelson_top": 12.26
+  },
+  {
+   "builder": 30,
+   "X": 205.96,
+   "face_A": 201.96,
+   "face_end": 209.96,
+   "keel_top": 2.14,
+   "keelson_bottom": 7.05,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 29,
+   "X": 216.96,
+   "face_A": 212.96,
+   "face_end": 220.96,
+   "keel_top": 2.17,
+   "keelson_bottom": 7.08,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 28,
+   "X": 227.95,
+   "face_A": 223.95,
+   "face_end": 231.95,
+   "keel_top": 2.21,
+   "keelson_bottom": 7.06,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 27,
+   "X": 239.5,
+   "face_A": 235.5,
+   "face_end": 243.5,
+   "keel_top": 2.25,
+   "keelson_bottom": 7.05,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 26,
+   "X": 251.43,
+   "face_A": 247.43,
+   "face_end": 255.43,
+   "keel_top": 2.29,
+   "keelson_bottom": 7.24,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 25,
+   "X": 263.02,
+   "face_A": 259.02,
+   "face_end": 267.02,
+   "keel_top": 2.33,
+   "keelson_bottom": 7.22,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 24,
+   "X": 273.93,
+   "face_A": 269.93,
+   "face_end": 277.93,
+   "keel_top": 2.35,
+   "keelson_bottom": 7.18,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 23,
+   "X": 284.46,
+   "face_A": 280.46,
+   "face_end": 288.46,
+   "keel_top": 2.38,
+   "keelson_bottom": 7.25,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 22,
+   "X": 295.58,
+   "face_A": 291.58,
+   "face_end": 299.58,
+   "keel_top": 2.4,
+   "keelson_bottom": 7.41,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 21,
+   "X": 303.76,
+   "face_A": 299.76,
+   "face_end": 307.76,
+   "keel_top": 2.41,
+   "keelson_bottom": 7.35,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 20,
+   "X": 311.94,
+   "face_A": 307.94,
+   "face_end": 315.94,
+   "keel_top": 2.42,
+   "keelson_bottom": 7.3,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 19,
+   "X": 322.68,
+   "face_A": 318.68,
+   "face_end": 326.68,
+   "keel_top": 2.43,
+   "keelson_bottom": 6.92,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 18,
+   "X": 334.02,
+   "face_A": 330.02,
+   "face_end": 338.02,
+   "keel_top": 2.44,
+   "keelson_bottom": 6.8,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 17,
+   "X": 345.14,
+   "face_A": 341.14,
+   "face_end": 349.14,
+   "keel_top": 2.44,
+   "keelson_bottom": 7.22,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 16,
+   "X": 357.41,
+   "face_A": 353.41,
+   "face_end": 361.41,
+   "keel_top": 2.45,
+   "keelson_bottom": 7.02,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 15,
+   "X": 367.17,
+   "face_A": 363.17,
+   "face_end": 371.17,
+   "keel_top": 2.46,
+   "keelson_bottom": 6.99,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 14,
+   "X": 380.13,
+   "face_A": 376.13,
+   "face_end": 384.13,
+   "keel_top": 2.47,
+   "keelson_bottom": 7.42,
+   "keelson_top": 12.25
+  },
+  {
+   "builder": 13,
+   "X": 390.74,
+   "face_A": 386.74,
+   "face_end": 394.74,
+   "keel_top": 2.48,
+   "keelson_bottom": 7.46,
+   "keelson_top": 12.27
+  },
+  {
+   "builder": 12,
+   "X": 402.75,
+   "face_A": 398.75,
+   "face_end": 406.75,
+   "keel_top": 2.49,
+   "keelson_bottom": 7.76,
+   "keelson_top": 12.47
+  },
+  {
+   "builder": 11,
+   "X": 413.75,
+   "face_A": 409.75,
+   "face_end": 417.75,
+   "keel_top": 2.51,
+   "keelson_bottom": 7.94,
+   "keelson_top": 12.86
+  },
+  {
+   "builder": 10,
+   "X": 424.19,
+   "face_A": 420.19,
+   "face_end": 428.19,
+   "keel_top": 2.55,
+   "keelson_bottom": 8.52,
+   "keelson_top": 13.31
+  },
+  {
+   "builder": 9,
+   "X": 434.46,
+   "face_A": 430.46,
+   "face_end": 438.46,
+   "keel_top": 2.69,
+   "keelson_bottom": 9.27,
+   "keelson_top": 13.94
+  },
+  {
+   "builder": 8,
+   "X": 446.09,
+   "face_A": 442.09,
+   "face_end": 450.09,
+   "keel_top": 3.1,
+   "keelson_bottom": 10.17,
+   "keelson_top": 14.95
+  },
+  {
+   "builder": 7,
+   "X": 457.77,
+   "face_A": 453.77,
+   "face_end": 461.77,
+   "keel_top": 3.91,
+   "keelson_bottom": 11.64,
+   "keelson_top": 16.41
+  },
+  {
+   "builder": 6,
+   "X": 468.38,
+   "face_A": 464.38,
+   "face_end": 472.38,
+   "keel_top": 5.09,
+   "keelson_bottom": 13.42,
+   "keelson_top": 18.16
+  },
+  {
+   "builder": 5,
+   "X": 480.27,
+   "face_A": 476.27,
+   "face_end": 484.27,
+   "keel_top": 7.16,
+   "keelson_bottom": 15.88,
+   "keelson_top": 20.52
+  },
+  {
+   "builder": 4,
+   "X": 491.35,
+   "face_A": 487.35,
+   "face_end": 495.35,
+   "keel_top": 9.8,
+   "keelson_bottom": 18.8,
+   "keelson_top": 23.15
+  },
+  {
+   "builder": 3,
+   "X": 502.17,
+   "face_A": 498.17,
+   "face_end": 506.17,
+   "keel_top": 13.9,
+   "keelson_bottom": 22.57,
+   "keelson_top": 26.52
+  },
+  {
+   "builder": 2,
+   "X": 513.55,
+   "face_A": 509.55,
+   "face_end": 517.55,
+   "keel_top": 19.4,
+   "keelson_bottom": 27.32,
+   "keelson_top": 31.26
+  },
+  {
+   "builder": 1,
+   "X": 524.03,
+   "face_A": 520.03,
+   "face_end": 528.03,
+   "keel_top": 26.3,
+   "keelson_bottom": 33.03,
+   "keelson_top": 36.94
+  }
+ ]
+}
