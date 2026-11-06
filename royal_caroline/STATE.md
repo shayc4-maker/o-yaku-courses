@@ -314,3 +314,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 sharp connections (no radii, non-tangent): face_poly_sharp in frames_batch_2d.py (SHARP=1 with NOSTEP): floor horizontal +-KB -> straight to the exact hull line start; seat horizontal -> straight out to where it meets the inner line. Frames 1-5 blanks regenerated, qa/render3d/e1-e4.
 
 - 2026-11-06 builder: do not invent lines; body plan lines are exact. Frame 5 in 2D with only: exact hull line, inner offset, horizontal floor/seat lines extended until they meet the exact lines (no chords, no radii): py/frame_one_2d.py 5 -> qa/frame5_one_2d.png. Waiting for approval.
+
+- 2026-11-06 builder answers: outer (iron) hull line stops at the keel wall (vertical wall); only ONE horizontal line = keel pocket floor, backbone width; inner line deviates slightly inward and meets its end. Frame 5 2D: `python3 py/frame_one_2d.py 5` -> qa/frame5_one_2d.png. Not yet propagated to frames_batch_2d.py / 3D blanks.
