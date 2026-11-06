@@ -3,7 +3,9 @@ import json,sys,numpy as np
 from scipy.interpolate import CubicSpline,splprep,splev
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-C=json.load(open('data/bodyplan_splines_v1.json')); W=json.load(open('data/wl_top_points_all.json')); ENDS=json.load(open('data/bodyplan_ends_proposed_v1.json'))
+import os
+CEN=os.environ.get('CENTERED','0')=='1'; SUF='_centered' if CEN else ''
+C=json.load(open('data/bodyplan_centered_v1.json' if CEN else 'data/bodyplan_splines_v1.json')); W=json.load(open('data/wl_top_centered_v1.json' if CEN else 'data/wl_top_points_all.json')); ENDS=json.load(open('data/bodyplan_ends_centered_v1.json' if CEN else 'data/bodyplan_ends_proposed_v1.json'))
 RB=json.load(open('data/rabbet_points_v3_ends.json'))['points']; R3=CubicSpline([p[0] for p in RB],[p[1] for p in RB],bc_type='natural')
 FN=int(sys.argv[1]); SA=int(sys.argv[2]); SB=int(sys.argv[3]); XS={1:527.8,2:505.8,3:472.0,4:438.0,5:404.4,6:370.7,7:336.0,8:303.4}; XA,XB=XS[SA],XS[SB]; XCs=json.load(open('data/frames_X.json'))['X_mm']; XC=XCs[46-FN-1]; FACES={'back X-4':XC-4,'mid X':XC,'front X+4':XC+4}; WL={'I':8.7,'II':17.4,'III':26.1,'IV':34.8,'V':43.4,'VI':52.1,'VII':69.5}
 PA=np.array(C[str(SA)]['points']); PB=np.array(C[str(SB)]['points']); LA=np.array(C[str(SA)]['curve']); LB=np.array(C[str(SB)]['curve'])
@@ -42,7 +44,7 @@ for nm,X in FACES.items():
     q=np.array([(y,z) for _,y,z in pts]); tck,uu=splprep(q[:-1].T,k=3,s=0); y,z=splev(np.linspace(0,1,500),tck); line=np.r_[np.c_[y,z],[q[-1]]]
     res[nm]=dict(X=X,rabbet_Z=zr,info=info,points=[[l,round(float(a),3),round(float(b),3)] for l,a,b in pts],curve=line.round(3).tolist())
     print('%s X=%.2f rabbet Z %.2f | %s | %d points'%(nm,X,zr,info,len(pts)))
-json.dump(res,open('data/frame%d_points_v1.json'%FN,'w'))
+json.dump(res,open('data/frame%d_points%s_v1.json'%(FN,SUF),'w'))
 f1=json.load(open('data/frame1_points_v1.json')) if False else None
 fig,axs=plt.subplots(2,1,figsize=(14,24),gridspec_kw={'height_ratios':[1,1.15]})
 for nm,d in res.items():
@@ -55,6 +57,6 @@ for n,c in ((SA,'gray'),(SB,'orange')):
 axs[0].set_xlim(-70,70); axs[0].set_ylim(0,125); axs[1].set_xlim(0,40); axs[1].set_ylim(max(0,res['back X-4']['rabbet_Z']-4),res['back X-4']['rabbet_Z']+56)
 for a in axs: a.set_aspect('equal'); a.grid(alpha=.3)
 axs[0].legend(fontsize=8); axs[0].set_title('Frame %d, front view: three faces between station %d (grey dashed) and station %d (orange dashed)'%(FN,SA,SB)); axs[1].set_title('zoom right side with point numbers and coordinates')
-fig.savefig('qa/frame%d_points_v1.png'%FN+'',dpi=60,bbox_inches='tight')
+fig.savefig('qa/frame%d_points%s_v1.png'%(FN,SUF),dpi=60,bbox_inches='tight')
 from matplotlib.backends.backend_pdf import PdfPages
-with PdfPages('qa/frame%d_points_v1.pdf'%FN+'') as pdf: pdf.savefig(fig)
+with PdfPages('qa/frame%d_points%s_v1.pdf'%(FN,SUF)) as pdf: pdf.savefig(fig)
