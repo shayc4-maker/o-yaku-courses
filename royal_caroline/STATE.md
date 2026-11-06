@@ -242,3 +242,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 approved ST16 (v2, top moved up 0.4 mm); ST17 points sent (`data/st17_points.json`).
 
 - 2026-11-06 approved ST17 (v2); ST18 points sent (`data/st18_points_v2.json`). After ST18: re-check 1-5 foot points, add F to stations ending at the foot, then spline-through-points for all and compare with builder splines.
+
+- 2026-11-06 approved ST18; all 18 stations approved. Convergence points: F_aft (1.0,-0.3), F_fwd (3.27,-0.43) in `data/bodyplan_F_points.json` (proposed: append to stations 8-12 aft / 4-8 fwd).
