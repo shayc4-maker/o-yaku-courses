@@ -16,7 +16,7 @@ def runs(X,zlo,zhi):
         else: i+=1
     return out
 # knots read from the ink centre of the upper line of the double black line (checked at X=400..528 step 10 and midships step 50)
-pts=[(30,0.0),(100,-0.04),(200,0.09),(300,0.26),(400,0.34),(430,0.47),(450,0.85),(460,1.66),(470,3.02),(480,4.93),(490,7.4),(500,10.88),(510,15.64),(520,22.14),(528,28.01)]
+pts=[(30,0.0),(100,-0.04),(200,0.09),(300,0.26),(400,0.34),(430,0.47),(450,0.85),(460,1.66),(470,3.02),(480,4.93),(490,7.4),(500,10.88),(510,15.64),(520,22.14),(528,28.8)]
 cs=CubicSpline([p[0] for p in pts],[p[1] for p in pts],bc_type='natural')
 X=np.array([p[0] for p in pts],float); Z=np.array([p[1] for p in pts])
 chk=[(Xc,float(min(runs(Xc,-3,32),key=lambda z:abs(z-cs(Xc))))) for Xc in (60,150,250,350,415,440,455,465,475,485,495,505,515,525)]
