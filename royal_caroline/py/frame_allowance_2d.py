@@ -5,12 +5,11 @@ import frames_batch_2d as F
 import matplotlib.pyplot as plt
 from shapely.ops import unary_union
 from scipy.interpolate import UnivariateSpline
-d=json.load(open('data/keelson_from_step_v1.json')); sK=UnivariateSpline(d['ref_knots_X'],d['ref_knots_Z'],k=3,s=0)       # keelson inner spline (builder STEP), no offset
-c=json.load(open('data/keel_keelson_clean_v1.json')); kk=np.array(c['keel_line']['X']); kz=np.array(c['keel_line']['Z'])-c['keel_raise']; kK=UnivariateSpline(kk,kz,k=3,s=0)  # keel surface spline (STEP ramp)
-POCKET=2.0
+V2=json.load(open('data/keel_keelson_v2.json')); sK=UnivariateSpline(V2['keelson_spline']['X'],V2['keelson_spline']['Z'],k=3,s=0); kK=UnivariateSpline(V2['keel_surface']['X'],V2['keel_surface']['Z'],k=3,s=0)
+POCKET=V2['depth']; XLIM=526.0       # beyond the stem start (526.6) keel and keelson are one solid: levels are read at 526.0
 KT0=F.keel_levels
 def lv(X):
-    _,(kb,kt)=KT0(X); return float(kK(X)),(float(sK(X)),float(kt))
+    X=min(X,XLIM); _,(kb,kt)=KT0(X); return float(kK(X)),(float(sK(X)),float(kt))
 F.keel_levels=lv; F.PEN_LOW=POCKET; 
 n=len(builder); fig,axs=plt.subplots(3,n,figsize=(9.5*n,17),gridspec_kw={'height_ratios':[1.5,1,1]})
 axs=np.atleast_2d(axs.T).T if n>1 else axs.reshape(3,1)
@@ -33,5 +32,5 @@ for j,b in enumerate(builder):
         a.set_aspect('equal'); a.set_xlim(*xl); a.set_ylim(*yl); a.grid(alpha=.25); a.set_title(t,fontsize=10)
     draw(axs[0,j],(-85,85),(-5,115),'frame %d (our %d) X=%.1f: solid = cut outline with allowance, dashed = final face lines; layer A blue, F red'%(b,OUR,xc))
     z1=float(kK(xc)); z2=float(sK(xc))
-    draw(axs[1,j],(-14,40),(z1-9,z1+14),'keel pocket (2 mm): floor line at X-4 (blue) / X (black) / X+4 (red)'); draw(axs[2,j],(-14,40),(z2-8,z2+12),'keelson seat = keelson spline at X-4 / X / X+4')
+    draw(axs[1,j],(-14,40),(z1-9,z1+14),'keel pocket (%.1f mm): floor line at X-4 (blue) / X (black) / X+4 (red)'%POCKET); draw(axs[2,j],(-14,40),(z2-8,z2+12),'keelson seat = keelson spline at X-4 / X / X+4')
 fig.savefig('qa/frame_allowance_'+'_'.join(map(str,builder))+'.png',dpi=48,bbox_inches='tight')
