@@ -25,6 +25,6 @@ for a,(xl,zl) in zip(axs,(((-20,570),(-14,62)),((440,545),(-12,45)),((220,330),(
             a.plot(xs3,[d[k][1] for k in ('m','c','p')],color='r',lw=1.2)
             if a is not axs[0]: a.text(xs3[1],zl[1]-2,str(b),ha='center',fontsize=8)
     a.set_xlim(*xl); a.set_ylim(*zl); a.set_ylabel('Z (mm)')
-axs[0].set_title('Side view (equal scale in X and Z, no stretching): sheer plan (original), whole existing backbone (blue outlines, not moved), frames lower end in red = from the outer line at the keel wall up to the pocket floor, at X-4, X, X+4')
+axs[0].set_title('Side view (equal scale in X and Z, no stretching): sheer plan (original), whole existing backbone lowered 0.6 mm (blue outlines) = frames raised 0.6 vs the keel, frames lower end in red = from the outer line at the keel wall up to the pocket floor, at X-4, X, X+4')
 fig.savefig('qa/frames_bottom_side_shift.png',dpi=55,bbox_inches='tight')
 lo=np.array([(r[0],r[3]) for r in rows if r[1]=='c']); print('lowest frame points: min Z %.2f at frame %d; frame bottoms at Z (builder 1,5,10,23,30,40,45):'%(lo[:,1].min(),lo[lo[:,1].argmin(),0]),[ (int(b),round(float(z),2)) for b,z in lo if int(b) in (1,5,10,23,30,40,45)])

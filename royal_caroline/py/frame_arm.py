@@ -8,7 +8,7 @@ from shapely.geometry import Polygon
 from shapely.ops import unary_union
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 V2=json.load(open('data/keel_keelson_v2.json')); sK=UnivariateSpline(V2['keelson_spline']['X'],V2['keelson_spline']['Z'],k=3,s=0); kK=UnivariateSpline(V2['keel_surface']['X'],V2['keel_surface']['Z'],k=3,s=0); DEPTH=V2['depth']; KB=F.KB; T=F.T; RAISE=float(os.environ.get('RAISE','2.0')); SHIFT=float(os.environ.get('SHIFT','0.6'));  # backbone lowered vs the body plan = frames raised vs the keel (builder, B3 check)
- JOIN=float(os.environ.get('JOIN','34'))
+JOIN=float(os.environ.get('JOIN','34'))
 def arm(X):
     floor=float(kK(min(X,526.0)))-DEPTH-SHIFT; seat=float(sK(min(X,526.0)))-SHIFT      # pocket floor on the keel, keelson spline underneath the keelson: the frame fills the gap between them at the centre
     P=F.hull_line(X)      # keep the line's own order (sorting by Z breaks flat midship frames)
