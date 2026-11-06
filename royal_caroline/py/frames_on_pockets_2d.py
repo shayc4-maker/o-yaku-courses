@@ -24,7 +24,11 @@ for j,b in enumerate(builder):
             blk,fa,fb,info=res[lay]
             for g in (unary_union([blk.buffer(0.02),F.mirror(blk).buffer(0.02)]).buffer(-0.02),):
                 for gg in (g.geoms if hasattr(g,'geoms') else [g]): a.fill(*gg.exterior.xy,color=col,alpha=.18); a.plot(*gg.exterior.xy,color=col,lw=1.2)
-        a.add_patch(plt.Rectangle((-F.KB,-20),2*F.KB,iA['keel_top']+20,color='#888',alpha=.8)); a.add_patch(plt.Rectangle((-F.KB,iA['ks_bot']),2*F.KB,iA['ks_top']-iA['ks_bot'],color='#888',alpha=.8))
+        kl=lambda x: float(np.interp(x,D['keel_line']['X'],D['keel_line']['Z'])); sl=lambda x: float(np.interp(x,D['keelson_line']['X'],D['keelson_line']['Z']))
+        k_out=max(kl(p['a']),kl(p['b'])); s_out=min(sl(p['a']),sl(p['b']))      # keel / keelson inner lines just outside the pocket (the walls)
+        a.add_patch(plt.Rectangle((-F.KB,-20),2*F.KB,k_out+20,color='#bbb',alpha=.6)); a.add_patch(plt.Rectangle((-F.KB,iA['keel_top']),2*F.KB,0.001,color='k'))
+        a.add_patch(plt.Rectangle((-F.KB,s_out),2*F.KB,iA['ks_top']-s_out,color='#bbb',alpha=.6))
+        for z,c,lw in ((iA['keel_top'],'k',1.4),(k_out,'tab:brown',1.0),(iA['ks_bot'],'k',1.4),(s_out,'g',1.0)): a.plot([-F.KB-6,F.KB+6],[z,z],color=c,lw=lw)
         a.set_aspect('equal'); a.set_xlim(*xl); a.set_ylim(*yl); a.grid(alpha=.25); a.set_title(title,fontsize=9)
-    draw(axs[0,j],(-85,85),(-5,115),'frame %d (our %d) X=%.1f'%(b,OUR,xc)); draw(axs[1,j],(-14,40),(iA['keel_top']-12,iA['keel_top']+16),'keel pocket floor %.2f'%iA['keel_top']); draw(axs[2,j],(-14,40),(iA['ks_bot']-6,iA['ks_top']+10),'keelson pocket ceiling %.2f'%iA['ks_bot'])
+    draw(axs[0,j],(-85,85),(-5,115),'frame %d (our %d) X=%.1f'%(b,OUR,xc)); draw(axs[1,j],(-14,40),(iA['keel_top']-12,iA['keel_top']+16),'keel: pocket floor %.2f (black) / outside the pocket %.2f (brown)'%(iA['keel_top'],max(float(np.interp(p['a'],D['keel_line']['X'],D['keel_line']['Z'])),float(np.interp(p['b'],D['keel_line']['X'],D['keel_line']['Z']))))); draw(axs[2,j],(-14,40),(iA['ks_bot']-6,iA['ks_top']+10),'keelson: pocket ceiling %.2f (black) / outside the pocket %.2f (green)'%(iA['ks_bot'],min(float(np.interp(p['a'],D['keelson_line']['X'],D['keelson_line']['Z'])),float(np.interp(p['b'],D['keelson_line']['X'],D['keelson_line']['Z'])))))
 tag='b%d-%d'%(min(builder),max(builder)); fig.savefig('qa/frames_pockets_%s.png'%tag,dpi=55,bbox_inches='tight'); json.dump(out,open('data/frames_pockets_%s.json'%tag,'w'))
