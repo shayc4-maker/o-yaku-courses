@@ -328,3 +328,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 join point of the inner-line spline moved outward (JOIN=18 mm from the wall) for a longer, more continuous transition. frame_arm.py, qa/frame5_one_2d.png.
 
 - 2026-11-06 frames 1-5 in 2D by the final arm rule: py/frames_arm_batch_2d.py 1 2 3 4 5 -> qa/frames_arm_1_2_3_4_5.png, data/frames_arm_1_2_3_4_5.json. Wall 3.2-6.1 mm, gap filled 3.0-7.6 mm. Frame 1 face X+4 levels read at X=526.
+
+- 2026-11-06 frames 6-10 in 2D (arm rule): qa/frames_arm_6_7_8_9_10.png. Wall 3.0-3.6, gap filled 4.9-7.6. Next 11-15.
