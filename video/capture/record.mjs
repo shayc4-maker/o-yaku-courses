@@ -7,8 +7,8 @@
  * Writes full-page JPEG snapshots plus timeline.json: for each shot its file, page height and
  * the page-coordinate boxes of the elements the video's cursor and camera need. No outside
  * network: every non-localhost request is aborted. The flow follows the current site exactly:
- * logged-out question outside the juniper demo → demo_scope_required + "התחברות לפטרון" →
- * (Patreon stands in by redirect) → lessons page as member → home → juniper question →
+ * home as a guest → header "התחברות לפטרון" → (Patreon stands in by redirect) → back on the
+ * home page as a member ("מנוי פעיל") → juniper question →
  * five server stages → answer with grouped sources.
  */
 import { createRequire } from 'node:module';
@@ -57,34 +57,19 @@ async function shot(name, boxes = {}) {
 const input = () => page.getByRole('textbox', { name: 'השאלה שלכם על בונסאי' });
 const submit = () => page.locator('.oy-home-question-form button[type="submit"]');
 
-// 1. Home, logged out.
+// 1. Home, logged out (header: "לא מחובר" + "התחברות לפטרון").
+const connection = page.getByRole('group', { name: 'חיבור לפטרון' });
 await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'networkidle' });
-await shot('home', {
-  input: input(), submit: submit(),
-  exampleFicus: page.getByRole('button', { name: 'מתי לבצע עבודת שורשים בפיקוס?' }),
-  questionArea: page.locator('.oy-home-hero'),
-});
+await connection.getByText('לא מחובר').waitFor();
+await shot('home', { headerLogin: connection.getByRole('button'), connection, input: input(), submit: submit(), questionArea: page.locator('.oy-home-hero') });
 
-// 2. Example question fills the box (no request yet), then submit.
-await page.getByRole('button', { name: 'מתי לבצע עבודת שורשים בפיקוס?' }).click();
-await shot('ficus-filled', { input: input(), submit: submit(), questionArea: page.locator('.oy-home-hero') });
-await submit().click();
-const login = page.getByRole('button', { name: 'התחברות לפטרון' });
-await login.waitFor();
-await shot('blocked', { login, alert: page.getByRole('alert'), questionArea: page.locator('.oy-home-hero') });
-
-// 3. Login → (redirect stands in for Patreon) → lessons page as a member.
-await login.click();
+// 2. Header login → (redirect stands in for Patreon) → back on the same page as a member.
+await connection.getByRole('button', { name: 'התחברות לפטרון' }).click();
 await page.waitForURL((u) => !u.search.includes('patreon_ticket') && !u.pathname.includes('/sb/'), { timeout: 15000 });
-await page.getByRole('heading', { name: 'שיעורים מוקלטים' }).waitFor();
+await connection.getByText('מנוי פעיל').waitFor();
+await page.evaluate(() => window.scrollTo(0, 0));
 await page.waitForLoadState('networkidle');
-await shot('lessons', { homeLink: page.getByRole('navigation').getByRole('link', { name: 'בית', exact: true }) });
-
-// 4. Back home as a member.
-await page.getByRole('navigation').getByRole('link', { name: 'בית', exact: true }).first().click();
-await input().waitFor();
-await page.waitForLoadState('networkidle');
-await shot('home-member', { input: input(), submit: submit(), questionArea: page.locator('.oy-home-hero') });
+await shot('home-member', { connection, input: input(), submit: submit(), questionArea: page.locator('.oy-home-hero') });
 
 // 5. Type the question, one snapshot per character.
 await input().click();
@@ -95,8 +80,9 @@ for (let i = 1; i <= QUESTION.length; i++) {
 
 // 6. Submit → the five server-reported stages → answer.
 await submit().click();
-await page.getByRole('status').waitFor();
-await shot('stage-sent', { waiting: page.getByRole('status') });
+const qaStatus = page.locator('.oy-home-qa [role="status"]');
+await qaStatus.waitFor();
+await shot('stage-sent', { waiting: qaStatus });
 for (const stage of ['approved', 'retrieval', 'selection', 'generation', 'references']) {
   await page.evaluate(() => window.__advance());
   await page.waitForFunction((s) => window.__qaState === s, stage);

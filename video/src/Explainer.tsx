@@ -5,7 +5,7 @@ import { clipSeconds, type Cue, type ExplainerProps } from './content';
 import { INTRO_FRAMES, Intro, Outro, OUTRO_FRAMES } from './scenes/Cards';
 import { CLIP_LEAD, CLIP_TAIL, PatreonClip } from './scenes/PatreonClip';
 import { R, REAL_SITE_FRAMES as SITE_FLOW_FRAMES, RealSite } from './scenes/RealSite';
-import { SiteTour, TOUR_FRAMES } from './scenes/SiteTour';
+import { SiteTour, TOUR_BEATS, TOUR_FRAMES } from './scenes/SiteTour';
 import { BODY, C, FPS } from './theme';
 
 const XFADE = 15;
@@ -48,12 +48,14 @@ export function Explainer(props: ExplainerProps) {
   // [cue, from, to] in absolute frames, anchored to the animation's own events.
   const cues: [Cue, number, number][] = [
     ['intro', 0, s + 25],
-    ['locked', s + R.blocked + 10, s + R.clickLogin],
-    ['check', s + R.clickLogin + 4, s + R.homeMember],
-    ['ask', s + R.homeMember, s + R.clickAsk2 + 10],
+    ['login', s + R.clickLogin + 4, s + R.scrollToQuestion],
+    ['ask', s + R.scrollToQuestion, s + R.clickAsk2 + 10],
     ['answer', s + R.stage0 + 10, s + R.answer + 100],
     ['toLive', s + R.answer + 100, s + SITE_FLOW_FRAMES - 8],
     ['patreon', p + 8, clipFrom],
+    ['articles', tl.tour + TOUR_BEATS[0] + 12, tl.tour + TOUR_BEATS[2]],
+    ['ceramics', tl.tour + TOUR_BEATS[2] + 12, tl.tour + TOUR_BEATS[4]],
+    ['shop', tl.tour + TOUR_BEATS[4] + 12, tl.outro],
     ['outro', tl.outro + 10, tl.total],
   ];
 

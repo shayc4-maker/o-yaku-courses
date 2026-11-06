@@ -43,6 +43,8 @@ const BEATS: Beat[] = [
 
 const XF = 10;
 export const TOUR_FRAMES = BEATS.reduce((n, b) => n + b.frames, 0) - XF * (BEATS.length - 1);
+/** Start frame of each beat inside the tour: articles, article, ceramics, calculator, shop. */
+export const TOUR_BEATS = BEATS.reduce<number[]>((starts, b, i) => [...starts, i ? starts[i - 1] + BEATS[i - 1].frames - XF : 0], []);
 
 export function SiteTour() {
   let at = 0;

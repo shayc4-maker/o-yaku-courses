@@ -64,7 +64,7 @@ export type ExplainerProps = {
   voiceId: string;
 };
 
-export type Cue = 'intro' | 'locked' | 'check' | 'ask' | 'answer' | 'toLive' | 'patreon' | 'outro';
+export type Cue = 'intro' | 'login' | 'ask' | 'answer' | 'toLive' | 'patreon' | 'articles' | 'ceramics' | 'shop' | 'outro';
 
 export const defaultProps: ExplainerProps = {
   question: 'איך מרכיבים עלווה חדשה על ערער?',
@@ -112,13 +112,17 @@ export const defaultProps: ExplainerProps = {
   },
   narration: {
     intro: { maxSec: 4.3, caption: null, voice: 'כל מה שנאמר בשיעורים ובלייבים של O-YAKU, במקום אחד.', audio: 'rec-intro.mp3' },
-    locked: { maxSec: 3.7, caption: 'מנוע השאלות פתוח למנויים · בלי מנוי, דמו בתחום הערערים בלבד', voice: 'מנוע השאלות החדש פתוח למנויי הפטרון שלנו.', audio: 'rec-locked.mp3' },
-    check: { maxSec: 6, caption: 'התחברות עם Patreon · כל השיעורים נפתחים', voice: 'מתחברים עם חשבון הפטרון, ואחרי בדיקה קצרה של המנוי, אתם בפנים.', audio: 'rec-check.mp3' },
+    // Until the re-recording: the earlier "check" take, which describes the same moment.
+    login: { maxSec: 4.5, caption: 'מתחברים לפטרון מהכפתור בראש העמוד, וחוזרים לאותו עמוד', voice: 'מתחברים עם חשבון הפטרון בלחיצה אחת, וחוזרים ישר לאתר.', audio: 'rec-check.mp3' },
     ask: { maxSec: 6.3, caption: 'שואלים כל שאלה בתחום הבונסאי', voice: 'שואלים כל שאלה בתחום הבונסאי. למשל: איך מרכיבים עלווה על ערער?', audio: 'rec-ask.mp3' },
     answer: { maxSec: 7.8, caption: 'התשובה נבנית מהשיעורים, עם מקור וזמן בהקלטה לכל קטע', voice: 'התשובה נבנית מתוך השיעורים והלייבים עצמם, עם מקור לכל קטע.', audio: 'rec-answer.mp3' },
     toLive: { maxSec: 3.5, caption: 'וכל מקור מוביל לשיעור עצמו בפטרון', voice: 'רוצים לשמוע את ההסבר המלא? לחיצה אחת,', audio: 'rec-toLive.mp3' },
     // the live clip starts right after this line
     patreon: { maxSec: 3.1, caption: 'השיעור נפתח בפטרון · ההסבר נמצא ב-20:05–22:12', voice: 'ואתם ברגע המדויק בלייב.', audio: 'rec-patreon.mp3' },
+    // Tour (captions come from the tour beats); voice added with the re-recording.
+    articles: { maxSec: 4, caption: null, voice: 'באתר יש גם מאמרים ותיעוד של עצים לאורך שנים.', audio: null },
+    ceramics: { maxSec: 7, caption: null, voice: 'בסטודיו אני מייצר כלי בונסאי בהתאמה אישית. במחשבון באתר מכניסים מידות וצורה, ומקבלים הדמיה ומחיר משוער.', audio: null },
+    shop: { maxSec: 4, caption: null, voice: 'ובחנות תמצאו עצים, כלי עבודה, מצע וכלי קרמיקה.', audio: null },
     outro: { maxSec: 5.6, caption: null, voice: 'שואלים, מקבלים תשובה, וממשיכים ללמוד. הצטרפו עכשיו.', audio: 'rec-outro.mp3' },
   },
   music: 'music/fantasy-quest.mp3', // Pixabay "Fantasy Adventure Quest" (Alex Morgan), normalized -16 LUFS; not in git
