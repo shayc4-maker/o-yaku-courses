@@ -220,3 +220,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 `py/bodyplan_points_all.py`: points on all 18 body-plan stations (10 mm arc, ink centre, straight top corner on ST01-03, ST06 kept inside ST07) -> `data/bodyplan_points_v1.json`, `qa/bodyplan_points_fwd.png`, `qa/bodyplan_points_aft.png`. Awaiting approval.
 
 - 2026-11-06 `py/bodyplan_points_v2.py`: keel-contact points ST13-17, coloured splines through points (ST07-09 held back for a separate round) -> `data/bodyplan_points_v2.json`, `qa/bodyplan_lines_fwd.png`, `qa/bodyplan_lines_aft.png`. Problem stations: 10,11,12,14,15 upper part (mis-snapped to neighbours).
+
+- 2026-11-06 approved by builder: ST01-06, 13, 16-18 -> `data/bodyplan_points_approved.json` (ST01 csv, ST02 json, rest from v2). Pending: 10,11,12,14,15 (upper part mis-snapped), 7-9 separate round.
