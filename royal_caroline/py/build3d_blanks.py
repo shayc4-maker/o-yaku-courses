@@ -42,7 +42,7 @@ lines=[]
 for b in FR:
     xc=F.XF[46-b-1]; fm,im=F.face_poly(xc-4,xc-4); fc,ic=F.face_poly(xc,xc); fp,ip=F.face_poly(xc+4,xc+4)
     env=unary_union([fm.buffer(0.01),fc.buffer(0.01),fp.buffer(0.01)]).buffer(-0.01)      # ONE common cut outline for A and F: inner minimum .. outer maximum over the three faces
-    floor=min(im['keel_top'],ic['keel_top'],ip['keel_top'])-DEPTH; env=unary_union([env,box(0,floor,F.KB,max(im['keel_top'],ic['keel_top'],ip['keel_top']))])
+    floor=min(im['leg_bot'],ic['leg_bot'],ip['leg_bot']); seat=max(im['ks_bot'],ic['ks_bot'],ip['ks_bot']); env=unary_union([env,box(0,floor,F.KB,seat)])
     blank=full(env)
     for lay,(x0,x1) in (('A',(xc-4,xc)),('F',(xc,xc+4))):
         v,t=mesh_of(prism_x(blank,x0,x1)); out['FRAME%02d_%s'%(b,lay)]=dict(v=v,t=t)

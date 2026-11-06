@@ -37,9 +37,9 @@ def face_poly(Xf,Xlay):
         sI=np.r_[0,np.cumsum(np.hypot(*np.diff(I,axis=0).T))]; nn=max(int(sI[-1]/3.0),8); tt=np.linspace(0,sI[-1],nn); Q=np.c_[np.interp(tt,sI,I[:,0]),np.interp(tt,sI,I[:,1])]
         tk_,u_=_sp(Q.T,k=3,s=nn*0.012); y_,z_=_sv(np.linspace(0,1,len(I)),tk_); I_old=I; I=np.c_[y_,z_]; I[0]=I_old[0]; I[-1]=I_old[-1]
     kk=int(np.where((I[:,0]>8)&(I[:,1]>zt+2.5))[0][0]); Pj=I[kk]; Tj=I[kk+2]-I[kk-2]; Tj=Tj/np.hypot(*Tj)
-    if NOSTEP:      # no step / legs at the keelson: the top is one smooth line from the keelson spline at the centre into the inner line
-        Ps=np.array([0.0,ks_bot]); L=np.hypot(*(Pj-Ps)); sp=herm(Ps,np.array([1.0,0.0])*L*0.9,Pj,Tj*L*0.9); top=np.vstack([sp,I[kk+1:]])
-        poly=Polygon(np.vstack([[[0,keel_top],[KB,keel_top],[KB,leg_bot]],O,top[::-1]])).buffer(0).intersection(box(0,-10,200,300))
+    if NOSTEP:      # across the backbone width (+-KB) two straight horizontal lines: the floor on the keel (pocket floor) and the seat under the keelson; no steps, no legs
+        Ps=np.array([KB,ks_bot]); L=np.hypot(*(Pj-Ps)); sp=herm(Ps,np.array([1.0,0.0])*L*0.9,Pj,Tj*L*0.9); top=np.vstack([[[0.0,ks_bot]],sp,I[kk+1:]])
+        poly=Polygon(np.vstack([[[0,leg_bot],[KB,leg_bot]],O[O[:,1]>leg_bot+1e-6],top[::-1]])).buffer(0).intersection(box(0,-10,200,300))
         return poly,dict(keel_top=keel_top,ks_bot=ks_bot,ks_top=ks_top,leg_bot=leg_bot,zt=ks_bot,O=O,I=I)
     Ps=np.array([KB+0.01,zt]); L=np.hypot(*(Pj-Ps)); sp=herm(Ps,np.array([1.0,0.0])*L*0.9,Pj,Tj*L*0.9)
     top=np.vstack([[[KB,ks_bot],[KB,zt]],sp[1:],I[kk+1:]])
