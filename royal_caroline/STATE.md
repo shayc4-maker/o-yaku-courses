@@ -230,3 +230,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 approved ST12 (v2) -> approved json; ST11 points sent for approval (`data/st11_points.json`).
 
 - 2026-11-06 approved ST11 (v2); ST10 points sent for approval (`data/st10_points.json`); next ST7-9 round.
+
+- 2026-11-06 approved ST10 (v3 + convergence point F=(1.0,-0.3)); ST09 points sent (`data/st09_points_v2.json`), top ends at row 891 (above it only the handwritten 9 arrow).
