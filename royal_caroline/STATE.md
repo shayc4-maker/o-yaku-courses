@@ -256,3 +256,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 WL I (top) approved. Side view line D = the long strip (rectangle) above the hull in A1/1; points on its top and bottom edges every 20 mm incl. corners -> `data/sideD_points.json`, `qa/sideD_points.png` (for approval).
 
 - 2026-11-06 side line D approved. WL II-VII top view traced (`py/wl_top_all.py`): Y scale of plan A1/4 calibrated on 87 crossings with the approved body plan: Y=(1227.4-row)*0.08186 (resid std 1.0 mm); WL I re-expressed with it (midship Y 52.2->50.5). Points every 20 mm -> `data/wl_top_points_all.json`, image `qa/wl_top_all_points.png` (awaiting approval).
+
+- 2026-11-06 WL I-VII top approved. Side-view hull lines: tracer found C/A (continuous port line) and the E bundle (4 lines, called E1-E4 top to bottom); points every 20 mm -> `data/side_lines_points_v1.json`, `qa/side_lines_*.png` (ends need confirmation). Other side lines not done yet: upper rail lines, dashed lines, B, F.
