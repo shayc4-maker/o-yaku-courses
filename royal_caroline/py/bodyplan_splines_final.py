@@ -15,6 +15,7 @@ for n in (4,6,7): P[n][0]=list(Ffwd)
 P[8][0]=list(Faft)      # 8-12 share the aft convergence point
 G=[round(float(np.mean([P[n][1][0] for n in (6,7,8)])),2), round(sorted(P[n][1][1] for n in (6,7,8))[1]+0.15,2)]
 for n in (6,7,8): P[n][1]=list(G)
+P[8]=[list(Faft),list(G)]+json.load(open('data/st08_points_fwd.json'))   # station 8 redone on the forward plan as the outermost stroke
 for n in (9,10,11,12): P[n]=[list(Faft)]+P[n][1:]     # the old foot points (Y~2.7) dropped: they made 11/12 kink before F
 print('G',G)
 STR={1:2,2:2}      # stations with a straight top: last 2 points = corner + top

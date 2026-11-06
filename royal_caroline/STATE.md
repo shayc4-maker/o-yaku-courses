@@ -248,3 +248,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 all 18 stations approved; F points approved (F_aft, F_fwd, shared 2nd point G of 6/7/8). `py/bodyplan_splines_final.py` -> `data/bodyplan_splines_v1.json`, `qa/bodyplan_final_{clean,fwd,aft}.png`. IMPORTANT calibration finding: aft plan (A1/2) Y scale was 3.1 % too small (stations 8-18 sat 2.3 mm inside the builder splines and inside forward stations 1-7); Y of stations 8-18 multiplied by 1.0325 (pixel positions unchanged). After: aft mean distance to builder splines 0.15-0.3 mm.
 
 - 2026-11-06 stations 8-12 now all end at F_aft (old foot points Y~2.7 dropped, ST8 start = F_aft); foot smooth. Awaiting final approval of the body plan splines.
+
+- 2026-11-06 station 8 redone on the forward plan as the outermost stroke (`data/st08_points_fwd.json`, band right edge - 2 px); previous 8 (from aft plan) sat inside 7 by up to 2 mm at Z<35. 8 starts at F_aft per builder (8-12 share the point).
