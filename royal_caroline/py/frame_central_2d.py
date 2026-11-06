@@ -16,13 +16,16 @@ def hull_line(X):
     P=HN.section(X); zz=np.round(P[:,1],2); _,ui=np.unique(zz,return_index=True); P=P[ui]; P=P[np.argsort(P[:,1])]
     z0,z1=P[0,1],P[-1,1]; zs=np.r_[z0,np.linspace(z0,z1,15)[1:]]; pts=np.array([(float(np.interp(z,P[:,1],P[:,0])),float(z)) for z in zs]); pts[0,0]=max(pts[0,0],3.2)
     tk,u=splprep(pts.T,k=3,s=0); y,z=splev(np.linspace(0,1,600),tk); return np.c_[y,z]
+GAP=float(sys.argv[2]) if len(sys.argv)>2 else None; KST=float(sys.argv[3]) if len(sys.argv)>3 else None
 def keel_levels(X):
     g=UB.intersection(LineString([(X,-30),(X,200)])); sg=sorted((l.bounds[1],l.bounds[3]) for l in getattr(g,'geoms',[g]))
     sg=[s for s in sg if s[1]-s[0]>0.05]; mrg=[list(sg[0])]
     for s in sg[1:]:
         if s[0]-mrg[-1][1]<0.3: mrg[-1][1]=max(mrg[-1][1],s[1])
         else: mrg.append(list(s))
-    return mrg[0][1],(mrg[1][0],mrg[1][1]) if len(mrg)>1 else (None,None)
+    kt=mrg[0][1]
+    if GAP is not None: return kt,(kt+GAP,kt+GAP+KST)       # B3 (plan 6) values: gap keel-keelson and keelson thickness
+    return kt,(mrg[1][0],mrg[1][1]) if len(mrg)>1 else (None,None)
 def herm(P0,T0,P1,T1,n=40):
     t=np.linspace(0,1,n)[:,None]; return (2*t**3-3*t**2+1)*P0+(t**3-2*t**2+t)*T0+(-2*t**3+3*t**2)*P1+(t**3-t**2)*T1
 def face_poly(Xf,Xlay):
@@ -43,7 +46,7 @@ print('frame our %d (builder %d) X=%.2f; faces X=%.2f/%.2f/%.2f'%(OUR,46-OUR,xc,
 print('keel top Z=%.2f, keelson bottom Z=%.2f top Z=%.2f; leg bottom Z=%.2f, top legs Z=%.2f'%(iA['keel_top'],iA['ks_bot'],iA['ks_top'],iA['leg_bot'],iA['zt']))
 for lay in 'AF':
     b=res[lay][0]; print(lay,'area %.0f mm2 valid %s bounds %s'%(b.area,b.is_valid,[round(v,1) for v in b.bounds]))
-json.dump({k:(res[k][0].exterior.coords[:] if hasattr(res[k][0],'exterior') else None) for k in 'AF'},open('data/frame%d_central_outline.json'%(46-OUR),'w'))
+json.dump({k:(res[k][0].exterior.coords[:] if hasattr(res[k][0],'exterior') else None) for k in 'AF'},open('data/frame%d_central_outline%s.json'%(46-OUR,'_B3' if GAP is not None else ''),'w'))
 fig,axs=plt.subplots(1,3,figsize=(22,11),gridspec_kw={'width_ratios':[1.1,1,1]})
 def draw(a,xlim,ylim,title,lab=True):
     for lay,col in (('A','tab:blue'),('F','tab:red')):
@@ -58,4 +61,4 @@ draw(axs[0],(-85,85),(-5,110),'Frame builder %d (our %d), X=%.1f - layer A blue 
 draw(axs[1],(-14,40),(iA['keel_top']-14,iA['keel_top']+22),'Bottom: laps onto the keel (keel top Z=%.1f, legs down to Z=%.1f)'%(iA['keel_top'],iA['leg_bot']))
 draw(axs[2],(-14,40),(iA['ks_bot']-8,iA['ks_top']+24),'Top: inverted ח over the keelson (keelson Z %.1f-%.1f, leg tops Z=%.1f)'%(iA['ks_bot'],iA['ks_top'],iA['zt']))
 for a,z in ((axs[1],iA['leg_bot']),(axs[1],iA['keel_top']),(axs[2],iA['zt']),(axs[2],iA['ks_bot'])): a.axhline(z,color='k',lw=.4,ls=':'); a.text(-13,z+.3,'Z=%.2f'%z,fontsize=8)
-fig.savefig('qa/frame%d_central_2d.png'%(46-OUR),dpi=70,bbox_inches='tight')
+fig.savefig('qa/frame%d_central_2d%s.png'%(46-OUR,'_B3' if GAP is not None else ''),dpi=70,bbox_inches='tight')
