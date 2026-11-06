@@ -45,8 +45,14 @@ for n,X in enumerate(XF,1):
     rows.append((46-n,X,Lf,Lc))
 a_=lambda X:X-4; b_=lambda X:X+4
 # constant offsets (mm): keelson line down by OFF, keel line up by e (smallest constant giving walls>=W at every frame)
+XJ=526.6
 ks=lambda x: spS(x)-OFF
-need_e=max(Lf+W-float(min(spK(a_(X)),spK(b_(X)))) for _,X,Lf,Lc in rows); e=max(need_e,0.0); kt=lambda x: spK(x)+e
+need_e=max(Lf+W-float(min(spK(a_(X)),spK(b_(X)))) for _,X,Lf,Lc in rows); e=max(need_e,0.0); kt0=lambda x: spK(x)+e
+# bow: keel line may not pass the keelson line; the gap tapers to 0 exactly at the stem start (X=526.6) and the two lines are one line beyond
+def kt(x):
+    x=np.asarray(x,float); g=np.where(x>=XJ,0.0,np.clip((XJ-x)/12.0,0,1)*1e9)   # taper window 12 mm: allowed gap = distance to junction / 12 * 1.0 (mm)
+    allowed=np.clip((XJ-x)/12.0,0,1)*1.0
+    return np.minimum(kt0(x),ks(x)-allowed)
 print('keel line raised by constant e = %.2f mm (needed %.2f); keelson line lowered by %.2f mm'%(e,need_e,OFF))
 pk_out=[]; walls=[]
 for b,X,Lf,Lc in rows:
