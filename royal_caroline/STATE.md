@@ -404,3 +404,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 frame 2 by points (py/frame2_points_wl.py -> data/frame2_points_v1.json, qa/frame2_points_v1.png/.pdf): faces 509.5/513.5/517.5 between station 2 (505.8) and station 1 (527.8); u(WL III-VII) = 0.13-0.16 / 0.29-0.34 / 0.46-0.53 (consistent across waterlines); WL II used only at the back face (anchored on station 2, fades to the WL end); levels < 1.5 mm above the rabbet skipped. For approval.
 
 - 2026-11-06 frame 2 back face bottom distorted by the anchored WL II point: removed (levels without a station 1 crossing, Z<26.05, give no point; the line goes from the rabbet end to WL III). Check: Y at Z=22: station 2 14.32, back 11.96, mid 9.11, front 6.33 (even steps).
+
+- 2026-11-06 frame 3 by points (py/frame_points_wl.py N A B, generic: stations A behind, B ahead; replaces frame2_points_wl.py): python3 py/frame_points_wl.py 3 3 2 -> data/frame3_points_v1.json, qa/frame3_points_v1.png/.pdf. Faces 498.17 (u 0.68-0.77), 502.17 (u 0.84-0.89) between station 3 (472.0) and station 2 (505.8); front face 506.17 = station 2 approved points with the end on the rabbet. For approval.
