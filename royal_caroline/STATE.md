@@ -254,3 +254,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 waterlines phase started: top view WL I traced (`py/line_follow.py`), 27 points every 20 mm -> `data/wl1_top_points.json`, `qa/wl1_top_*.png`. Y scale of plan A1/4 NOT yet calibrated (tentative 0.0833; body plan vs plan inconsistent by 1-3 mm); side-view line pending builder choice.
 
 - 2026-11-06 WL I (top) approved. Side view line D = the long strip (rectangle) above the hull in A1/1; points on its top and bottom edges every 20 mm incl. corners -> `data/sideD_points.json`, `qa/sideD_points.png` (for approval).
+
+- 2026-11-06 side line D approved. WL II-VII top view traced (`py/wl_top_all.py`): Y scale of plan A1/4 calibrated on 87 crossings with the approved body plan: Y=(1227.4-row)*0.08186 (resid std 1.0 mm); WL I re-expressed with it (midship Y 52.2->50.5). Points every 20 mm -> `data/wl_top_points_all.json`, image `qa/wl_top_all_points.png` (awaiting approval).
