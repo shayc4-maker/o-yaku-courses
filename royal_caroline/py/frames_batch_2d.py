@@ -41,7 +41,7 @@ def face_poly(Xf,Xlay):
 def frame(OUR):
     xc=XF[OUR-1]; res={}
     for lay,(x0,x1) in {'A':(xc-4,xc),'F':(xc,xc+4)}.items():
-        xl=(x0+x1)/2; fa,info=face_poly(x0,xl); fb,_=face_poly(x1,xl); res[lay]=(unary_union([fa.buffer(0.01),fb.buffer(0.01)]).buffer(-0.01),fa,fb,info)
+        fa,info=face_poly(x0,x0); fb,infob=face_poly(x1,x1); info['b']=infob; res[lay]=(unary_union([fa.buffer(0.01),fb.buffer(0.01)]).buffer(-0.01),fa,fb,info)
     return xc,res
 if __name__=='__main__':
     builder=[int(a) for a in sys.argv[1:]]; n=len(builder); fig,axs=plt.subplots(3,n,figsize=(5.3*n,17),gridspec_kw={'height_ratios':[1.6,1,1]}); out={}
