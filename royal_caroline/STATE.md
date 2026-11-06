@@ -236,3 +236,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 approved ST09 (v2); ST08 points sent (`data/st08_points.json`): builder spline for ST08 sits ~2 mm inside the ink, points taken as the ink line just outside ST09.
 
 - 2026-11-06 approved ST08; ST07 points sent (`data/st07_points.json`) from the forward plan: clean rows = 2nd line from the right; merged band 7+8 = left part; foot points = builder spline.
+
+- 2026-11-06 approved ST06 (v2) and ST07 (v2) -> approved json; ST16 points sent (`data/st16_points.json`); next ST17, 18 then global check.
