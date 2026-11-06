@@ -228,3 +228,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 aft right side restarted by builder: approved ST13 (v4), ST14 (v2), ST15 (v2) -> `data/bodyplan_points_approved.json`; ST16-18 earlier ones need re-approval; next ST12, 11, 10, then 7-9.
 
 - 2026-11-06 approved ST12 (v2) -> approved json; ST11 points sent for approval (`data/st11_points.json`).
+
+- 2026-11-06 approved ST11 (v2); ST10 points sent for approval (`data/st10_points.json`); next ST7-9 round.
