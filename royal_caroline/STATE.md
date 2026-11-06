@@ -226,3 +226,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 aft upper part ST10-15: `py/bodyplan_aft_upper*.py` (stations identified by order counted from the right, clean rows only; validated vs approved ST16-18: mean 0.05 mm) -> `data/bodyplan_aft_upper_v1.json`, `qa/bodyplan_aft_10-15_points.png`. Awaiting approval. Root cause of earlier failures: builder splines sit ~2 mm outside the ink at Z 55-100, lines only 1-2 mm apart => nearest-ink snapping picks the neighbour.
 
 - 2026-11-06 aft right side restarted by builder: approved ST13 (v4), ST14 (v2), ST15 (v2) -> `data/bodyplan_points_approved.json`; ST16-18 earlier ones need re-approval; next ST12, 11, 10, then 7-9.
+
+- 2026-11-06 approved ST12 (v2) -> approved json; ST11 points sent for approval (`data/st11_points.json`).
