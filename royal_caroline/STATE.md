@@ -310,3 +310,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 frame 5 blank: across the backbone width (+-2.65) two straight horizontal lines: floor on the keel (pocket floor = keel surface - 1 mm) and seat under the keelson (keelson spline level); no legs/steps (NOSTEP branch in frames_batch_2d.py, flat tab in build3d_blanks.py). qa/render3d/d1-d3. Other frames still to be regenerated with this rule.
 
 - 2026-11-06 frames 1-5 blanks with the straight horizontal floor/seat rule: py/build3d_blanks.py 1 2 3 4 5 (+ py/render3d_blanks.py) -> qa/render3d/e1-e4. Blank excess vs final face: frame 1 x2.5, 2 x2.1, 3 x1.8, 4 x1.7, 5 x1.6 (hull flare over 8 mm).
+
+- 2026-11-06 sharp connections (no radii, non-tangent): face_poly_sharp in frames_batch_2d.py (SHARP=1 with NOSTEP): floor horizontal +-KB -> straight to the exact hull line start; seat horizontal -> straight out to where it meets the inner line. Frames 1-5 blanks regenerated, qa/render3d/e1-e4.

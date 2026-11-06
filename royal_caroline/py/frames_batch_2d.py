@@ -6,7 +6,7 @@ from scipy.interpolate import splprep,splev
 from scipy.signal import savgol_filter
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 import hull_new_sections as HN
-INNER_SMOOTH=__import__('os').environ.get('INNER_SMOOTH','1')=='1'; NOSTEP=__import__('os').environ.get('NOSTEP','0')=='1'; KB=2.65; T=3.2; PEN_LOW=2.5; PEN_UP=float(__import__("os").environ.get("PEN_UP","0.6"))
+SHARP=__import__('os').environ.get('SHARP','1')=='1'; INNER_SMOOTH=__import__('os').environ.get('INNER_SMOOTH','1')=='1'; NOSTEP=__import__('os').environ.get('NOSTEP','0')=='1'; KB=2.65; T=3.2; PEN_LOW=2.5; PEN_UP=float(__import__("os").environ.get("PEN_UP","0.6"))
 BB=json.load(open('data/step44_profiles.json')); XF=json.load(open('data/frames_X.json'))['X_mm']
 PP={k:Polygon(max(v,key=lambda q:Polygon(q).area)).buffer(0) for k,v in BB.items() if k not in('Split1[1]','Split1[2]','Boss-Extrude4[2]')}
 UB=unary_union(list(PP.values()))
@@ -45,6 +45,27 @@ def face_poly(Xf,Xlay):
     top=np.vstack([[[KB,ks_bot],[KB,zt]],sp[1:],I[kk+1:]])
     poly=Polygon(np.vstack([[[0,keel_top],[KB,keel_top],[KB,leg_bot]],O,top[::-1],[[0,ks_bot]]])).buffer(0).intersection(box(0,-10,200,300))
     return poly,dict(keel_top=keel_top,ks_bot=ks_bot,ks_top=ks_top,leg_bot=leg_bot,zt=zt,O=O,I=I)
+def face_poly_sharp(Xf,Xlay):
+    """no radii, no tangent joins: floor (horizontal, +-KB) -> straight to the exact hull line; seat (horizontal) -> straight out until it meets the inner line"""
+    keel_top,(ks_bot,ks_top)=keel_levels(Xlay); leg_bot=keel_top-PEN_LOW
+    P=hull_line(Xf); O=P[np.argsort(P[:,1])]; O=O[O[:,0]>=KB-1e-6]
+    sm=np.c_[savgol_filter(O[:,0],11,3),savgol_filter(O[:,1],11,3)]; d_=np.gradient(sm,axis=0); d_/=np.hypot(*d_.T)[:,None]; m=np.c_[-d_[:,1],d_[:,0]]; I=O+m*T
+    if INNER_SMOOTH:
+        from scipy.interpolate import splprep as _sp,splev as _sv
+        sI=np.r_[0,np.cumsum(np.hypot(*np.diff(I,axis=0).T))]; nn=max(int(sI[-1]/3.0),8); tt=np.linspace(0,sI[-1],nn); Q=np.c_[np.interp(tt,sI,I[:,0]),np.interp(tt,sI,I[:,1])]
+        tk_,u_=_sp(Q.T,k=3,s=nn*0.012); y_,z_=_sv(np.linspace(0,1,len(I)),tk_); I_old=I; I=np.c_[y_,z_]; I[0]=I_old[0]; I[-1]=I_old[-1]
+    i0=int(np.argmax(I[:,0]>=KB-1e-6))
+    cross=np.where((I[i0:,1]>=ks_bot))[0]
+    if len(cross)==0: raise ValueError('inner line never reaches the seat')
+    j=i0+int(cross[0])
+    if j==i0: seat_end=np.array([I[j,0],ks_bot]); top=np.vstack([[[0.0,ks_bot]],[[KB,ks_bot]],I[j:]]) if I[j,0]>KB+1e-6 else np.vstack([[[0.0,ks_bot],[KB,ks_bot]],I[j:]])
+    else:
+        a,b=I[j-1],I[j]; t_=(ks_bot-a[1])/(b[1]-a[1]); Pc=a+t_*(b-a); top=np.vstack([[[0.0,ks_bot]],[Pc],I[j:]])
+    poly=Polygon(np.vstack([[[0,leg_bot],[KB,leg_bot]],O,top[::-1]])).buffer(0).intersection(box(0,-10,200,300))
+    return poly,dict(keel_top=keel_top,ks_bot=ks_bot,ks_top=ks_top,leg_bot=leg_bot,zt=ks_bot,O=O,I=I)
+_face_poly_old=face_poly
+def face_poly(Xf,Xlay):
+    return face_poly_sharp(Xf,Xlay) if (NOSTEP and SHARP) else _face_poly_old(Xf,Xlay)
 
 def frame(OUR):
     xc=XF[OUR-1]; res={}
