@@ -11,10 +11,11 @@ P={n:[list(p) for p in A[str(n)]] for n in range(1,19)}
 for n in range(8,19): P[n]=[[round(y*SF,2),z] for y,z in P[n]]
 Faft=[round(Faft[0]*SF,2),Faft[1]]
 # shared foot point F and the shared second point G of stations 6,7,8 (forward plan, circled by the builder)
-for n in (4,6,7,8): P[n][0]=list(Ffwd)
+for n in (4,6,7): P[n][0]=list(Ffwd)
+P[8][0]=list(Faft)      # 8-12 share the aft convergence point
 G=[round(float(np.mean([P[n][1][0] for n in (6,7,8)])),2), round(sorted(P[n][1][1] for n in (6,7,8))[1]+0.15,2)]
 for n in (6,7,8): P[n][1]=list(G)
-for n in (9,10,11,12): P[n]=[list(Faft)]+P[n]
+for n in (9,10,11,12): P[n]=[list(Faft)]+P[n][1:]     # the old foot points (Y~2.7) dropped: they made 11/12 kink before F
 print('G',G)
 STR={1:2,2:2}      # stations with a straight top: last 2 points = corner + top
 COL=plt.cm.tab20(np.linspace(0,1,20)); curves={}
