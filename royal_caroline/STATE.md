@@ -272,3 +272,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 frames in batches of 5 (2D, for approval): `python3 py/frames_batch_2d.py 1 2 3 4 5` (builder numbering) -> `qa/frames5_b1-5.png`, `data/frames5_b1-5.json`. Rules: new body plan loft, step44 keel/keelson levels, leg tops keelson bottom+0.6 (B3). Frames 1-2: layers A/F displaced (X beyond station 1 at 527.8 clamped; steep bow). Next: builder 6-10.
 
 - 2026-11-06 builder: each face plane must take keel/keelson levels at its OWN X (they rise to the bow). `py/frame_one_faces.py 1` -> `qa/frame1_faces_2d.png`. Frame 1 (X=524): face X-4 keelson bottom 29.60, face X 33.03 (step in the keelson profile), face X+4=528.03 lies in the stem where keel+keelson are one solid (stem starts X=526.6) -> asked builder how frame 1 ends there. frames_batch_2d.py now uses per-face levels too.
+
+- 2026-11-06 frame 1 side view (X-Z) with the keel/keelson channel: `py/frame1_side.py` -> `qa/frame1_side_view.png`. The channel between keel and keelson is stepped (steps at X~511, 516, 521.5, 524) and closes into the stem at 526.6.
