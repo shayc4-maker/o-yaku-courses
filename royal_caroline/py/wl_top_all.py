@@ -30,6 +30,9 @@ for k in ('VI','VII'):
     t=WL[k]; p=t[-25:]; dx,dy=p[-1]-p[0]; R=LF.follow(g,t[-1,0],t[-1,1],dx,dy,hw=3,miss_max=8,stop_wide=12,max_steps=900)
     j=next((i for i in range(len(R)) if R[i,1]>=1160),len(R)-1); WL[k]=np.r_[t,R[1:j+1]]
 for k in ('VI',): WL[k]=WL[k][WL[k][:,0]>=4262]
+# VI near the stern: the Roman numeral labels (x 5100-5250) broke the column method -> follow the ink instead
+Rf=LF.follow(g,4306,1166,1,-0.5,hw=3,miss_max=8,stop_wide=12,max_steps=4000); v=WL['VI']
+WL['VI']=np.r_[v[v[:,0]<4306],Rf[(Rf[:,0]>=4306)&(Rf[:,0]<6200)],v[v[:,0]>=6200]]
 # bow part of VI/VII re-followed (the Roman numeral labels next to the lines disturbed the column method there)
 for k in ('VI','VII'):
     t=WL[k]; t=t[t[:,0]<=9900]; p=t[-25:]; dx,dy=p[-1]-p[0]; R=LF.follow(g,t[-1,0],t[-1,1],dx,dy,hw=3,miss_max=8,stop_wide=12,max_steps=1500)
