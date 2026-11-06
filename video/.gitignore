@@ -9,3 +9,5 @@ public/capture/*.jpg
 # licensed background music (Pixabay), not committed
 public/music/
 public/capture-pages/*.jpg
+# lesson footage for the Facebook clip (patron content), not committed
+public/fb/
