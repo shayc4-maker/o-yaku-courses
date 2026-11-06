@@ -282,3 +282,5 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-06 builder: wants a FULL pocket for every frame (keelson inner line walls on both sides). `python3 py/channel_adapt_v2.py 1.5` -> `data/channel_seats_v2.json`, `qa/channel_adapt_v2.png`: in the gaps between frames the keelson inner line sits W=1.5 mm below the seat ceiling. 3dm not modified yet.
 
 - 2026-11-06 keelson inner line as a spline between pockets: `py/keelson_spline.py 1.5` -> `data/keelson_inner_spline_v1.json`, `qa/keelson_spline.png`. Original shape lowered by a smooth d(x) (3.1 mm at frame 2, ~1 mm at midships), wall >= 1.5 mm at the bow side of every pocket; clearance to keel top >= 1.3 mm. Pocket ceiling = old level at frame centre. 3dm not modified.
+
+- 2026-11-06 builder: wall 1 mm is enough. `py/keel_keelson_final_2d.py 1.0` -> `data/keel_keelson_final_v1.json`, `qa/keel_keelson_final_2d.png` (2D for approval before 3D): keelson inner line lowered 0.1-2.6 mm, keel top raised 0.6-1.8 mm (splines), full pockets both sides at all 45 frames; min clearance keel-keelson outside pockets 0.92 mm at frame 2, others >= 2.1 mm.
