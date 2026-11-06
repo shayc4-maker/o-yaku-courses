@@ -16,9 +16,11 @@ def arm(X):
     O=np.vstack([ext,P]); hk=float(ext[0,1])
     sm=np.c_[savgol_filter(O[:,0],11,3),savgol_filter(O[:,1],11,3)]; d=np.gradient(sm,axis=0); d/=np.hypot(*d.T)[:,None]; N=np.c_[-d[:,1],d[:,0]]; I=O+N*T
     # inner line: its own spline from the end of the floor line (KB, floor) through the exact offset points further out
-    s_=np.r_[0,np.cumsum(np.hypot(*np.diff(I,axis=0).T))]; sel=[i for i in range(len(I)) if I[i,0]>=KB+6]; k0=sel[0]
-    nodes=[(KB,seat)]+[tuple(I[k0+int(np.argmin(abs(s_[k0:]-(s_[k0]+dd))))]) for dd in (0,3,6,9)]
-    tk,u=splprep(np.array(nodes).T,k=3,s=0); yy,zz=splev(np.linspace(0,1,40),tk); inner_conn=np.c_[yy,zz]
-    inner=np.vstack([inner_conn,I[k0+int(np.argmin(abs(s_[k0:]-(s_[k0]+9))))+1:]])
+    # inner line continuation: a spline from the end of the seat line (KB, seat) that joins the exact offset line TANGENTIALLY further out; the start is a corner against the horizontal line
+    cand=np.where((I[:,0]>=KB+6)&(I[:,1]>=seat+1.5))[0]
+    if len(cand)==0: raise ValueError('inner line does not rise above the seat')
+    jj=int(cand[0]); P3=I[jj]; T3=I[min(jj+3,len(I)-1)]-I[max(jj-3,0)]; T3=T3/np.hypot(*T3); P0=np.array([KB,seat]); ch=P3-P0; L=np.hypot(*ch); T0=ch/L
+    tt=np.linspace(0,1,50)[:,None]; inner_conn=(2*tt**3-3*tt**2+1)*P0+(tt**3-2*tt**2+tt)*T0*L+(-2*tt**3+3*tt**2)*P3+(tt**3-tt**2)*T3*L
+    inner=np.vstack([inner_conn,I[jj+1:]])
     poly=Polygon(np.vstack([[[0,floor],[KB,floor]],[[KB,hk]],O[len(ext):],inner[::-1],[[0,seat]]])).buffer(0)
     return poly,dict(seat=seat,floor=floor,hull_at_wall=hk,inner_at_wall_natural=float(I[0,1]),O=O,inner=inner)
