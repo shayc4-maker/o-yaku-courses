@@ -38,12 +38,15 @@ for b in BL:
     env=big(unary_union([FP[k].buffer(0.01) for k in FP]).buffer(-0.01))
     R[b]=dict(xc=xc,FP=FP,env=env,info=info)
     print('frame %d X=%.1f valid %s areas %s common %.0f; floor %.2f seat %.2f; Ztop %.2f/%.2f/%.2f'%(b,xc,all(p.is_valid for p in FP.values()),'/'.join('%.0f'%p.area for p in FP.values()),env.area,info['mid']['floor'],info['mid']['seat'],info['back']['ztop'],info['mid']['ztop'],info['front']['ztop']))
-n=len(BL); cols={'back':'tab:blue','mid':'k','front':'tab:red'}; fig,axs=plt.subplots(3,n,figsize=(5*n,15),gridspec_kw={'height_ratios':[1.5,1,1]}); axs=np.atleast_2d(axs).reshape(3,n)
-for j,b in enumerate(BL):
-    r=R[b]; f0=r['info']['mid']['floor']; s0=r['info']['mid']['seat']; zmax=max(i['ztop'] for i in r['info'].values())
-    for row,(xl,yl,t) in enumerate((((-90,90),(f0-8,zmax+6),'frame %d X=%.1f'%(b,r['xc'])),((-14,14),(f0-5,s0+5),'centre: wall, floor, seat'),((-60,60),(zmax-18,zmax+3),'top (cut along the bulwark line)'))):
-        a=axs[row,j]; a.fill(*r['env'].exterior.xy,color='0.85')
-        for k,p in r['FP'].items(): a.plot(*p.exterior.xy,color=cols[k],lw=1.2)
-        a.set_aspect('equal'); a.set_xlim(*xl); a.set_ylim(*yl); a.grid(alpha=.25); a.set_title(t,fontsize=9)
-fig.savefig('qa/frames_blank_%s_2d.png'%('_'.join(map(str,BL))),dpi=50,bbox_inches='tight')
-np.save('/tmp/blank_batch.npy',{b:dict(xc=R[b]['xc'],env=np.array(R[b]['env'].exterior.coords),FP={k:np.array(v.exterior.coords) for k,v in R[b]['FP'].items()},z={k:v['ztop'] for k,v in R[b]['info'].items()}) for b in BL},allow_pickle=True)
+NOFIG=os.environ.get('NOFIG')=='1'
+n=len(BL); cols={'back':'tab:blue','mid':'k','front':'tab:red'}
+if not NOFIG:
+    fig,axs=plt.subplots(3,n,figsize=(5*n,15),gridspec_kw={'height_ratios':[1.5,1,1]}); axs=np.atleast_2d(axs).reshape(3,n)
+    for j,b in enumerate(BL):
+        r=R[b]; f0=r['info']['mid']['floor']; s0=r['info']['mid']['seat']; zmax=max(i['ztop'] for i in r['info'].values())
+        for row,(xl,yl,t) in enumerate((((-90,90),(f0-8,zmax+6),'frame %d X=%.1f'%(b,r['xc'])),((-14,14),(f0-5,s0+5),'centre: wall, floor, seat'),((-60,60),(zmax-18,zmax+3),'top (cut along the bulwark line)'))):
+            a=axs[row,j]; a.fill(*r['env'].exterior.xy,color='0.85')
+            for k,p in r['FP'].items(): a.plot(*p.exterior.xy,color=cols[k],lw=1.2)
+            a.set_aspect('equal'); a.set_xlim(*xl); a.set_ylim(*yl); a.grid(alpha=.25); a.set_title(t,fontsize=9)
+    fig.savefig('qa/frames_blank_%s_2d.png'%('_'.join(map(str,BL))),dpi=50,bbox_inches='tight')
+np.save(os.environ.get('NPY','/tmp/blank_batch.npy'),{b:dict(xc=R[b]['xc'],env=np.array(R[b]['env'].exterior.coords),FP={k:np.array(v.exterior.coords) for k,v in R[b]['FP'].items()},z={k:v['ztop'] for k,v in R[b]['info'].items()}) for b in BL},allow_pickle=True)

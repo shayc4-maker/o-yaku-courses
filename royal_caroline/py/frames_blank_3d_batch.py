@@ -1,6 +1,6 @@
 # 3D blanks of ONE frame (layers A: X-4..X, F: X..X+4, common blank prism) + laser lines (3 final faces) -> 3dm (meshes+curves) and STEP
 import sys,json,numpy as np
-B=np.load('/tmp/blank_batch.npy',allow_pickle=True).item()
+B=np.load(sys.argv[1] if len(sys.argv)>1 else '/tmp/blank_batch.npy',allow_pickle=True).item()
 import rhino3dm as r3
 from OCP.gp import gp_Pnt,gp_Vec
 from OCP.BRepBuilderAPI import BRepBuilderAPI_MakePolygon,BRepBuilderAPI_MakeFace
