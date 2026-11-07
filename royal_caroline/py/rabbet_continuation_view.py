@@ -17,9 +17,9 @@ for a,(xl,zl) in zip(axs,(((400,545),(-4,50)),((505,590),(14,110)))):
     a.plot([e[0] for e in ends],[e[1] for e in ends],'-',color='orange',lw=.8,label='through the lower ends of the approved faces (polyline, not a spline)')
     for X,Z,b,nm in ends:
         a.plot(X,Z,'o',color=cols[nm],ms=5)
-        if nm=='mid' and b<=10: a.text(X,Z-2.6,str(b),fontsize=8,ha='center')
+        if nm=='mid' and b<=10: a.text(X,Z-2.6,str(b),fontsize=8,ha='center',clip_on=True)
     for i,r in enumerate(R):
-        c='red' if i<7 else 'darkorange'; a.plot(r['X'],r['Z'],'+',color=c,ms=14,mew=2); a.text(r['X']+1.2,r['Z']+.6,'R%d'%(i+1),color=c,fontsize=9)
+        c='red' if i<7 else 'darkorange'; a.plot(r['X'],r['Z'],'+',color=c,ms=14,mew=2); a.text(r['X']+1.2,r['Z']+.6,'R%d'%(i+1),color=c,fontsize=9,clip_on=True)
     a.set_xlim(*xl); a.set_ylim(*zl); a.grid(alpha=.25)
 axs[0].legend(fontsize=8,loc='upper left'); axs[0].set_title('after the builder edit: lower ends of the approved faces (blue back, black mid, red front; frame numbers below the mid face) on the keel plan')
 axs[1].set_title('continuation of the rabbet up the stem from the foremost end (R1-R7 on the stem line, R8-R12 uncertain, orange)')
