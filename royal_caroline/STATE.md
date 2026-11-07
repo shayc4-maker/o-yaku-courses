@@ -458,3 +458,4 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - Plane 1 = rabbet; planes 2-5 (Y=2.65+8.97j) from approved F01 front crossing, WL IV-VII, upper deck Z=100 (inferred).
 - Caveats: ~0.1 mm X bulge E-E2; plane 5 has only 2 points; Z=100 inferred; deck X registration rough; nothing above Z=69.5 except deck.
 - Files: data/rabbet_iron_v1.json, data/bow_plane_sketch_v2.json, rhino/RoyalCaroline_bow_rabbet_and_plane_sketch_v1.3dm, qa/rabbet_iron_and_planes_v1.png.
+- 2026-11-07 py/frame1_front_on_plan5.py -> qa/frame1_front_on_plan5_v1.png: frame 1 faces (X=520.03/524.03/528.03, vertical in side view) on plan_5; front face Z 28.2..106.9.
