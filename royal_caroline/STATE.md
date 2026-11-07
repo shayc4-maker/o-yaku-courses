@@ -452,3 +452,9 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - 2026-11-07 builder: keep only R10 of the uncertain R8-R12 and add one end point at the ship end: the lower of the two parallel bulwark lines near Z 100, at its intersection with the light vertical line. Measured: pair at Z 96.05 (lower) and 98.0-98.2 (upper) around X 556-564; light vertical line X~559.3 -> E = (559.3, 96.05). data/rabbet_stem_points_v2.json = R1-R7, R10 (557.9, 84), E; qa/rabbet_continuation_v3.png (py/rabbet_continuation_view.py). Dropped R8, R9, R11, R12.
 
 - 2026-11-07 builder: E good, one more point above it needed (marked one green pixel in the screenshot at about X 559.4, Z 103.5; found by pixel search). Added E2 = (559.3, 103.35): lower line of the next parallel pair (Z 103.2-104.4) at the light vertical line X 559.3. data/rabbet_stem_points_v3.json = R1-R7, R10, E, E2; qa/rabbet_continuation_v4.png.
+
+## 2026-11-07 rabbet iron + plane sketch v2
+- `py/rabbet_iron_and_planes.py`: ONE interpolating cubic rabbet spline (Y=1.8) through mid-face ends frames 8..1, F01 front end, R1-R7, R10, E, E2 (2 curvature sign changes; other face ends <=0.087 mm from it). Approved frames not moved.
+- Plane 1 = rabbet; planes 2-5 (Y=2.65+8.97j) from approved F01 front crossing, WL IV-VII, upper deck Z=100 (inferred).
+- Caveats: ~0.1 mm X bulge E-E2; plane 5 has only 2 points; Z=100 inferred; deck X registration rough; nothing above Z=69.5 except deck.
+- Files: data/rabbet_iron_v1.json, data/bow_plane_sketch_v2.json, rhino/RoyalCaroline_bow_rabbet_and_plane_sketch_v1.3dm, qa/rabbet_iron_and_planes_v1.png.
