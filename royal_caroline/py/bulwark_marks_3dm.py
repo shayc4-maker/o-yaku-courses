@@ -36,5 +36,5 @@ for nm,Q in segs:
     at=r3.ObjectAttributes(); at.LayerIndex=Lc; at.Name=nm; f.Objects.AddCurve(cv,at)
 f.Write('rhino/RoyalCaroline_bulwark_marks_side_v1.3dm',7)
 with zipfile.ZipFile('rhino/RoyalCaroline_bulwark_marks_side_v1.zip','w',zipfile.ZIP_DEFLATED) as z:
-    z.write('rhino/RoyalCaroline_bulwark_marks_side_v1.3dm','RoyalCaroline_bulwark_marks_side_v1.3dm'); z.write(OUT+'/plan_1a_side.png','bulwark_ref/plan_1a_side.png')
+    z.write('rhino/RoyalCaroline_bulwark_marks_side_v1.3dm','RoyalCaroline_bulwark_marks_side_v1.3dm'); z.write(OUT+'/plan_1a_side.png','plan_1a_side.png')
 print(os.path.getsize('rhino/RoyalCaroline_bulwark_marks_side_v1.zip')/1e6,'MB')
