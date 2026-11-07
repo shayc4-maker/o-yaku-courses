@@ -1,0 +1,108 @@
+{
+ "plan": "4a",
+ "scale_px_per_mm": 11.75,
+ "plank_mm": 1.6,
+ "centre_line_through_masts": {
+  "m1": [
+   3860.9,
+   1088.9
+  ],
+  "m2": [
+   6604.7,
+   1085.7
+  ],
+  "slope": -0.0011662657628107172
+ },
+ "points": [
+  {
+   "id": 1,
+   "F_x_px": 6020,
+   "F_y_px": 342.0,
+   "F_Y_mm": 63.35,
+   "H_x_px": 6018.0,
+   "H_y_px": 320.0,
+   "H_Y_mm": 65.22,
+   "H_on_drawn_line": true
+  },
+  {
+   "id": 2,
+   "F_x_px": 6184,
+   "F_y_px": 327.0,
+   "F_Y_mm": 64.61,
+   "H_x_px": 6184.1,
+   "H_y_px": 308.2,
+   "H_Y_mm": 66.21,
+   "H_on_drawn_line": false
+  },
+  {
+   "id": 3,
+   "F_x_px": 6323,
+   "F_y_px": 344.0,
+   "F_Y_mm": 63.15,
+   "H_x_px": 6324.8,
+   "H_y_px": 330.0,
+   "H_Y_mm": 64.34,
+   "H_on_drawn_line": true
+  },
+  {
+   "id": 4,
+   "F_x_px": 6462,
+   "F_y_px": 363.0,
+   "F_Y_mm": 61.52,
+   "H_x_px": 6464.9,
+   "H_y_px": 344.4,
+   "H_Y_mm": 63.1,
+   "H_on_drawn_line": false
+  },
+  {
+   "id": 5,
+   "F_x_px": 6600,
+   "F_y_px": 388.0,
+   "F_Y_mm": 59.38,
+   "H_x_px": 6603.3,
+   "H_y_px": 369.5,
+   "H_Y_mm": 60.95,
+   "H_on_drawn_line": false
+  },
+  {
+   "id": 6,
+   "F_x_px": 6739,
+   "F_y_px": 412.0,
+   "F_Y_mm": 57.32,
+   "H_x_px": 6742.5,
+   "H_y_px": 393.5,
+   "H_Y_mm": 58.89,
+   "H_on_drawn_line": false
+  },
+  {
+   "id": 7,
+   "F_x_px": 6877,
+   "F_y_px": 441.0,
+   "F_Y_mm": 54.84,
+   "H_x_px": 6881.4,
+   "H_y_px": 422.7,
+   "H_Y_mm": 56.4,
+   "H_on_drawn_line": false
+  },
+  {
+   "id": 8,
+   "F_x_px": 7013,
+   "F_y_px": 478.0,
+   "F_Y_mm": 51.68,
+   "H_x_px": 7018.2,
+   "H_y_px": 459.9,
+   "H_Y_mm": 53.22,
+   "H_on_drawn_line": false
+  },
+  {
+   "id": 9,
+   "F_x_px": 7147,
+   "F_y_px": 519.0,
+   "F_Y_mm": 48.18,
+   "H_x_px": 7152.5,
+   "H_y_px": 501.0,
+   "H_Y_mm": 49.71,
+   "H_on_drawn_line": false
+  }
+ ]
+}
