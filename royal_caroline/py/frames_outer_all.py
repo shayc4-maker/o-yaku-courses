@@ -42,8 +42,24 @@ def station_face(n,X):
     if s['vtop']: pts+=[('corner',float(P[-2,0]),float(P[-2,1])),('top',float(P[-1,0]),float(P[-1,1]))]
     else: pts+=[('top',float(P[-1,0]),float(P[-1,1]))]
     return pts
+def zlow(n,y):      # Z of the station line at a given Y on its flat lower part (up to Z 9), None outside
+    s=ST[n]; L=s['L']; f=s['first']; Pl=np.vstack([[f[0],f[1]],L[L[:,1]<=9.5]]) if s['P'][0,1]<9.5 else None
+    if Pl is None or len(Pl)<3: return None
+    o=np.argsort(Pl[:,0]); Pl=Pl[o]
+    return float(np.interp(y,Pl[:,0],Pl[:,1])) if Pl[0,0]<=y<=Pl[-1,0] else None
 def between(A,B,X):
     yb,zb,kind=bottom(X,A,B); pts=[('bottom '+kind,yb,zb)]; t=(X-XS[A])/(XS[B]-XS[A]); info={}
+    aI,bI=ywl('I',XS[A]),ywl('I',XS[B]); PwI=wl('I'); uI=(ywl('I',X)-aI)/(bI-aI) if abs(bI-aI)>=1.0 and PwI[0,0]-5<=X<=PwI[-1,0]+5 and PwI[0,0]-5<=XS[A] and XS[B]<=PwI[-1,0]+5 else t; uI=float(np.clip(uI,-0.1,1.1))
+    # flat floor (below WL I): points from the approved station points, interpolated in Z at fixed Y (Y-levels), then forced to be non-decreasing from the junction
+    if zb<WL['I']-1.5:
+        yI=[y_at(n,WL['I']) for n in (A,B)]; ylim=min(v for v in yI if v is not None)-2.5 if all(v is not None for v in yI) else None
+        if ylim is not None:
+            lev=sorted(set(round(float(y),2) for n in (A,B) for y in ST[n]['P'][:,0] if yb+2.0<y<ylim and ST[n]['P'][:,1][list(ST[n]['P'][:,0]).index(y)]<9.5))
+            zprev=zb; ylast=yb
+            for y in lev:
+                za,zB=zlow(A,y),zlow(B,y)
+                if za is None or zB is None or y-ylast<2.5: continue
+                z=max(za+uI*(zB-za),zprev); pts.append(('floor',y,z)); zprev=z; ylast=y
     for k,z in WL.items():
         if z<=zb+1.5: continue
         ya,yB=y_at(A,z),y_at(B,z)
@@ -61,18 +77,30 @@ def between(A,B,X):
     if corner: pts+=[('corner',sa['P'][-2,0]+uv*(sb['P'][-2,0]-sa['P'][-2,0]),sa['P'][-2,1]+uv*(sb['P'][-2,1]-sa['P'][-2,1])),('top',sa['P'][-1,0]+uv*(sb['P'][-1,0]-sa['P'][-1,0]),sa['P'][-1,1]+uv*(sb['P'][-1,1]-sa['P'][-1,1]))]
     else: pts+=[('top',sa['P'][-1,0]+uv*(sb['P'][-1,0]-sa['P'][-1,0]),sa['P'][-1,1]+uv*(sb['P'][-1,1]-sa['P'][-1,1]))]
     return pts
-def curve(pts,corner_last):
+def tangent_at(n,pt_first,span=8.0):          # unit tangent of the station line at its junction: chord over the first SPAN mm of the line (not the 1.3 mm end hook)
+    s=ST[n]; f=s['first']; poly=np.vstack([f,s['L']]); sl=np.r_[0,np.cumsum(np.hypot(*np.diff(poly,axis=0).T))]; j=int(np.searchsorted(sl,span)); j=min(j,len(poly)-1); d=poly[j]-f; return d/np.hypot(*d)
+def curve(pts,corner_last,tan0=None):
     q=np.array([(y,z) for _,y,z in pts]); q=q[np.argsort(q[:,1])] if False else q
     body=q[:-1] if corner_last else q
-    keep=[0]+[i for i in range(1,len(body)) if np.hypot(*(body[i]-body[i-1]))>1e-6]; body=body[keep]; tck,u=splprep(body.T,k=3,s=0); y,z=splev(np.linspace(0,1,500),tck)
-    return np.r_[np.c_[y,z],[q[-1]]] if corner_last else np.c_[y,z]
+    keep=[0]+[i for i in range(1,len(body)) if np.hypot(*(body[i]-body[i-1]))>1e-6]; body=body[keep]
+    if tan0 is None:
+        tck,u=splprep(body.T,k=3,s=0); y,z=splev(np.linspace(0,1,500),tck); L=np.c_[y,z]
+    else:
+        from scipy.interpolate import make_interp_spline
+        t=np.r_[0,np.cumsum(np.sqrt(np.hypot(*np.diff(body,axis=0).T)))]; sp0=np.hypot(*(body[1]-body[0]))/(t[1]-t[0]); sp=make_interp_spline(t,body,k=3,bc_type=([(1,tan0*sp0)],[(2,np.zeros(2))])); L=sp(np.linspace(0,t[-1],500))
+    return np.r_[L,[q[-1]]] if corner_last else L
 out={}; bad=[]; RAW={}
 for b in range(1,46):
     xc=XF[45-b]; out[b]={}
     for nm,X in (('back',xc-4),('mid',xc),('front',xc+4)):
         pts,kind=face(X)
         if pts is None: bad.append((b,nm,X)); continue
-        corner=any(p[0]=='corner' for p in pts); L=curve(pts,corner); RAW[(b,nm)]=L; out[b][nm]=dict(X=X,kind=kind,points=[[p[0],round(float(p[1]),3),round(float(p[2]),3)] for p in pts],curve=L.round(3).tolist())
+        corner=any(p[0]=='corner' for p in pts); tan0=None
+        if kind.startswith('between'):
+            a_,b_=[int(x) for x in kind.split(' ')[1].split('-')]; tt=(X-XS[a_])/(XS[b_]-XS[a_]); v=(1-tt)*tangent_at(a_,None)+tt*tangent_at(b_,None); tan0=v/np.hypot(*v)
+        else:
+            tan0=tangent_at(int(kind.split(' ')[1]),None)
+        L=curve(pts,corner,tan0); RAW[(b,nm)]=L; out[b][nm]=dict(X=X,kind=kind,points=[[p[0],round(float(p[1]),3),round(float(p[2]),3)] for p in pts],curve=L.round(3).tolist())
 json.dump({str(b):v for b,v in out.items()},open('data/frames_outer_all_v1.json','w'))
 print('frames',len(out),'faces',sum(len(v) for v in out.values()),'outside:',bad)
 # checks: progression monotone between faces of one frame, curvature sign changes of the outline
