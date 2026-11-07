@@ -459,3 +459,4 @@ Working rules are in `royal_caroline/CLAUDE.md`; read them first.
 - Caveats: ~0.1 mm X bulge E-E2; plane 5 has only 2 points; Z=100 inferred; deck X registration rough; nothing above Z=69.5 except deck.
 - Files: data/rabbet_iron_v1.json, data/bow_plane_sketch_v2.json, rhino/RoyalCaroline_bow_rabbet_and_plane_sketch_v1.3dm, qa/rabbet_iron_and_planes_v1.png.
 - 2026-11-07 py/frame1_front_on_plan5.py -> qa/frame1_front_on_plan5_v1.png: frame 1 faces (X=520.03/524.03/528.03, vertical in side view) on plan_5; front face Z 28.2..106.9.
+- 2026-11-07 builder: top of frame 1 too low; upper green line (Z~117-119.6 to X 537.4) then step down to Z~101 then lower line to X 559.8. py/top_line_points_bow.py -> data/top_line_bow_points_v1.json, qa/top_line_bow_points_v1.png (points T1-T9 for approval; snapped to ink in column).
