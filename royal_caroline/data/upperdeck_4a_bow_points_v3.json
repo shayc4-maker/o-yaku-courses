@@ -1,0 +1,114 @@
+{
+ "plan": "4a",
+ "plank_mm": 0.8,
+ "points": [
+  {
+   "id": 1,
+   "H_x_px": 6043.8,
+   "H_y_px": 333.0,
+   "H_Y_mm": 64.12,
+   "F_x_px": 6043.6,
+   "F_y_px": 340.4,
+   "F_Y_mm": 63.48,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": false,
+   "shift_H_vs_v2_px": 16.9
+  },
+  {
+   "id": 2,
+   "H_x_px": 6182.8,
+   "H_y_px": 337.8,
+   "H_Y_mm": 63.69,
+   "F_x_px": 6182.4,
+   "F_y_px": 344.3,
+   "F_Y_mm": 63.14,
+   "F_on_drawn_line": false,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 10.0
+  },
+  {
+   "id": 3,
+   "H_x_px": 6321.9,
+   "H_y_px": 352.8,
+   "H_Y_mm": 62.4,
+   "F_x_px": 6321.0,
+   "F_y_px": 359.2,
+   "F_Y_mm": 61.85,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 7.0
+  },
+  {
+   "id": 4,
+   "H_x_px": 6459.9,
+   "H_y_px": 375.8,
+   "H_Y_mm": 60.43,
+   "F_x_px": 6458.8,
+   "F_y_px": 384.2,
+   "F_Y_mm": 59.72,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 10.0
+  },
+  {
+   "id": 5,
+   "H_x_px": 6599.5,
+   "H_y_px": 390.4,
+   "H_Y_mm": 59.18,
+   "F_x_px": 6598.3,
+   "F_y_px": 398.8,
+   "F_Y_mm": 58.46,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 1.0
+  },
+  {
+   "id": 6,
+   "H_x_px": 6737.9,
+   "H_y_px": 417.3,
+   "H_Y_mm": 56.87,
+   "F_x_px": 6736.0,
+   "F_y_px": 425.6,
+   "F_Y_mm": 56.17,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 3.0
+  },
+  {
+   "id": 7,
+   "H_x_px": 6874.1,
+   "H_y_px": 453.1,
+   "H_Y_mm": 53.81,
+   "F_x_px": 6871.9,
+   "F_y_px": 461.3,
+   "F_Y_mm": 53.11,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 10.0
+  },
+  {
+   "id": 8,
+   "H_x_px": 7009.9,
+   "H_y_px": 489.0,
+   "H_Y_mm": 50.74,
+   "F_x_px": 7007.4,
+   "F_y_px": 498.2,
+   "F_Y_mm": 49.96,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 10.0
+  },
+  {
+   "id": 9,
+   "H_x_px": 7144.8,
+   "H_y_px": 526.1,
+   "H_Y_mm": 47.57,
+   "F_x_px": 7142.6,
+   "F_y_px": 534.3,
+   "F_Y_mm": 46.87,
+   "F_on_drawn_line": true,
+   "H_on_thick_line": true,
+   "shift_H_vs_v2_px": 6.0
+  }
+ ]
+}
