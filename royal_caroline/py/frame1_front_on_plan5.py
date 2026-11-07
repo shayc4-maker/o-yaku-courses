@@ -6,10 +6,10 @@ import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 im=np.array(Image.open('plans/plan_5_aligned.png').convert('L'))
 A=json.load(open('data/frames_outer_approved_v2.json')); R=json.load(open('data/rabbet_iron_v1.json'))
 print(list(R.keys())[:8])
-xl,zl=(495,600),(0,125)
+xl,zl=(480,620),(0,164)
 x0,z0=model_to_p5(xl[0],zl[0]); x1,z1=model_to_p5(xl[1],zl[1])
 crop=im[int(z1):int(z0),int(x0):int(x1)]
-fig,a=plt.subplots(figsize=(11,13))
+fig,a=plt.subplots(figsize=(11,13.5))
 a.imshow(crop,cmap='gray',extent=(xl[0],xl[1],zl[0],zl[1]),aspect='equal')
 for nm,c in (('back','tab:blue'),('mid','k'),('front','tab:red')):
     v=A['1'][nm]; C=np.array(v['curve']); zt=C[:,1].max(); zb=C[0,1] if C[0,1]<C[-1,1] else C[-1,1]
@@ -17,4 +17,4 @@ for nm,c in (('back','tab:blue'),('mid','k'),('front','tab:red')):
     print(nm,v['X'],C[:,1].min(),zt)
 a.set_xlim(*xl);a.set_ylim(*zl);a.grid(alpha=.3);a.legend(fontsize=8,loc='upper left')
 a.set_title('plan_5 side view, frame 1 faces (vertical lines in X)')
-fig.savefig('qa/frame1_front_on_plan5_v1.png',dpi=80,bbox_inches='tight')
+fig.savefig('qa/frame1_front_on_plan5_v2.png',dpi=80,bbox_inches='tight')
