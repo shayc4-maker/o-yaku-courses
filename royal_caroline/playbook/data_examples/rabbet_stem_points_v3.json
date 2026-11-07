@@ -1,0 +1,54 @@
+[
+ {
+  "id": "R1",
+  "X": 529.84,
+  "Z": 30
+ },
+ {
+  "id": "R2",
+  "X": 535.62,
+  "Z": 36
+ },
+ {
+  "id": "R3",
+  "X": 540.5,
+  "Z": 42
+ },
+ {
+  "id": "R4",
+  "X": 544.7,
+  "Z": 48
+ },
+ {
+  "id": "R5",
+  "X": 548.36,
+  "Z": 54
+ },
+ {
+  "id": "R6",
+  "X": 551.42,
+  "Z": 60
+ },
+ {
+  "id": "R7",
+  "X": 553.86,
+  "Z": 66
+ },
+ {
+  "id": "R10",
+  "X": 557.9,
+  "Z": 84
+ },
+ {
+  "id": "E",
+  "X": 559.3,
+  "Z": 96.05,
+  "note": "end of the ship: lower line of the bulwark pair (Z 96.05; upper 98.0-98.2) at the light vertical line X=559.3"
+ },
+ {
+  "id": "E2",
+  "X": 559.3,
+  "Z": 103.35,
+  "note": "above E: lower line of the next parallel pair (Z 103.2-104.4) at the light vertical line X=559.3; the builder marked a green pixel at about (559.4, 103.5)"
+ }
+]

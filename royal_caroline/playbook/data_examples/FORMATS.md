@@ -1,0 +1,11 @@
+# Data formats
+- frames_X.json: {"X_mm":[...]} centre X of the 48 frame positions (builder frame b -> XF[45-b]).
+- frames_outer_approved_v5.json: {"<b>": {"back"|"mid"|"front": {"X", "curve":[[Y,Z]x500], "top":[[Y,Z],[Y,Z]]|null, "end":[Y,Z]}}} +Y master; top = straight segment extended to the bulwark line (key top_ext true where extended).
+- keel_keelson_v2.json: depth 1.0; keelson_spline{X,Z}; keel_surface{X,Z}; pockets[...].
+- bulwark_line_v3.json: {"S1".."S10": [[X,Z]x200]} the builder's final bulwark lower line (sampled from his 3dm).
+- p1a_marks_v1.json: [{"id":"M0","g":"red|purple|yellow|green","X","Z","px","py"}] his coloured pixel marks in model mm.
+- bow_lines_builder_final_v1.json: rabbet / planes 2-5 / deck WL as [X,Y,Z] x200 from his edited 3dm.
+- bow_deck_waterline_v3.json: Z, points, smooth_s, curve [[X,Y]], plane_tops {"1":[X,Y,Z]...}.
+- plan_calibration_v2.json: affine corrections per sheet; plan1a_new_to_aligned.json / plan5_new_to_aligned.json: ax=[a,b,c], ay=[d,e,f] new px -> aligned px: x'=a x+b y+c, y'=d x+e y+f.
+- step44_profiles.json: {"<solid name>": [[[X,Z]...]...]} side-view profiles of the STEP solids.
+- rabbet_stem_points_v3.json: R1..R7,R10,E,E2 [{"id","X","Z"}].
