@@ -1,0 +1,48 @@
+<!doctype html><html><body style="margin:0;background:#111"><canvas id="c" width="1280" height="720"></canvas>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const W=1280,H=720; const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setSize(W,H,false); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=0.92; renderer.outputColorSpace=THREE.SRGBColorSpace;
+const scene=new THREE.Scene();
+// background gradient
+const bgc=document.createElement('canvas'); bgc.width=4; bgc.height=256; const bg=bgc.getContext('2d'); const gr=bg.createLinearGradient(0,0,0,256); gr.addColorStop(0,'#3a3d46'); gr.addColorStop(1,'#14151a'); bg.fillStyle=gr; bg.fillRect(0,0,4,256); const bgt=new THREE.CanvasTexture(bgc); bgt.colorSpace=THREE.SRGBColorSpace; scene.background=bgt;
+// pear wood: procedural grain texture (canvas), mapped per triangle along its dominant axis
+function grainTexture(){
+  const c=document.createElement('canvas'); c.width=1024; c.height=1024; const x=c.getContext('2d'); x.fillStyle='#e6cfae'; x.fillRect(0,0,1024,1024);
+  let seed=7; const rnd=()=>{seed=(seed*16807)%2147483647; return seed/2147483647;};
+  for(let i=0;i<70;i++){ const y=rnd()*1024,h=8+rnd()*60; const gg=x.createLinearGradient(0,y-h,0,y+h); const a=0.05+rnd()*0.08; gg.addColorStop(0,'rgba(140,98,66,0)'); gg.addColorStop(.5,'rgba(140,98,66,'+a+')'); gg.addColorStop(1,'rgba(140,98,66,0)'); x.fillStyle=gg; x.fillRect(0,y-h,1024,2*h); }   // broad tone bands
+  for(let i=0;i<1100;i++){ const y=rnd()*1024; x.strokeStyle='rgba('+(110+rnd()*40|0)+','+(70+rnd()*30|0)+','+(40+rnd()*20|0)+','+(0.05+rnd()*0.16)+')'; x.lineWidth=0.4+rnd()*1.6; x.beginPath(); let ph=rnd()*6.28,amp=0.5+rnd()*3.5; x.moveTo(0,y); for(let u=0;u<=1024;u+=16) x.lineTo(u,y+Math.sin(u*0.01+ph)*amp+Math.sin(u*0.035+ph*2)*amp*0.3); x.stroke(); }   // fine grain lines
+  const id=x.getImageData(0,0,1024,1024),d=id.data; for(let i=0;i<d.length;i+=4){ const n=(rnd()-0.5)*9; d[i]+=n; d[i+1]+=n; d[i+2]+=n; } x.putImageData(id,0,0);   // pores / fine speckle
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=8; return t;
+}
+const GT=grainTexture();
+function uvGeometry(o,off){
+  const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(o.v,3)); geo.setIndex(o.t); const ng=geo.toNonIndexed(); ng.computeVertexNormals();
+  const p=ng.attributes.position.array, n=ng.attributes.normal.array, uv=new Float32Array(p.length/3*2), S=1/55;
+  for(let i=0;i<p.length/3;i++){ const nx=Math.abs(n[3*i]),ny=Math.abs(n[3*i+1]),nz=Math.abs(n[3*i+2]); let u,v; if(nx>=ny&&nx>=nz){u=p[3*i+2];v=p[3*i+1];} else if(ny>=nz){u=p[3*i];v=p[3*i+2];} else {u=p[3*i];v=p[3*i+1];} uv[2*i]=u*S+off[0]; uv[2*i+1]=v*S*1.6+off[1]; }
+  ng.setAttribute('uv',new THREE.BufferAttribute(uv,2)); return ng;
+}
+function pearMaterial(tint){ return new THREE.MeshStandardMaterial({map:GT,color:new THREE.Color(tint),roughness:0.52,metalness:0.0}); }
+let seedI=0; const pear=['#ffffff','#f4e9dc','#ffeedd','#efe0cf']; const g=new THREE.Group(); scene.add(g);
+const sc=await (await fetch('/web/scene.json')).json();
+const box=new THREE.Box3();
+for(const o of sc){
+  const ng=uvGeometry(o,[((seedI*0.37)%1),((seedI*0.61)%1)]);
+  const mat=pearMaterial(pear[(seedI++)%pear.length]); const mesh=new THREE.Mesh(ng,mat); mesh.castShadow=true; mesh.receiveShadow=true; g.add(mesh);
+}
+box.setFromObject(g); const ctr=new THREE.Vector3(); box.getCenter(ctr); const sz=new THREE.Vector3(); box.getSize(sz);
+// workshop table below the keel
+const table=new THREE.Mesh(new THREE.PlaneGeometry(2400,1200),new THREE.MeshStandardMaterial({color:'#3a332d',roughness:0.9})); table.position.set(ctr.x,0,box.min.z-3); table.receiveShadow=true; scene.add(table);
+scene.add(new THREE.HemisphereLight('#fff1dd','#6a5848',2.0));
+const key=new THREE.DirectionalLight('#fff0d8',2.6); key.position.set(ctr.x+260,-520,620); key.target.position.copy(ctr); key.castShadow=true; key.shadow.mapSize.set(2048,2048); const sc2=key.shadow.camera; sc2.left=-420;sc2.right=420;sc2.top=260;sc2.bottom=-260;sc2.near=10;sc2.far=1600; key.shadow.bias=-0.0006; scene.add(key,key.target);
+const rim=new THREE.DirectionalLight('#9fb4ff',1.1); rim.position.set(ctr.x-420,380,260); scene.add(rim);
+const cam=new THREE.PerspectiveCamera(26,W/H,10,6000); cam.up.set(0,0,1);
+window.setT=(t)=>{ // t in 0..1 : slow arc around the side view, slight rise
+  const e=t*t*(3-2*t); const yaw=THREE.MathUtils.degToRad(-24+48*e); const R=1020; const pitch=THREE.MathUtils.degToRad(11+3*Math.sin(Math.PI*t));
+  cam.position.set(ctr.x+R*Math.sin(yaw)*0.55 , -R*Math.cos(yaw)*Math.cos(pitch), ctr.z+R*Math.sin(pitch)+20); cam.lookAt(ctr.x+10*(t-0.5),0,ctr.z-5); renderer.render(scene,cam); return true; };
+window.dbg=()=>JSON.stringify({n:g.children.length,ctr:ctr.toArray(),sz:sz.toArray(),cam:cam.position.toArray()});
+if(location.search.includes('std')){g.children.forEach(m=>{m.material=new THREE.MeshStandardMaterial({color:'#d7b48b',roughness:.55});});}
+if(location.search.includes('plain')){g.children.forEach(m=>{m.material=new THREE.MeshNormalMaterial();});}
+window.ready=true; window.setT(0.5);
+</script></body></html>
