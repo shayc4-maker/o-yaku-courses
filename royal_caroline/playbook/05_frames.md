@@ -23,3 +23,6 @@ Geometry: builder frame b has centre X = XF[45-b] (data/frames_X.json); layers A
 - Solids: OCP prism of the common blank, `BRepAlgoAPI_Common` with the slab, `BRepCheck_Analyzer`, volume; mesh with `BRepMesh_IncrementalMesh`. Export per 15 frames (about 12 MB each); a STEP of 5 frames is 28 MB (do not commit).
 - 3D check on the keel: `frames_on_keel_side_check.py` (Y=0 section) shows the flat blank against the sloped pocket floor. Bow numbers: pocket slope 0.81 (frame 1) .. 0.25 (frame 5); flat blank hangs up to 6.5 mm above the pocket at X+4 and enters the keelson by the same amount at X-4. The builder accepted this (hand sanding) but the keel line "is not continuous enough" and must be worked again before closing.
 - Cathead/step zones of the bulwark line (X 213-222, 251-262, 280) give steep top lines (frame 25: 105.6 -> 99.3 over 4 mm; frame 29: 118 -> 112.8). That is his line; flag, do not smooth.
+
+## Update 2026-11-08: keel without pockets
+The keel is modelled with a clean top surface and NO pockets. Pockets (1 mm deep, 8 mm wide, floor parallel to the surface) are cut afterwards on the solids by boolean with the frame blanks, after the keel/keelson lines are final. Do not put pocket steps into the keel top line.

@@ -6,3 +6,4 @@
 - Frames 9, 10, 24, 25, 28 tops are above the bulwark line (not trimmed). Stern frames 46-48 are not rebuilt on the new backbone.
 - Splitting frames into parts with marks and numbering: the builder's rules are shown in sections b2/b3 of the plans; do it only after reading them with him.
 - 3D blanks for frames 6-45 were generated in groups of 15 (see STATE.md); not checked for clashes with keel/keelson, not opened in Rhino.
+- Keel/keelson lines: points+splines v1 sent (data/keel_keelson_points_v1.json); builder will mark new points, esp. keel top X 510-526. Keel is built without pockets; pockets are made on the solids at the end.
